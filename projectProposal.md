@@ -12,6 +12,11 @@ Creating Karaoke videos is tedious work:
 - There is little custom control the user has. Karaoke places often have remotes that let you display the musical notes of the song, play a cheering sound effect, change the key of the song.
 
 NAME TBD solves this problem and adds more functionality to a YouTube karaoke session.
+
+Generator Service:
+1. Create Algorithms the generate karaoke videos
+2. Get the lyrics and timestamps of the lyrics of a video using https://github.com/openai/whisper
+
 Website:
 1. Users will sign up on the website and create profiles. They can add their spotify playlist to their account and the generator will show videos based on their playlists (medium)
 2. Home page will list the top karaoke videos (easy)
@@ -43,7 +48,7 @@ Options:
 * No need for middleware endpoints
 
 Frontend:
-Built using Next.js, React, and [Mantine UI Library](https://mantine.dev/)
+Built using [Next.js](https://nextjs.org/), [React](https://reactjs.org/), and [Mantine UI Library](https://mantine.dev/)
 - @ashley-kim22 designs and @Alamode89 codes :^)
 
 Hosting:
