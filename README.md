@@ -1,4 +1,4 @@
-# Online Karaoke Service (Name TBD)
+# Project Karaoke(Name TBD)
 by Ashley Kim, Andre Amante, Andrei Dimaano, Roy Feng
 
 ## Background
