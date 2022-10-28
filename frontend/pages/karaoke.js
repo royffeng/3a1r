@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { Avatar } from '@mantine/core';
 import Video from '../components/karaoke/video'
 import 'plyr/dist/plyr.css'
+import Comments from '../components/karaoke/comment';
 
 function rectifyFormat(s) {
   let b = s.split(/\D/);
@@ -50,6 +51,8 @@ export default function Karaoke() {
 
   return (
     <>
+      {/* <div style={{width: '640px', height: '360px', display: 'flex', flexDirection: "column",justifyContent: 'start', alignItems: 'start', backgroundColor: 'black'}}>
+      </div> */}
       <Video />
       <div style={{width: '640px', height: '360px', display: 'flex', flexDirection: "column",justifyContent: 'start', alignItems: 'start'}}>
         <div style={{marginBottom: '0.5rem', display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
@@ -59,11 +62,11 @@ export default function Karaoke() {
           <p style={{fontSize: '0.9rem', marginTop: 0, marginBottom: 0, marginRight: '0.5rem'}}>{dateString}</p>
           <p style={{fontSize: '0.9rem', marginTop: 0, marginBottom: 0}}>{videoViews} views</p>
         </div>
-        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center'}}>
+        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', marginBottom: '2rem'}}>
           <Avatar style={{marginRight: '0.5rem'}} radius="xl" alt="no image here"/>
           <p style={{margin: 0, marginRight:'0.5rem'}}>Author Username</p>
         </div> 
-         
+         <Comments />
       </div>
     </>
   )
