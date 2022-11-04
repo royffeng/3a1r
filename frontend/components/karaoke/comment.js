@@ -67,7 +67,7 @@ export default function Comments() {
   return (
     <>
      {COMMENTS.map((comment) => (
-        <Comment props={comment}/>
+        <Comment key={comment.authorUsername} props={comment}/>
      ))}
     </>
   )

@@ -41,7 +41,7 @@ export default function Karaoke() {
     } 
 
     return "0";
-  }, videoMetaData)
+  }, [videoMetaData])
 
   return (
     <>
