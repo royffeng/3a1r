@@ -1,6 +1,6 @@
 export const LYRICS = [
   {
-    lyrics: "-intro-",
+    lyrics: "",
     start: 0,
     end: 9.470436,
   },
