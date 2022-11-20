@@ -24,15 +24,14 @@ const findIndex = (time, lyricsArr) => {
   return -1;
 };
 
-export default function Video() {
-  const [videoSource, setVideoSource] = useState("");
+export default function Video({videoSource, lyricsArr}) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [lyricsIndex, setLyricsIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0);
-  const [lyricsArr, setLyricsArr] = useState([]);
   const [timeoutId, setTimeoutId] = useState(0);
   const videoRef = useRef(null);
   let player = null;
+
 
   const setSelectors = useCallback(() => {
     document
@@ -57,22 +56,9 @@ export default function Video() {
     setIsVideoPlaying(true);
   }, []);
 
-  // get video source
   useEffect(() => {
-    const fetchData = async () => {
-      let { data, error } = await supabase.from("video").select();
-      if (error) {
-        console.log("error: ", error);
-        return;
-      } else {
-        setVideoSource(data[0].videourl);
-        setLyricsArr(data[0].lyrics);
-        setRemainingTime(data[0].lyrics[0].end - data[0].lyrics[0].start);
-      }
-    };
-
-    fetchData();
-  }, []);
+    setRemainingTime(lyricsArr[0].end - lyricsArr[0].start);
+  }, [lyricsArr]);
 
   // start video
   useEffect(() => {
@@ -116,7 +102,6 @@ export default function Video() {
   // setTimeout to countdown lyric change
   useEffect(() => {
     if (isVideoPlaying) {
-      console.log(lyricsIndex);
       const newTimeoutId = setTimeout(() => {
         if (lyricsIndex < lyricsArr.length - 1) {
           setRemainingTime(

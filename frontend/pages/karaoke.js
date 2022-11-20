@@ -1,21 +1,32 @@
 import { supabase } from "../lib/initSupabase";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/router";
 import { Avatar } from "@mantine/core";
 import { rectifyFormat } from "../utils/formatUTC";
 import { Button } from "@mantine/core";
 import { Divider } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import Video from "../components/karaoke/video";
 import "plyr/dist/plyr.css";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import Comments from "../components/karaoke/comment";
 
 export default function Karaoke() {
-  const [videoMetaData, setVideoMediaData] = useState();
+  const router = useRouter();
+  const vid = useMemo(() => {
+    if (router.query.vid == null || router.query.vid == undefined) {
+      router.push("/");
+    }
+    return router.query.vid;
+  }, [router]);
+  const [videoMetaData, setVideoMediaData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      let { data, error } = await supabase.from("video").select();
-      console.log(data);
+      let { data, error } = await supabase
+        .from("video")
+        .select()
+        .filter("id", "eq", vid);
       if (error) {
         console.log("error: ", error);
         return;
@@ -24,8 +35,10 @@ export default function Karaoke() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (vid) {
+      fetchData();
+    }
+  }, [vid]);
 
   const dateString = useMemo(() => {
     if (videoMetaData) {
@@ -44,8 +57,36 @@ export default function Karaoke() {
   }, [videoMetaData]);
 
   return (
-    <>
-      <Video />
+    <div
+      style={{
+        padding: "0 2rem",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {videoMetaData == null || videoMetaData == undefined ? (
+        <div
+          style={{
+            width: "clamp(100%, 95vw, 100%)",
+            height: "360px",
+            position: "relative",
+            background:
+              "linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Loader />
+        </div>
+      ) : (
+        <Video
+          videoSource={videoMetaData.videourl}
+          lyricsArr={videoMetaData.lyrics}
+        />
+      )}
       <div
         className="below-player-wrapper"
         style={{
@@ -162,6 +203,6 @@ export default function Karaoke() {
         </p>
         <Comments />
       </div>
-    </>
+    </div>
   );
 }
