@@ -1,6 +1,5 @@
 import { supabase } from "../../lib/initSupabase";
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { LYRICS } from "./twiceDemo";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Hls from "hls.js";
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
@@ -30,17 +29,10 @@ export default function Video() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [lyricsIndex, setLyricsIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0);
+  const [lyricsArr, setLyricsArr] = useState([])
   const [timeoutId, setTimeoutId] = useState(0);
   const videoRef = useRef(null);
   let player = null;
-
-  const lyricsArr = useMemo(() => {
-    return LYRICS;
-  });
-
-  useEffect(() => {
-    setRemainingTime(lyricsArr[0].end - lyricsArr[0].start);
-  }, [lyricsArr]);
 
   const setSelectors = useCallback(() => {
     document
@@ -74,6 +66,8 @@ export default function Video() {
         return;
       } else {
         setVideoSource(data[0].videourl);
+        setLyricsArr(data[0].lyrics);
+        setRemainingTime(data[0].lyrics[0].end - data[0].lyrics[0].start);
       }
     };
 
@@ -122,9 +116,9 @@ export default function Video() {
   // setTimeout to countdown lyric change
   useEffect(() => {
     if (isVideoPlaying) {
+      console.log(lyricsIndex);
       const newTimeoutId = setTimeout(() => {
         if (lyricsIndex < lyricsArr.length - 1) {
-          console.log("execute: ", lyricsIndex);
           setRemainingTime(
             lyricsIndex < lyricsArr.length
               ? lyricsArr[lyricsIndex + 1].end -
@@ -142,7 +136,6 @@ export default function Video() {
   useEffect(() => {
     if (timeoutId !== 0 && !isVideoPlaying) {
       let index = findIndex(videoRef.current.plyr.currentTime, lyricsArr);
-      console.log(videoRef.current.plyr);
       clearTimeout(timeoutId);
       setTimeoutId(0);
       setLyricsIndex(index);
@@ -188,7 +181,7 @@ export default function Video() {
           >
             {`${
               lyricsIndex < lyricsArr.length
-                ? lyricsArr[lyricsIndex].lyricsIndex
+                ? lyricsArr[lyricsIndex].lyrics
                 : ""
             }`}
           </p>
