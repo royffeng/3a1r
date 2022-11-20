@@ -29,7 +29,7 @@ export default function Video() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [lyricsIndex, setLyricsIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0);
-  const [lyricsArr, setLyricsArr] = useState([])
+  const [lyricsArr, setLyricsArr] = useState([]);
   const [timeoutId, setTimeoutId] = useState(0);
   const videoRef = useRef(null);
   let player = null;
