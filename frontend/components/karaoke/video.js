@@ -1,29 +1,40 @@
 import { supabase } from "../../lib/initSupabase";
-import { useState, useEffect, useRef } from "react";
-import { LYRICS } from "./twiceDemo";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Hls from "hls.js";
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 
-/*
-  TODO: 
-  1. seek binary search change position
-  2. Pause change remaining time
-  3. Handle case when it ends
-*/
+// binary search lyrics array for correct timestamp
+const findIndex = (time, lyricsArr) => {
+  let l = 0;
+  let r = lyricsArr.length - 1;
+
+  while (l <= r) {
+    let mid = Math.floor(l + (r - l) / 2);
+
+    if (lyricsArr[mid].start <= time && lyricsArr[mid].end >= time) {
+      return mid;
+    } else if (lyricsArr[mid].start < time && lyricsArr[mid].end < time) {
+      l = mid + 1;
+    } else {
+      r = mid - 1;
+    }
+  }
+
+  return -1;
+};
 
 export default function Video() {
   const [videoSource, setVideoSource] = useState("");
-  const [playing, setPlaying] = useState(false);
-  const [lyrics, setLyrics] = useState(0);
-  const [remainingTime, setRemainingTime] = useState(
-    LYRICS[0].end - LYRICS[0].start
-  );
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [lyricsIndex, setLyricsIndex] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [lyricsArr, setLyricsArr] = useState([]);
   const [timeoutId, setTimeoutId] = useState(0);
   const videoRef = useRef(null);
   let player = null;
 
-  const setSelectors = () => {
+  const setSelectors = useCallback(() => {
     document
       .querySelector(".plyr")
       ?.removeEventListener("pause", handleVideoPaused, true);
@@ -36,8 +47,17 @@ export default function Video() {
     document
       .querySelector(".plyr")
       ?.addEventListener("playing", handleVideoPlaying);
-  };
+  }, []);
 
+  const handleVideoPaused = useCallback(() => {
+    setIsVideoPlaying(false);
+  }, []);
+
+  const handleVideoPlaying = useCallback(() => {
+    setIsVideoPlaying(true);
+  }, []);
+
+  // get video source
   useEffect(() => {
     const fetchData = async () => {
       let { data, error } = await supabase.from("video").select();
@@ -46,6 +66,8 @@ export default function Video() {
         return;
       } else {
         setVideoSource(data[0].videourl);
+        setLyricsArr(data[0].lyrics);
+        setRemainingTime(data[0].lyrics[0].end - data[0].lyrics[0].start);
       }
     };
 
@@ -67,8 +89,6 @@ export default function Video() {
         "mute",
         "volume",
         "captions",
-        "settings",
-        "pip",
         "airplay",
       ],
       fullscreen: { enabled: false },
@@ -80,48 +100,52 @@ export default function Video() {
       hls.loadSource(videoSource);
       player = new Plyr(video, options);
       hls.attachMedia(video);
-
-      document.querySelector(".plyr").addEventListener("seeking", () => {
-        console.log(videoRef.current.plyr.currentTime);
-      });
       setSelectors();
     }
+
+    return () => {
+      document
+        .querySelector(".plyr")
+        ?.removeEventListener("pause", handleVideoPaused, true);
+      document
+        .querySelector(".plyr")
+        ?.removeEventListener("playing", handleVideoPlaying, true);
+    };
   }, [videoSource, videoRef]);
 
+  // setTimeout to countdown lyric change
   useEffect(() => {
-    setSelectors();
-    if (playing) {
+    if (isVideoPlaying) {
+      console.log(lyricsIndex);
       const newTimeoutId = setTimeout(() => {
-        if (lyrics < LYRICS.length - 1) {
-          setLyrics((prev) => prev + 1);
+        if (lyricsIndex < lyricsArr.length - 1) {
+          setRemainingTime(
+            lyricsIndex < lyricsArr.length
+              ? lyricsArr[lyricsIndex + 1].end -
+                  lyricsArr[lyricsIndex + 1].start
+              : 10
+          );
+          setLyricsIndex((prev) => prev + 1);
         }
       }, remainingTime * 1000);
       setTimeoutId(newTimeoutId);
     }
-  }, [videoRef, remainingTime, playing]);
+  }, [remainingTime, isVideoPlaying]);
 
+  // change remainingTime when video pauses
   useEffect(() => {
-    console.log("new lyrics: ", lyrics);
-    setRemainingTime(
-      lyrics < LYRICS.length ? LYRICS[lyrics].end - LYRICS[lyrics].start : 10
-    );
-  }, [lyrics]);
-
-  const handleVideoPaused = () => {
-    setPlaying(false);
-    if (timeoutId !== 0) {
+    if (timeoutId !== 0 && !isVideoPlaying) {
+      let index = findIndex(videoRef.current.plyr.currentTime, lyricsArr);
       clearTimeout(timeoutId);
       setTimeoutId(0);
+      setLyricsIndex(index);
+      setRemainingTime(
+        lyricsIndex < lyricsArr.length && index !== -1
+          ? lyricsArr[index].end - videoRef.current.plyr.currentTime
+          : 10
+      );
     }
-    // fix this
-    setRemainingTime(
-      lyrics < LYRICS.length ? LYRICS[lyrics].end - LYRICS[lyrics].start : 10
-    );
-  };
-
-  const handleVideoPlaying = () => {
-    setPlaying(true);
-  };
+  }, [videoRef, isVideoPlaying, timeoutId]);
 
   const handleSubTitleClick = () => {
     if (videoRef.current.plyr?.paused) {
@@ -134,7 +158,7 @@ export default function Video() {
   return (
     <div style={{ position: "relative" }}>
       <video style={{ width: "90vw" }} ref={videoRef} />
-      {playing && (
+      {isVideoPlaying && (
         <div
           onClick={handleSubTitleClick}
           style={{
@@ -144,9 +168,9 @@ export default function Video() {
             alignItems: "center",
             justifyContent: "center",
             left: "10%",
-            bottom: "25%",
+            bottom: "50%",
             right: "10%",
-            top: "25%",
+            top: "50%",
           }}
         >
           <p
@@ -155,7 +179,11 @@ export default function Video() {
               textAlign: "center",
             }}
           >
-            {`${lyrics < LYRICS.length ? LYRICS[lyrics].lyrics : ""}`}
+            {`${
+              lyricsIndex < lyricsArr.length
+                ? lyricsArr[lyricsIndex].lyrics
+                : ""
+            }`}
           </p>
         </div>
       )}
