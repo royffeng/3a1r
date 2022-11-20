@@ -14,9 +14,6 @@ import Comments from "../components/karaoke/comment";
 export default function Karaoke() {
   const router = useRouter();
   const vid = useMemo(() => {
-    if (router.query.vid == null || router.query.vid == undefined) {
-      router.push("/");
-    }
     return router.query.vid;
   }, [router]);
   const [videoMetaData, setVideoMediaData] = useState(null);
