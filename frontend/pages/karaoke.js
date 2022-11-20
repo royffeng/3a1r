@@ -45,18 +45,10 @@ export default function Karaoke() {
 
   return (
     <>
-      {/* <div style={{width: '640px', height: '360px', display: 'flex', flexDirection: "column",justifyContent: 'start', alignItems: 'start', backgroundColor: 'black'}}>
-      </div> */}
-      {/* <div style={{display: 'grid'}}> */}
-      {/* <div style={{position: 'relative'}}> */}
       <Video />
-
-      {/* </div> */}
-      {/* </div> */}
       <div
+        className="below-player-wrapper"
         style={{
-          width: "640px",
-          height: "360px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
@@ -64,6 +56,7 @@ export default function Karaoke() {
         }}
       >
         <div
+          className="video-title"
           style={{
             marginBottom: "0.5rem",
             display: "flex",
@@ -76,6 +69,7 @@ export default function Karaoke() {
           </p>
         </div>
         <div
+          className="video-date-views"
           style={{
             marginBottom: "0.5rem",
             display: "flex",
@@ -99,6 +93,7 @@ export default function Karaoke() {
           </p>
         </div>
         <div
+          className="video-user"
           style={{
             width: "100%",
             display: "flex",
@@ -124,6 +119,7 @@ export default function Karaoke() {
             <p style={{ margin: 0, marginRight: "0.5rem" }}>Author Username</p>
           </div>
           <div
+            className="video-likes-dislikes"
             style={{
               display: "flex",
               flexDirection: "row",

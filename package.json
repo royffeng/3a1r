@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "format": "prettier --write \"frontend/**/*.js\""
+    "format": "prettier --write \"frontend/components/*.js\" \"frontend/pages/*.js\""
   },
   "dependencies": {
-    "prettier": "^2.7.1"
+    "prettier": "2.7.1"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0"

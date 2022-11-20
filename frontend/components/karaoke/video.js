@@ -156,8 +156,8 @@ export default function Video() {
   };
 
   return (
-    <div style={{ position: "relative" }}>
-      <video style={{ width: "90vw" }} ref={videoRef} />
+    <div style={{ width: "clamp(100%, 95vw, 100%)", position: "relative" }}>
+      <video style={{ width: "100%" }} ref={videoRef} />
       {isVideoPlaying && (
         <div
           onClick={handleSubTitleClick}
