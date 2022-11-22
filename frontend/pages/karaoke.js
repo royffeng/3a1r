@@ -51,6 +51,7 @@ export default function Karaoke() {
       if (disliked) {
         setDisliked(false);
         updateDislikes(vid, dislikes - 1);
+        // TODO SET UP LIKES / DISLIKES RELATION TABLE
         setDislikes((d) => d - 1);
       }
       if (liked) {
@@ -62,8 +63,6 @@ export default function Karaoke() {
         updateLikes(vid, likes + 1);
         setLikes((l) => l + 1);
       }
-
-      // database callback here
     },
     [likes, dislikes]
   );
@@ -84,9 +83,6 @@ export default function Karaoke() {
         updateDislikes(vid, dislikes + 1);
         setDislikes((d) => d + 1);
       }
-
-      setDisliked(!disliked);
-      // database callback here
     },
     [likes, dislikes]
   );
@@ -319,15 +315,6 @@ export default function Karaoke() {
               </Spoiler>
             </Alert>
             <Divider style={{ width: "100%" }} size="sm" />
-            <p
-              style={{
-                marginTop: "0.5rem",
-                fontSize: "1.5rem",
-                marginBottom: "1rem",
-              }}
-            >
-              Comments
-            </p>
             <Comments vid={videoMetaData.id} />
           </div>
         </>

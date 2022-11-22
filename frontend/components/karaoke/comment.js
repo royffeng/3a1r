@@ -3,55 +3,61 @@ import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import { Avatar } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { rectifyFormat } from "../../utils/formatUTC";
-import { useState, useEffect} from "react";
+import { useState, useEffect, useCallback} from "react";
 
 /* todo: 
   - recursive comments
   - format likes, dislikes and likes, dislike onclick
 */
 
-function Comment({ props }) {
-  let { content, created_at } = props;
+function Comment({ props, updateLikes, updateDislikes }) {
+  let { cid, content, created_at } = props;
   let { username, avatar_url } = props.profiles
   const [likes, setLikes] = useState(props.likes);
   const [dislikes, setDislikes] = useState(props.dislikes);
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
 
-  const handleLike = () => {
-    if(disliked) {
-      setDisliked(false);
-      setDislikes(d => d - 1)
-    }
-    if(liked) {
-      setLiked(false);
-      setLikes(l => l - 1)
-    } else {
-      console.log(liked)
-      setLiked(true);
-      setLikes(l => l + 1)
-    }
-    
-    // database callback here
-  }
+  const handleLike = useCallback(
+    () => {
+      if (disliked) {
+        setDisliked(false);
+        updateDislikes(cid, dislikes - 1);
+        setDislikes((d) => d - 1);
+      }
+      if (liked) {
+        setLiked(false);
+        updateLikes(cid, likes - 1);
+        setLikes((l) => l - 1);
+      } else {
+        setLiked(true);
+        updateLikes(cid, likes + 1);
+        setLikes((l) => l + 1);
+      }
+    },
+    [cid, likes, dislikes]
+  );
 
-  const handleDislike = () => {
-    if(liked) {
-      setLiked(false);
-      setLikes(l => l - 1);
-    }
-    if(disliked) {
-      setDisliked(false);
-      setDislikes(d => d - 1)
-    } else {
-      setDisliked(true);
-      setDislikes(d => d + 1)
-    }
-
-
-    setDisliked(!disliked);
-    // database callback here
-  }
+  const handleDislike = useCallback(
+    () => {
+      if (liked) {
+        setLiked(false);
+        updateLikes(cid, likes - 1);
+        setLikes((l) => l - 1);
+      }
+      if (disliked) {
+        setDisliked(false);
+        updateDislikes(cid, dislikes - 1);
+        setDislikes((d) => d - 1);
+      } else {
+        setDisliked(true);
+        updateDislikes(cid, dislikes + 1);
+        setDislikes((d) => d + 1);
+        // TODO SET UP LIKES / DISLIKES RELATION TABLE
+      }
+    },
+    [cid, likes, dislikes]
+  );
 
   return (
     <div style={{ display: "flex", flexDirection: "row", marginBottom: "1rem" }}>
@@ -80,11 +86,12 @@ function Comment({ props }) {
             marginBottom: "0.5rem",
           }}
         >
-          <p style={{ marginBottom: 0, marginTop: 0, marginRight: "0.5rem" }}>
+          <p style={{ fontWeight: "bold",marginBottom: 0, marginTop: 0, marginRight: "0.5rem" }}>
             {username}
           </p>
           <p
             style={{
+              color: "gray",
               fontSize: "0.9rem",
               marginTop: 0,
               marginBottom: 0,
@@ -103,7 +110,7 @@ function Comment({ props }) {
           }}
         >
           <Button
-            onClick={handleLike}
+            onClick={() => handleLike()}
             style={{ marginRight: "0.25rem" }}
             color="gray"
             compact
@@ -116,7 +123,7 @@ function Comment({ props }) {
             <p style={{ marginLeft: "0.5rem", color: liked ? 'green' : 'gray'}}>{likes}</p>
           </Button>
           <Button
-            onClick={handleDislike}
+            onClick={() => handleDislike()}
             style={{ marginRight: "0.25rem" }}
             color="gray"
             compact
@@ -136,6 +143,29 @@ function Comment({ props }) {
 export default function Comments({vid}) {
   const supabase = useSupabaseClient();
   const [commentData, setCommentData] = useState([])
+
+  const updateLikes = useCallback(async (cid, likes) => {
+    let { error } = await supabase
+      .from("comments")
+      .update({ likes: likes })
+      .eq("cid", cid);
+
+    if (error) {
+      console.log("error: ", error);
+    }
+  }, []);
+
+  const updateDislikes = useCallback(async (cid, dislikes) => {
+    let { error } = await supabase
+      .from("comments")
+      .update({ dislikes: dislikes })
+      .eq("cid", cid);
+
+    if (error) {
+      console.log("error: ", error);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       let { data, error } = await supabase
@@ -151,7 +181,8 @@ export default function Comments({vid}) {
             avatar_url
           )
         `)
-        .filter("vid", "eq", vid);
+        .filter("vid", "eq", vid)
+        .order('likes', {ascending: false});
       if (error) {
         console.log("error: ", error);
         return;
@@ -165,24 +196,23 @@ export default function Comments({vid}) {
     }
   }, [vid]);
 
-
-  // TODO
-  // const handleLike = async () => {
-  //   let { error } = await supabase
-  //     .from('comment')
-  //     .update({ likes: data[0].views + 1 })
-  //     .eq('cid', cid);
-
-  //   data[0].views = data[0].views + 1;
-  // }
-
   return (
     <>
       {commentData !== undefined && commentData.length !== 0 && (
-        commentData.map((comment) => (
-          <Comment key={comment.cid} props={comment} />
-        ))
-      )}
+      <>  
+        <p
+          style={{
+            marginTop: "0.5rem",
+            fontSize: "1.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+        {commentData.length} Comments
+      </p>
+        {commentData.map((comment) => (
+          <Comment key={comment.cid} props={comment} updateLikes={updateLikes} updateDislikes={updateDislikes}/>
+        ))}
+      </>)}
     </>
   );
 }
