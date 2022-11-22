@@ -1,4 +1,3 @@
-import { supabase } from "../../lib/initSupabase";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Hls from "hls.js";
 import Plyr from "plyr";
@@ -30,7 +29,6 @@ export default function Video({videoSource, lyricsArr}) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [timeoutId, setTimeoutId] = useState(0);
   const videoRef = useRef(null);
-  let player = null;
 
 
   const setSelectors = useCallback(() => {
@@ -84,7 +82,7 @@ export default function Video({videoSource, lyricsArr}) {
     } else {
       const hls = new Hls();
       hls.loadSource(videoSource);
-      player = new Plyr(video, options);
+      new Plyr(video, options);
       hls.attachMedia(video);
       setSelectors();
     }

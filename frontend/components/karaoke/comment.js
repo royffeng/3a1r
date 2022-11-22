@@ -1,8 +1,9 @@
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import { Avatar } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { rectifyFormat } from "../../utils/formatUTC";
-import { COMMENTS } from "./twiceDemo";
+import { useState, useEffect} from "react";
 
 /* todo: 
   - recursive comments
@@ -10,15 +11,65 @@ import { COMMENTS } from "./twiceDemo";
 */
 
 function Comment({ props }) {
-  let { content, authorUsername, date, likes, dislikes } = props;
+  let { content, created_at } = props;
+  let { username, avatar_url } = props.profiles
+  const [likes, setLikes] = useState(props.likes);
+  const [dislikes, setDislikes] = useState(props.dislikes);
+  const [liked, setLiked] = useState(false); // initial value depends on query
+  const [disliked, setDisliked] = useState(false); // initial value depends on query
+
+  const handleLike = () => {
+    if(disliked) {
+      setDisliked(false);
+      setDislikes(d => d - 1)
+    }
+    if(liked) {
+      setLiked(false);
+      setLikes(l => l - 1)
+    } else {
+      console.log(liked)
+      setLiked(true);
+      setLikes(l => l + 1)
+    }
+    
+    // database callback here
+  }
+
+  const handleDislike = () => {
+    if(liked) {
+      setLiked(false);
+      setLikes(l => l - 1);
+    }
+    if(disliked) {
+      setDisliked(false);
+      setDislikes(d => d - 1)
+    } else {
+      setDisliked(true);
+      setDislikes(d => d + 1)
+    }
+
+
+    setDisliked(!disliked);
+    // database callback here
+  }
+
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
+    <div style={{ display: "flex", flexDirection: "row", marginBottom: "1rem" }}>
       <div>
-        <Avatar
-          style={{ marginRight: "1rem" }}
-          radius="xl"
-          alt="no image here"
-        />
+        {avatar_url !== undefined ? (
+          <Avatar
+            src={avatar_url}
+            style={{ marginRight: "1rem" }}
+            radius="xl"
+            alt="no image here"
+          />
+        ) : (
+          <Avatar
+            style={{ marginRight: "1rem" }}
+            radius="xl"
+            alt="no image here"
+          />
+        )}
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div
@@ -30,7 +81,7 @@ function Comment({ props }) {
           }}
         >
           <p style={{ marginBottom: 0, marginTop: 0, marginRight: "0.5rem" }}>
-            {authorUsername}
+            {username}
           </p>
           <p
             style={{
@@ -40,10 +91,10 @@ function Comment({ props }) {
               marginRight: "0.5rem",
             }}
           >
-            {rectifyFormat(date)}
+            {rectifyFormat(created_at)}
           </p>
         </div>
-        <p style={{ margin: 0 }}>{content}</p>
+        <p style={{ marginTop: 0, marginBottom: "0.5rem" }}>{content}</p>
         <div
           style={{
             display: "flex",
@@ -52,39 +103,86 @@ function Comment({ props }) {
           }}
         >
           <Button
+            onClick={handleLike}
             style={{ marginRight: "0.25rem" }}
             color="gray"
             compact
-            size="xs"
+            size="sm"
             variant="light"
             radius="xl"
+            on
           >
-            <AiFillLike size={12} />
+            <AiFillLike color={liked ? 'green' : 'gray'} size={12} />
+            <p style={{ marginLeft: "0.5rem", color: liked ? 'green' : 'gray'}}>{likes}</p>
           </Button>
-          <p style={{ marginRight: "1rem" }}>{likes}</p>
           <Button
+            onClick={handleDislike}
             style={{ marginRight: "0.25rem" }}
             color="gray"
             compact
-            size="xs"
+            size="sm"
             variant="light"
             radius="xl"
           >
-            <AiFillDislike size={12} />{" "}
+            <AiFillDislike color={disliked ? 'red' : 'gray'} size={12} />
+            <p style={{marginLeft: "0.5rem", color: disliked ? 'red' : 'gray'}}>{dislikes}</p>
           </Button>
-          <p>{dislikes}</p>
         </div>
       </div>
     </div>
   );
 }
 
-export default function Comments() {
+export default function Comments({vid}) {
+  const supabase = useSupabaseClient();
+  const [commentData, setCommentData] = useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      let { data, error } = await supabase
+        .from("comments")
+        .select(`
+          cid, 
+          content,
+          created_at,
+          likes,
+          dislikes,
+          profiles(
+            username,
+            avatar_url
+          )
+        `)
+        .filter("vid", "eq", vid);
+      if (error) {
+        console.log("error: ", error);
+        return;
+      } else {
+        setCommentData(data);
+      }
+    };
+
+    if (vid) {
+      fetchData();
+    }
+  }, [vid]);
+
+
+  // TODO
+  // const handleLike = async () => {
+  //   let { error } = await supabase
+  //     .from('comment')
+  //     .update({ likes: data[0].views + 1 })
+  //     .eq('cid', cid);
+
+  //   data[0].views = data[0].views + 1;
+  // }
+
   return (
     <>
-      {COMMENTS.map((comment) => (
-        <Comment key={comment.authorUsername} props={comment} />
-      ))}
+      {commentData !== undefined && commentData.length !== 0 && (
+        commentData.map((comment) => (
+          <Comment key={comment.cid} props={comment} />
+        ))
+      )}
     </>
   );
 }
