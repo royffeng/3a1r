@@ -1,69 +1,218 @@
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import { Avatar } from "@mantine/core";
 import { Button } from "@mantine/core";
+import { rectifyFormat } from "../../utils/formatUTC";
+import { useState, useEffect, useCallback} from "react";
 
 /* todo: 
   - recursive comments
-  - how long ago
-  - format likes, dislikes
+  - format likes, dislikes and likes, dislike onclick
 */
-const COMMENTS = [
-  {  
-    content: "Estamos a 4.8 M de vistas para los 100 M vamos ONCE Y FANS DEL KPOP APOYEN ESTA JOYA , UN GRUPO COMO TWICE SE MERECE MUCHO MAS APOYO .",
-    authorUsername: "jinniologist",
-    likes: 168,
-    dislikes: 10,
-  },
-  {  
-    content: "Visual, Vocal, Choreo, literally everything in this is really amazing!!! TWICE gave us the another masterpiece.",
-    authorUsername: "ONCE FOREVER!!",
-    likes: 78,
-    dislikes: 10,
-  },
-  {  
-    content: "this album is absolutely amazing. Solidifies TWICE not only as a korean artist but as a fully grown global artist",
-    authorUsername: "Byrnisonn",
-    likes: 48,
-    dislikes: 10,
-  },
-  {
-    content: "TWICE has surpassed 1.4 MILLION points on Billboard Japan Hot 100! They are the first Korean act to reach this milestone",
-    authorUsername: "Life of Mori",
-    likes: 18,
-    dislikes: 0,
-  }
-]
 
-function Comment({props}) {
-  let {content, authorUsername, likes, dislikes} = props;
-  console.log(props);
+function Comment({ props, updateLikes, updateDislikes }) {
+  let { cid, content, created_at } = props;
+  let { username, avatar_url } = props.profiles
+  const [likes, setLikes] = useState(props.likes);
+  const [dislikes, setDislikes] = useState(props.dislikes);
+  const [liked, setLiked] = useState(false); // initial value depends on query
+  const [disliked, setDisliked] = useState(false); // initial value depends on query
+
+  const handleLike = useCallback(
+    () => {
+      if (disliked) {
+        setDisliked(false);
+        updateDislikes(cid, dislikes - 1);
+        setDislikes((d) => d - 1);
+      }
+      if (liked) {
+        setLiked(false);
+        updateLikes(cid, likes - 1);
+        setLikes((l) => l - 1);
+      } else {
+        setLiked(true);
+        updateLikes(cid, likes + 1);
+        setLikes((l) => l + 1);
+      }
+    },
+    [cid, likes, dislikes]
+  );
+
+  const handleDislike = useCallback(
+    () => {
+      if (liked) {
+        setLiked(false);
+        updateLikes(cid, likes - 1);
+        setLikes((l) => l - 1);
+      }
+      if (disliked) {
+        setDisliked(false);
+        updateDislikes(cid, dislikes - 1);
+        setDislikes((d) => d - 1);
+      } else {
+        setDisliked(true);
+        updateDislikes(cid, dislikes + 1);
+        setDislikes((d) => d + 1);
+        // TODO SET UP LIKES / DISLIKES RELATION TABLE
+      }
+    },
+    [cid, likes, dislikes]
+  );
+
   return (
-    <div style={{display: "flex", flexDirection: "row"}}>
+    <div style={{ display: "flex", flexDirection: "row", marginBottom: "1rem" }}>
       <div>
-        <Avatar style={{marginRight: '1rem'}} radius="xl" alt="no image here"/>
+        {avatar_url !== undefined ? (
+          <Avatar
+            src={avatar_url}
+            style={{ marginRight: "1rem" }}
+            radius="xl"
+            alt="no image here"
+          />
+        ) : (
+          <Avatar
+            style={{ marginRight: "1rem" }}
+            radius="xl"
+            alt="no image here"
+          />
+        )}
       </div>
-      <div style={{display: "flex", flexDirection: "column"}}>
-        <div style={{display: "flex", flexDirection: "row"}}>
-          <p style={{marginBottom: 0, marginTop: 0}}>{authorUsername}</p>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignContent: "flex-start",
+            marginBottom: "0.5rem",
+          }}
+        >
+          <p style={{ fontWeight: "bold",marginBottom: 0, marginTop: 0, marginRight: "0.5rem" }}>
+            {username}
+          </p>
+          <p
+            style={{
+              color: "gray",
+              fontSize: "0.9rem",
+              marginTop: 0,
+              marginBottom: 0,
+              marginRight: "0.5rem",
+            }}
+          >
+            {rectifyFormat(created_at)}
+          </p>
         </div>
-        <p>{content}</p>
-        <div style={{display: "flex", flexDirection: "row", alignItems: 'center'}}>
-          <Button variant="light" radius="xl"><AiFillLike size={14}/></Button>
-          <p style= {{marginRight: "1rem"}}>{likes}</p>
-          <Button variant="light" radius="xl"><AiFillDislike size={14}/> </Button>
-          <p>{dislikes}</p>
+        <p style={{ marginTop: 0, marginBottom: "0.5rem" }}>{content}</p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            onClick={() => handleLike()}
+            style={{ marginRight: "0.25rem" }}
+            color="gray"
+            compact
+            size="sm"
+            variant="light"
+            radius="xl"
+            on
+          >
+            <AiFillLike color={liked ? 'green' : 'gray'} size={12} />
+            <p style={{ marginLeft: "0.5rem", color: liked ? 'green' : 'gray'}}>{likes}</p>
+          </Button>
+          <Button
+            onClick={() => handleDislike()}
+            style={{ marginRight: "0.25rem" }}
+            color="gray"
+            compact
+            size="sm"
+            variant="light"
+            radius="xl"
+          >
+            <AiFillDislike color={disliked ? 'red' : 'gray'} size={12} />
+            <p style={{marginLeft: "0.5rem", color: disliked ? 'red' : 'gray'}}>{dislikes}</p>
+          </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default function Comments() {
+export default function Comments({vid}) {
+  const supabase = useSupabaseClient();
+  const [commentData, setCommentData] = useState([])
+
+  const updateLikes = useCallback(async (cid, likes) => {
+    let { error } = await supabase
+      .from("comments")
+      .update({ likes: likes })
+      .eq("cid", cid);
+
+    if (error) {
+      console.log("error: ", error);
+    }
+  }, []);
+
+  const updateDislikes = useCallback(async (cid, dislikes) => {
+    let { error } = await supabase
+      .from("comments")
+      .update({ dislikes: dislikes })
+      .eq("cid", cid);
+
+    if (error) {
+      console.log("error: ", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let { data, error } = await supabase
+        .from("comments")
+        .select(`
+          cid, 
+          content,
+          created_at,
+          likes,
+          dislikes,
+          profiles(
+            username,
+            avatar_url
+          )
+        `)
+        .filter("vid", "eq", vid)
+        .order('likes', {ascending: false});
+      if (error) {
+        console.log("error: ", error);
+        return;
+      } else {
+        setCommentData(data);
+      }
+    };
+
+    if (vid) {
+      fetchData();
+    }
+  }, [vid]);
+
   return (
     <>
-     {COMMENTS.map((comment) => (
-        <Comment props={comment}/>
-     ))}
+      {commentData !== undefined && commentData.length !== 0 && (
+      <>  
+        <p
+          style={{
+            marginTop: "0.5rem",
+            fontSize: "1.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+        {commentData.length} Comments
+      </p>
+        {commentData.map((comment) => (
+          <Comment key={comment.cid} props={comment} updateLikes={updateLikes} updateDislikes={updateDislikes}/>
+        ))}
+      </>)}
     </>
-  )
+  );
 }
