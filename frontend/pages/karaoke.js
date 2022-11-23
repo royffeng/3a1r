@@ -10,7 +10,7 @@ import { Loader } from "@mantine/core";
 import Video from "../components/karaoke/video";
 import "plyr/dist/plyr.css";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
-import Comments from "../components/karaoke/comment";
+import Comments from "../components/karaoke/comments";
 
 export default function Karaoke() {
   const supabase = useSupabaseClient();
