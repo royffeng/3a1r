@@ -23,44 +23,81 @@ export default function Karaoke() {
   const [dislikes, setDislikes] = useState();
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
-
-  const updateLikes = useCallback(async (vid, likes) => {
-    let { error } = await supabase
-      .from("video")
-      .update({ likes: likes })
-      .eq("id", vid);
-
-    if (error) {
-      console.log("error: ", error);
-    }
+  const uid = useMemo(() => {
+    return "753b8a89-0624-4dd5-9592-89c664a806c3";
+    // temp value until auth is finished
   }, []);
 
-  const updateDislikes = useCallback(async (vid, dislikes) => {
-    let { error } = await supabase
-      .from("video")
-      .update({ dislikes: dislikes })
-      .eq("id", vid);
+  const insertLikes = useCallback(
+    async (vid) => {
+      let { error } = await supabase
+        .from("videoLikes")
+        .insert({ uid: uid, vid: vid });
 
-    if (error) {
-      console.log("error: ", error);
-    }
-  }, []);
+      if (error) {
+        console.log("insert video likes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const deleteLikes = useCallback(
+    async (vid) => {
+      let { error } = await supabase
+        .from("videoLikes")
+        .delete()
+        .eq("uid", uid)
+        .eq("vid", vid);
+
+      if (error) {
+        console.log("delete video likes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const insertDislikes = useCallback(
+    async (vid) => {
+      let { error } = await supabase
+        .from("videoDislikes")
+        .insert({ uid: uid, vid: vid });
+
+      if (error) {
+        console.log("insert video dislikes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const deleteDislikes = useCallback(
+    async (vid) => {
+      let { error } = await supabase
+        .from("videoDislikes")
+        .delete()
+        .eq("uid", uid)
+        .eq("vid", vid);
+
+      if (error) {
+        console.log("delete video dislikes error: ", error);
+      }
+    },
+    [uid]
+  );
 
   const handleLike = useCallback(
     (vid) => {
       if (disliked) {
         setDisliked(false);
-        updateDislikes(vid, dislikes - 1);
-        // TODO SET UP LIKES / DISLIKES RELATION TABLE
+        deleteDislikes(vid);
         setDislikes((d) => d - 1);
       }
       if (liked) {
         setLiked(false);
-        updateLikes(vid, likes - 1);
+        deleteLikes(vid);
         setLikes((l) => l - 1);
       } else {
         setLiked(true);
-        updateLikes(vid, likes + 1);
+        insertLikes(vid);
         setLikes((l) => l + 1);
       }
     },
@@ -71,16 +108,16 @@ export default function Karaoke() {
     (vid) => {
       if (liked) {
         setLiked(false);
-        updateLikes(vid, likes - 1);
+        deleteLikes(vid);
         setLikes((l) => l - 1);
       }
       if (disliked) {
         setDisliked(false);
-        updateDislikes(vid, dislikes - 1);
+        deleteDislikes(vid);
         setDislikes((d) => d - 1);
       } else {
         setDisliked(true);
-        updateDislikes(vid, dislikes + 1);
+        insertDislikes(vid);
         setDislikes((d) => d + 1);
       }
     },
@@ -93,26 +130,27 @@ export default function Karaoke() {
         .from("video")
         .select(
           `
-          id,
-          audiourl,
-          created_at,
-          description,
-          dislikes,
-          likes,
-          lyrics,
-          title,
-          videourl,
-          audiourl,
-          views,
-          profiles(
-            username,
-            avatar_url
-          )
-        `
+            id,
+            audiourl,
+            created_at,
+            description,
+            dislikes,
+            likes,
+            lyrics,
+            title,
+            videourl,
+            audiourl,
+            views,
+            profiles(
+              username,
+              avatar_url
+            )
+          `
         )
         .filter("id", "eq", vid);
+
       if (error) {
-        console.log("error: ", error);
+        console.log("error getting videos: ", error);
         return;
       } else {
         let { error } = await supabase
@@ -123,9 +161,23 @@ export default function Karaoke() {
         data[0].views = data[0].views + 1;
 
         if (error) {
-          console.log("error: ", error);
+          console.log("error updating views for video: ", error);
         }
 
+        let videoLikedData = await supabase
+          .from("videoLikes")
+          .select()
+          .eq("uid", uid)
+          .eq("vid", vid);
+
+        let videoDislikedData = await supabase
+          .from("videoDislikes")
+          .select()
+          .eq("uid", uid)
+          .eq("vid", vid);
+
+        setLiked(videoLikedData.data.length !== 0);
+        setDisliked(videoDislikedData.data.length !== 0);
         setVideoMediaData(data[0]);
         setLikes(data[0].likes);
         setDislikes(data[0].dislikes);
@@ -306,9 +358,14 @@ export default function Karaoke() {
               <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
                 <p style={{ margin: 0 }}>Description:</p>
                 <div style={{ marginTop: "0.25rem" }}>
-                  {videoMetaData.description.split("\n").map((s) => {
+                  {videoMetaData.description.split("\n").map((s, i) => {
+                    if (s == "") {
+                      return <br key={i} />;
+                    }
                     return (
-                      <>{s == "" ? <br /> : <p style={{ margin: 0 }}>{s}</p>}</>
+                      <p key={`description ${s}`} style={{ margin: 0 }}>
+                        {s}
+                      </p>
                     );
                   })}
                 </div>

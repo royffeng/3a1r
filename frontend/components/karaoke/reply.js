@@ -18,6 +18,7 @@ export default function Reply({
   const supabase = useSupabaseClient();
   const uid = useMemo(() => {
     return "753b8a89-0624-4dd5-9592-89c664a806c3";
+    // temp value until auth is finished
   }, []);
 
   const handleCommentSubmit = async (vid, uid, content) => {

@@ -1,36 +1,75 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Collapse } from "@mantine/core";
 import { Button } from "@mantine/core";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
 import Comment from "./comment";
 
-export default function Replies({ pid, sessionAvatarUrl }) {
+export default function Replies({ vid, pid, sessionAvatarUrl }) {
   const supabase = useSupabaseClient();
   const [commentData, setCommentData] = useState([]);
   const [opened, setOpened] = useState(false);
 
-  const updateLikes = useCallback(async (id, likes) => {
-    let { error } = await supabase
-      .from("replies")
-      .update({ likes: likes })
-      .eq("cid", id);
-
-    if (error) {
-      console.log("error: ", error);
-    }
+  const uid = useMemo(() => {
+    return "753b8a89-0624-4dd5-9592-89c664a806c3";
+    // temp value until auth is finished
   }, []);
 
-  const updateDislikes = useCallback(async (id, dislikes) => {
-    let { error } = await supabase
-      .from("replies")
-      .update({ dislikes: dislikes })
-      .eq("cid", id);
+  const insertLikes = useCallback(
+    async (rid) => {
+      let { error } = await supabase
+        .from("replyLikes")
+        .insert({ uid: uid, rid: rid });
 
-    if (error) {
-      console.log("error: ", error);
-    }
-  }, []);
+      if (error) {
+        console.log("insert reply likes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const deleteLikes = useCallback(
+    async (rid) => {
+      let { error } = await supabase
+        .from("replyLikes")
+        .delete()
+        .eq("uid", uid)
+        .eq("rid", rid);
+
+      if (error) {
+        console.log("delete reply likes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const insertDislikes = useCallback(
+    async (rid) => {
+      let { error } = await supabase
+        .from("replyDislikes")
+        .insert({ uid: uid, rid: rid });
+
+      if (error) {
+        console.log("insert reply dislikes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const deleteDislikes = useCallback(
+    async (rid) => {
+      let { error } = await supabase
+        .from("replyDislikes")
+        .delete()
+        .eq("uid", uid)
+        .eq("rid", rid);
+
+      if (error) {
+        console.log("delete reply dislikes error: ", error);
+      }
+    },
+    [uid]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,11 +119,17 @@ export default function Replies({ pid, sessionAvatarUrl }) {
           </Button>
           <Collapse in={opened}>
             {commentData.map((comment) => (
-              <div key={comment.cid} style={{ marginBottom: "0.5rem" }}>
+              <div
+                key={`reply: ${comment.cid}`}
+                style={{ marginBottom: "0.5rem" }}
+              >
                 <Comment
                   commentData={comment}
-                  updateLikes={updateLikes}
-                  updateDislikes={updateDislikes}
+                  vid={vid}
+                  insertLikes={insertLikes}
+                  insertDislikes={insertDislikes}
+                  deleteLikes={deleteLikes}
+                  deleteDislikes={deleteDislikes}
                   sessionAvatarUrl={sessionAvatarUrl}
                 />
               </div>

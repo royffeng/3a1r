@@ -1,37 +1,119 @@
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Avatar } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { rectifyFormat } from "../../utils/formatUTC";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import Reply from "./reply";
 
 export default function Comment({
   commentData,
-  updateLikes,
-  updateDislikes,
+  vid,
+  insertLikes,
+  insertDislikes,
+  deleteLikes,
+  deleteDislikes,
   sessionAvatarUrl,
 }) {
-  let { pid, cid, content, created_at } = commentData;
-  let { username, avatar_url } = commentData.profiles;
+  const supabase = useSupabaseClient();
+  let { pid, cid, content, created_at } = useMemo(() => {
+    return commentData;
+  }, [commentData]);
+  let { username, avatar_url } = useMemo(() => {
+    return commentData.profiles;
+  }, [commentData]);
   const [likes, setLikes] = useState(commentData.likes);
   const [dislikes, setDislikes] = useState(commentData.dislikes);
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
   const [showReply, setShowReply] = useState(false);
+  const uid = useMemo(() => {
+    return "753b8a89-0624-4dd5-9592-89c664a806c3";
+    // temp value until auth is finished
+  }, []);
+
+  useEffect(() => {
+    const getInitialLikedState = async () => {
+      if (pid !== null && pid !== undefined) {
+        // reply
+        let replyLikedData = await supabase
+          .from("replyLikes")
+          .select()
+          .eq("uid", uid)
+          .eq("rid", cid);
+
+        let replyDisLikedData = await supabase
+          .from("replyDislikes")
+          .select()
+          .eq("uid", uid)
+          .eq("rid", cid);
+
+        if (replyLikedData.error) {
+          console.log(
+            "error getting initial reply liked state: ",
+            replyLikedData.error
+          );
+        }
+
+        if (replyDisLikedData.error) {
+          console.log(
+            "error getting initial reply disliked state: ",
+            replyDisLikedData.error
+          );
+        }
+
+        setLiked(replyLikedData.data.length !== 0);
+        setDisliked(replyDisLikedData.data.length !== 0);
+      } else {
+        // comment
+        let commentLikedData = await supabase
+          .from("commentLikes")
+          .select()
+          .eq("uid", uid)
+          .eq("cid", cid);
+
+        let commentDislikedData = await supabase
+          .from("commentDislikes")
+          .select()
+          .eq("uid", uid)
+          .eq("cid", cid);
+
+        if (commentLikedData.error) {
+          console.log(
+            "error getting initial comment liked state: ",
+            commentLikedData.error
+          );
+        }
+
+        if (commentDislikedData.error) {
+          console.log(
+            "error getting initial comment disliked state: ",
+            commentLikedData.error
+          );
+        }
+        setLiked(commentLikedData.data.length !== 0);
+        setDisliked(commentDislikedData.data.length !== 0);
+      }
+    };
+
+    if (vid && uid) {
+      getInitialLikedState();
+    }
+  }, [uid, pid, vid]);
 
   const handleLike = useCallback(() => {
     if (disliked) {
       setDisliked(false);
-      updateDislikes(cid, dislikes - 1);
+      deleteDislikes(cid);
       setDislikes((d) => d - 1);
     }
     if (liked) {
       setLiked(false);
-      updateLikes(cid, likes - 1);
+      deleteLikes(cid);
       setLikes((l) => l - 1);
     } else {
       setLiked(true);
-      updateLikes(cid, likes + 1);
+      insertLikes(cid);
       setLikes((l) => l + 1);
     }
   }, [cid, likes, dislikes]);
@@ -39,18 +121,17 @@ export default function Comment({
   const handleDislike = useCallback(() => {
     if (liked) {
       setLiked(false);
-      updateLikes(cid, likes - 1);
+      deleteLikes(cid);
       setLikes((l) => l - 1);
     }
     if (disliked) {
       setDisliked(false);
-      updateDislikes(cid, dislikes - 1);
+      deleteDislikes(cid);
       setDislikes((d) => d - 1);
     } else {
       setDisliked(true);
-      updateDislikes(cid, dislikes + 1);
+      insertDislikes(cid);
       setDislikes((d) => d + 1);
-      // TODO SET UP LIKES / DISLIKES RELATION TABLE
     }
   }, [cid, likes, dislikes]);
 

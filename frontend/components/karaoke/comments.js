@@ -1,6 +1,6 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Comment from "./comment";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Replies from "./replies";
 import Reply from "./reply";
 
@@ -9,28 +9,66 @@ export default function Comments({ vid }) {
   const [commentData, setCommentData] = useState([]);
   const [avatarWait, setAvatarWait] = useState(true);
   const [avatar_url, setAvatarUrl] = useState("");
-
-  const updateLikes = useCallback(async (cid, likes) => {
-    let { error } = await supabase
-      .from("comments")
-      .update({ likes: likes })
-      .eq("cid", cid);
-
-    if (error) {
-      console.log("error: ", error);
-    }
+  const uid = useMemo(() => {
+    return "753b8a89-0624-4dd5-9592-89c664a806c3";
+    // temp value until auth is finished
   }, []);
 
-  const updateDislikes = useCallback(async (cid, dislikes) => {
-    let { error } = await supabase
-      .from("comments")
-      .update({ dislikes: dislikes })
-      .eq("cid", cid);
+  const insertLikes = useCallback(
+    async (cid) => {
+      let { error } = await supabase
+        .from("commentLikes")
+        .insert({ uid: uid, cid: cid });
 
-    if (error) {
-      console.log("error: ", error);
-    }
-  }, []);
+      if (error) {
+        console.log("insert comment likes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const deleteLikes = useCallback(
+    async (cid) => {
+      let { error } = await supabase
+        .from("commentLikes")
+        .delete()
+        .eq("uid", uid)
+        .eq("cid", cid);
+
+      if (error) {
+        console.log("delete comment likes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const insertDislikes = useCallback(
+    async (cid) => {
+      let { error } = await supabase
+        .from("commentDislikes")
+        .insert({ uid: uid, cid: cid });
+
+      if (error) {
+        console.log("insert comment dislikes error: ", error);
+      }
+    },
+    [uid]
+  );
+
+  const deleteDislikes = useCallback(
+    async (cid) => {
+      let { error } = await supabase
+        .from("commentDislikes")
+        .delete()
+        .eq("uid", uid)
+        .eq("cid", cid);
+
+      if (error) {
+        console.log("delete comment dislikes error: ", error);
+      }
+    },
+    [uid]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +90,7 @@ export default function Comments({ vid }) {
         .filter("vid", "eq", vid)
         .order("likes", { ascending: false });
       if (error) {
-        console.log("error: ", error);
+        console.log("error getting comments: ", error);
         return;
       } else {
         setCommentData(data);
@@ -61,10 +99,10 @@ export default function Comments({ vid }) {
       ({ data, error } = await supabase
         .from("profiles")
         .select(`avatar_url`)
-        .filter("id", "eq", "753b8a89-0624-4dd5-9592-89c664a806c3"));
+        .filter("id", "eq", uid));
 
       if (error) {
-        console.log("error: ", error);
+        console.log("error getting user profile: ", error);
         return;
       } else {
         setAvatarUrl(data[0].avatar_url);
@@ -72,10 +110,10 @@ export default function Comments({ vid }) {
       setAvatarWait(false);
     };
 
-    if (vid) {
+    if (vid && uid) {
       fetchData();
     }
-  }, [vid]);
+  }, [vid, uid]);
 
   return (
     <>
@@ -99,18 +137,22 @@ export default function Comments({ vid }) {
           />
           {commentData.map((comment) => (
             <div
-              key={comment.cid}
+              key={`comment: ${comment.cid}`}
               className="comment"
               style={{ marginBottom: "1rem" }}
             >
               <Comment
                 commentData={comment}
-                updateLikes={updateLikes}
-                updateDislikes={updateDislikes}
+                vid={vid}
+                insertLikes={insertLikes}
+                insertDislikes={insertDislikes}
+                deleteLikes={deleteLikes}
+                deleteDislikes={deleteDislikes}
                 sessionAvatarUrl={avatar_url}
               />
               <Replies
                 key={`${comment.cid} replies`}
+                vid={vid}
                 pid={comment.cid}
                 sessionAvatarUrl={avatar_url}
               />
