@@ -23,13 +23,12 @@ const findIndex = (time, lyricsArr) => {
   return -1;
 };
 
-export default function Video({videoSource, lyricsArr}) {
+export default function Video({ videoSource, lyricsArr }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [lyricsIndex, setLyricsIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0);
   const [timeoutId, setTimeoutId] = useState(0);
   const videoRef = useRef(null);
-
 
   const setSelectors = useCallback(() => {
     document
@@ -62,19 +61,9 @@ export default function Video({videoSource, lyricsArr}) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video || videoSource == "") return;
-
-    video.controls = true;
+    video.disablePictureInPicture = true;
     const options = {
-      controls: [
-        "play-large",
-        "play",
-        "progress",
-        "current-time",
-        "mute",
-        "volume",
-        "captions",
-        "airplay",
-      ],
+      controls: ["play", "progress", "current-time", "mute", "volume"],
       fullscreen: { enabled: false },
     };
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
@@ -82,6 +71,7 @@ export default function Video({videoSource, lyricsArr}) {
     } else {
       const hls = new Hls();
       hls.loadSource(videoSource);
+      // new Plyr(video)
       new Plyr(video, options);
       hls.attachMedia(video);
       setSelectors();
@@ -140,7 +130,11 @@ export default function Video({videoSource, lyricsArr}) {
 
   return (
     <div style={{ width: "clamp(100%, 95vw, 100%)", position: "relative" }}>
-      <video style={{ width: "100%" }} ref={videoRef} />
+      <video
+        disablePictureInPicture
+        style={{ maxHeight: "100vh", width: "100%" }}
+        ref={videoRef}
+      />
       {isVideoPlaying && (
         <div
           onClick={handleSubTitleClick}
