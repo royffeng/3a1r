@@ -155,6 +155,8 @@ export default function Video({ videoSource, lyricsArr }) {
             color="white"
             style={{
               fontSize: "3rem",
+              textShadow:
+                "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
             }}
           >
             {`${
