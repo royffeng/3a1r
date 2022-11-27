@@ -1,5 +1,12 @@
-import { Textarea, Button, LoadingOverlay, Avatar } from "@mantine/core";
-import { useState, useMemo } from "react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  LoadingOverlay,
+  Space,
+  Textarea,
+} from "@mantine/core";
+import { useMemo, useState } from "react";
 
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
@@ -49,31 +56,20 @@ export default function Reply({
   };
 
   return (
-    <div style={{ marginBottom: "0.375rem" }}>
+    <Flex sx={{ position: "relative" }}>
       <LoadingOverlay visible={loading} overlayBlur={2} />
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div>
+      <Flex direction="row" gap="md" sx={{ width: "100%" }}>
+        <>
           {avatar_url !== undefined ? (
-            <Avatar
-              src={avatar_url}
-              style={{ marginRight: "1rem" }}
-              radius="xl"
-              alt="no image here"
-            />
+            <Avatar src={avatar_url} radius="xl" alt="no image here" />
           ) : (
-            <Avatar
-              style={{ marginRight: "1rem" }}
-              radius="xl"
-              alt="no image here"
-            />
+            <Avatar radius="xl" alt="no image here" />
           )}
-        </div>
-        <div style={{ width: "100%" }}>
+        </>
+        <Flex direction="column" gap="sm" sx={{ width: "100%" }}>
           <Textarea
             onFocus={() => setShowButtons(true)}
-            style={{
-              marginBottom: "0.375rem",
-            }}
+            sx={{ width: "100%" }}
             value={value}
             onChange={(e) => setValue(e.currentTarget.value)}
             placeholder={placeholder}
@@ -81,9 +77,8 @@ export default function Reply({
             minRows={1}
           />
           {showButtons && (
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Flex justify="flex-end">
               <Button
-                style={{ marginRight: "0.5rem" }}
                 size="xs"
                 radius="xl"
                 variant="subtle"
@@ -95,6 +90,7 @@ export default function Reply({
               >
                 Cancel
               </Button>
+              <Space w="xs" />
               {value === "" ? (
                 <Button size="xs" radius="xl" disabled>
                   {type}
@@ -113,10 +109,10 @@ export default function Reply({
                   {type}
                 </Button>
               )}
-            </div>
+            </Flex>
           )}
-        </div>
-      </div>
-    </div>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 }

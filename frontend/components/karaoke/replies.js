@@ -1,7 +1,6 @@
+import { Button, Collapse, Flex, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Collapse } from "@mantine/core";
-import { Button } from "@mantine/core";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
 import Comment from "./comment";
 
@@ -106,22 +105,30 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
 
   return (
     <>
-      {commentData !== undefined && commentData.length !== 0 ? (
-        <div className="reply" style={{ marginLeft: "3.375rem" }}>
-          <Button
-            variant="subtle"
-            size="sm"
-            onClick={() => setOpened((o) => !o)}
-            radius="xl"
-            leftIcon={opened ? <GoChevronUp /> : <GoChevronDown />}
-          >
-            {commentData.length} replies
-          </Button>
+      {commentData !== undefined && commentData.length !== 0 && (
+        <Flex
+          direction="column"
+          className="reply"
+          style={{ marginLeft: "3.375rem" }}
+        >
+          <Space h="sm" />
+          <Flex>
+            <Button
+              variant="subtle"
+              size="sm"
+              onClick={() => setOpened((o) => !o)}
+              radius="xl"
+              leftIcon={opened ? <GoChevronUp /> : <GoChevronDown />}
+            >
+              {commentData.length} replies
+            </Button>
+          </Flex>
           <Collapse in={opened}>
+            <Space h="sm" />
             {commentData.map((comment) => (
               <div
                 key={`reply: ${comment.cid}`}
-                style={{ marginBottom: "0.5rem" }}
+                style={{ marginBottom: "0.5rem", width: "100%" }}
               >
                 <Comment
                   commentData={comment}
@@ -135,9 +142,7 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
               </div>
             ))}
           </Collapse>
-        </div>
-      ) : (
-        <> </>
+        </Flex>
       )}
     </>
   );

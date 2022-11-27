@@ -1,6 +1,7 @@
+import { Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Comment from "./comment";
-import { useState, useEffect, useCallback, useMemo } from "react";
 import Replies from "./replies";
 import Reply from "./reply";
 
@@ -118,16 +119,16 @@ export default function Comments({ vid }) {
   return (
     <>
       {commentData !== undefined && commentData.length !== 0 && !avatarWait && (
-        <div style={{ width: "100%" }}>
-          <p
+        <Flex direction="column" style={{ width: "100%" }}>
+          <Text
+            fz="xl"
             style={{
               marginTop: "0.5rem",
-              fontSize: "1.5rem",
               marginBottom: "1rem",
             }}
           >
             {commentData.length} Comments
-          </p>
+          </Text>
           <Reply
             placeholder={"Add a comment..."}
             avatar_url={avatar_url}
@@ -135,30 +136,34 @@ export default function Comments({ vid }) {
             vid={vid}
             initialShowButtons={false}
           />
+          <Space h="xl" />
           {commentData.map((comment) => (
-            <div
-              key={`comment: ${comment.cid}`}
-              className="comment"
-              style={{ marginBottom: "1rem" }}
-            >
-              <Comment
-                commentData={comment}
-                vid={vid}
-                insertLikes={insertLikes}
-                insertDislikes={insertDislikes}
-                deleteLikes={deleteLikes}
-                deleteDislikes={deleteDislikes}
-                sessionAvatarUrl={avatar_url}
-              />
-              <Replies
-                key={`${comment.cid} replies`}
-                vid={vid}
-                pid={comment.cid}
-                sessionAvatarUrl={avatar_url}
-              />
-            </div>
+            <>
+              <Flex
+                direction="column"
+                key={`comment: ${comment.cid}`}
+                className="comment"
+              >
+                <Comment
+                  commentData={comment}
+                  vid={vid}
+                  insertLikes={insertLikes}
+                  insertDislikes={insertDislikes}
+                  deleteLikes={deleteLikes}
+                  deleteDislikes={deleteDislikes}
+                  sessionAvatarUrl={avatar_url}
+                />
+                <Replies
+                  key={`${comment.cid} replies`}
+                  vid={vid}
+                  pid={comment.cid}
+                  sessionAvatarUrl={avatar_url}
+                />
+              </Flex>
+              <Space h="lg" />
+            </>
           ))}
-        </div>
+        </Flex>
       )}
     </>
   );
