@@ -1,16 +1,22 @@
+import {
+  Alert,
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Loader,
+  Space,
+  Spoiler,
+  Text,
+} from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { Alert, Spoiler } from "@mantine/core";
 import { useRouter } from "next/router";
-import { Avatar } from "@mantine/core";
-import { rectifyFormat } from "../utils/formatUTC";
-import { Button } from "@mantine/core";
-import { Divider } from "@mantine/core";
-import { Loader } from "@mantine/core";
-import Video from "../components/karaoke/video";
 import "plyr/dist/plyr.css";
-import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import Comments from "../components/karaoke/comments";
+import Video from "../components/karaoke/video";
+import { rectifyFormat } from "../utils/formatUTC";
 
 export default function Karaoke() {
   const supabase = useSupabaseClient();
@@ -246,133 +252,102 @@ export default function Karaoke() {
               alignItems: "start",
             }}
           >
-            <div
-              className="video-title"
-              style={{
-                marginBottom: "0.5rem",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "start",
-              }}
-            >
-              <p style={{ fontSize: "1.5rem", marginBottom: 0 }}>
-                {videoMetaData?.title}
-              </p>
-            </div>
-            <div
+            <Text style={{ fontSize: "1.5rem" }}>{videoMetaData?.title}</Text>
+            <Flex
               className="video-date-views"
-              style={{
-                marginBottom: "0.5rem",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "start",
-                alignItems: "center",
-              }}
+              direction="row"
+              justify="start"
+              align="center"
+              gap="sm"
             >
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  marginTop: 0,
-                  marginBottom: 0,
-                  marginRight: "0.5rem",
-                }}
-              >
-                {dateString}
-              </p>
-              <p style={{ fontSize: "0.9rem", marginTop: 0, marginBottom: 0 }}>
-                {videoViews} views
-              </p>
-            </div>
-            <div
+              <Text fz="md">{dateString}</Text>
+              <Text fz="md">{videoViews} views</Text>
+            </Flex>
+            <Flex
               className="video-user"
+              direction="row"
+              justify="space-between"
+              align="center"
               style={{
                 width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "2rem",
               }}
             >
-              <div
+              <Flex
+                direction="row"
+                align="center"
                 style={{
                   width: "100%",
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
                 }}
+                gap="sm"
               >
                 {videoMetaData.profiles.avatar_url !== undefined ? (
                   <Avatar
                     src={videoMetaData.profiles.avatar_url}
-                    style={{ marginRight: "0.5rem" }}
                     radius="xl"
                     alt="no image here"
                   />
                 ) : (
-                  <Avatar
-                    style={{ marginRight: "0.5rem" }}
-                    radius="xl"
-                    alt="no image here"
-                  />
+                  <Avatar radius="xl" alt="no image here" />
                 )}
-                <p style={{ margin: 0, marginRight: "0.5rem" }}>
-                  {videoMetaData.profiles.username}
-                </p>
-              </div>
-              <div
+                <Text>{videoMetaData.profiles.username}</Text>
+              </Flex>
+              <Flex
                 className="video-likes-dislikes"
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
+                direction="row"
+                align="center"
+                gap="xs"
               >
                 <Button
                   onClick={() => handleLike(videoMetaData.id)}
-                  style={{ marginRight: "0.25rem" }}
+                  leftIcon={
+                    <AiFillLike color={liked ? "green" : "gray"} size={12} />
+                  }
                   color="gray"
                   compact
                   size="md"
                   variant="light"
                   radius="xl"
                 >
-                  <AiFillLike color={liked ? "green" : "gray"} size={12} />
-                  <p style={{ marginLeft: "0.5rem" }}>{likes}</p>
+                  <Text>{likes}</Text>
                 </Button>
                 <Button
                   onClick={() => handleDislike(videoMetaData.id)}
-                  style={{ marginRight: "0.25rem" }}
+                  leftIcon={
+                    <AiFillDislike
+                      color={disliked ? "red" : "gray"}
+                      size={12}
+                    />
+                  }
                   color="gray"
                   compact
                   size="md"
                   variant="light"
                   radius="xl"
                 >
-                  <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
-                  <p style={{ marginLeft: "0.5rem" }}>{dislikes}</p>
-                </Button>{" "}
-              </div>
-            </div>
-            <Alert color="gray" style={{ width: "100%", marginBottom: "2rem" }}>
+                  <Text>{dislikes}</Text>
+                </Button>
+              </Flex>
+            </Flex>
+            <Space h="md" />
+            <Alert color="gray" style={{ width: "100%" }}>
               <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
-                <p style={{ margin: 0 }}>Description:</p>
-                <div style={{ marginTop: "0.25rem" }}>
-                  {videoMetaData.description.split("\n").map((s, i) => {
-                    if (s == "") {
-                      return <br key={i} />;
-                    }
-                    return (
-                      <p key={`description ${s}`} style={{ margin: 0 }}>
-                        {s}
-                      </p>
-                    );
-                  })}
-                </div>
+                <Text fz="sm">Description:</Text>
+                {videoMetaData.description.split("\n").map((s, i) => {
+                  if (s == "") {
+                    return <br key={i} />;
+                  }
+                  return (
+                    <Text fz="sm" key={`description ${s}`}>
+                      {s}
+                    </Text>
+                  );
+                })}
               </Spoiler>
             </Alert>
+            <Space h="xl" />
             <Divider style={{ width: "100%" }} size="sm" />
             <Comments vid={videoMetaData.id} />
+            <Space h="xl" />
           </div>
         </>
       )}

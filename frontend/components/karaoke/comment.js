@@ -1,9 +1,8 @@
-import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import { Avatar, Button, Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Avatar } from "@mantine/core";
-import { Button } from "@mantine/core";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { rectifyFormat } from "../../utils/formatUTC";
-import { useState, useCallback, useEffect, useMemo } from "react";
 import Reply from "./reply";
 
 export default function Comment({
@@ -141,126 +140,107 @@ export default function Comment({
 
   return (
     <>
-      <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
-        <div>
+      <Flex direction="row" gap="md">
+        <>
           {avatar_url !== undefined ? (
-            <Avatar
-              src={avatar_url}
-              style={{ marginRight: "1rem" }}
-              radius="xl"
-              alt="no image here"
-            />
+            <Avatar src={avatar_url} radius="xl" alt="no image here" />
           ) : (
-            <Avatar
-              style={{ marginRight: "1rem" }}
-              radius="xl"
-              alt="no image here"
-            />
+            <Avatar radius="xl" alt="no image here" />
           )}
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignContent: "flex-start",
-              marginBottom: "0.5rem",
-            }}
-          >
-            <p
-              style={{
-                fontWeight: "bold",
-                marginBottom: 0,
-                marginTop: 0,
-                marginRight: "0.5rem",
-              }}
-            >
+        </>
+        <Flex direction="column" sx={{ width: "100%" }}>
+          <Flex direction="row" gap="sm">
+            <Text fz="sm" fw={500}>
               {username}
-            </p>
-            <p
+            </Text>
+            <Text
+              fz="sm"
               style={{
                 color: "gray",
-                fontSize: "0.9rem",
-                marginTop: 0,
-                marginBottom: 0,
-                marginRight: "0.5rem",
               }}
             >
               {rectifyFormat(created_at)}
-            </p>
-          </div>
-          <p style={{ marginTop: 0, marginBottom: "0.5rem" }}>{content}</p>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
+            </Text>
+          </Flex>
+          <Text fz="sm" sx={{ marginBottom: "0.25rem" }}>
+            {content}
+          </Text>
+          <Flex
+            direction="row"
+            wrap="wrap"
+            align="center"
+            justify="flex-start"
+            gap="xs"
           >
             <Button
               onClick={() => handleLike()}
-              style={{ marginRight: "0.25rem" }}
+              leftIcon={
+                <AiFillLike color={liked ? "green" : "gray"} size={12} />
+              }
               color="gray"
               compact
               size="xs"
               variant="light"
               radius="xl"
             >
-              <AiFillLike color={liked ? "green" : "gray"} size={12} />
-              <p
-                style={{
-                  marginLeft: "0.5rem",
+              <Text
+                fz="xs"
+                sx={{
                   color: liked ? "green" : "gray",
                 }}
               >
                 {likes}
-              </p>
+              </Text>
             </Button>
             <Button
               onClick={() => handleDislike()}
-              style={{ marginRight: "0.25rem" }}
+              leftIcon={
+                <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
+              }
               color="gray"
               compact
               size="xs"
               variant="light"
               radius="xl"
             >
-              <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
-              <p
+              <Text
+                fz="xs"
                 style={{
-                  marginLeft: "0.5rem",
                   color: disliked ? "red" : "gray",
                 }}
               >
                 {dislikes}
-              </p>
+              </Text>
             </Button>
             <Button
               onClick={() => {
                 setShowReply(true);
               }}
               color="dark"
+              compact
               size="xs"
               variant="subtle"
               radius="xl"
             >
               Reply
             </Button>
-          </div>
-        </div>
-      </div>
-      {showReply ? (
-        <div style={{ marginLeft: "3.375rem" }}>
-          <Reply
-            placeholder={"Add a reply..."}
-            type="Reply"
-            pid={pid !== undefined ? pid : cid}
-            avatar_url={sessionAvatarUrl}
-            closeReply={closeReply}
-          />
-        </div>
-      ) : (
-        <></>
+          </Flex>
+        </Flex>
+      </Flex>
+      {showReply && (
+        <>
+          <Space h="sm" />
+          <Flex direction="column" sx={{ marginLeft: "3.375rem" }}>
+            <Reply
+              placeholder={"Add a reply..."}
+              type="Reply"
+              pid={pid !== undefined ? pid : cid}
+              avatar_url={sessionAvatarUrl}
+              closeReply={closeReply}
+            />
+            <Space h="xs" />
+          </Flex>
+        </>
       )}
     </>
   );

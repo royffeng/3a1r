@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { Text } from "@mantine/core";
 import Hls from "hls.js";
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // binary search lyrics array for correct timestamp
 const findIndex = (time, lyricsArr) => {
@@ -139,7 +140,6 @@ export default function Video({ videoSource, lyricsArr }) {
         <div
           onClick={handleSubTitleClick}
           style={{
-            color: "white",
             position: "absolute",
             display: "flex",
             alignItems: "center",
@@ -150,10 +150,13 @@ export default function Video({ videoSource, lyricsArr }) {
             top: "50%",
           }}
         >
-          <p
+          <Text
+            align="center"
+            color="white"
             style={{
               fontSize: "3rem",
-              textAlign: "center",
+              textShadow:
+                "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
             }}
           >
             {`${
@@ -161,7 +164,7 @@ export default function Video({ videoSource, lyricsArr }) {
                 ? lyricsArr[lyricsIndex].lyrics
                 : ""
             }`}
-          </p>
+          </Text>
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import { MantineProvider } from "@mantine/core";
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
@@ -11,7 +12,24 @@ function MyApp({ Component, pageProps }) {
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
-      <Component {...pageProps} />
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          spacing: {
+            xs: 4,
+            sm: 8,
+          },
+          colorScheme: "light",
+          white: "#F1EAE0",
+          fontFamily: "Lexend, sans-serif",
+          headings: {
+            fontFamily: "Lexend, sans-serif",
+          },
+        }}
+      >
+        <Component {...pageProps} />
+      </MantineProvider>
     </SessionContextProvider>
   );
 }
