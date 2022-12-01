@@ -1,27 +1,19 @@
-import { Auth, Typography, Button } from '@supabase/ui'
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Auth, Typography, Button, ThemeSupa } from '@supabase/auth-ui-react'
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 
-const Container = (props) => {
-  const { user } = Auth.useUser()
-  if (user)
-    return (
-      <>
-        <Typography.Text>Signed in: {user.email}</Typography.Text>
-        <Button block onClick={() => props.supabaseClient.auth.signOut()}>
-          Sign out
-        </Button>
-      </>
-    )
-  return props.children
-}
+const Profile = () => {
+  const session = useSession()
+  const supabase = useSupabaseClient()
 
-export default function AuthBasic() {
-  const [supabase] = useState(() => createBrowserSupabaseClient());
   return (
-    <Auth.UserContextProvider supabaseClient={supabase}>
-      <Container supabaseClient={supabase}>
-        <Auth supabaseClient={supabase} providers={['google', 'spotify']} />
-      </Container>
-    </Auth.UserContextProvider>
+    <div className="container" style={{ padding: '50px 0 100px 0' }}>
+      {!session ? (
+        <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} theme="light" />
+      ) : (
+        <p>Account page will go here.</p>
+      )}
+    </div>
   )
 }
+
+export default Profile
