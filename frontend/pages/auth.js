@@ -1,6 +1,7 @@
 import { Auth, Button, ThemeSupa } from '@supabase/auth-ui-react'
 import { useSession, useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
 import { useState } from 'react'
+import Account from '../components/profile'
 
 const Profile = () => {
   /*
@@ -9,15 +10,15 @@ const Profile = () => {
   */
   const supabaseClient = useSupabaseClient()
   const user = useUser()
+  const session = useSession()
 
   return (
-    <div className="container">
+    <div className="container" style={{ padding: '50px 0 100px 0' }}>
       {!user ? (
         <Auth supabaseClient={supabaseClient} providers={['google', 'spotify']} appearance={{ theme: ThemeSupa }} theme="light" />
       ) : (
         <>
-          <p>Account page will go here.</p>
-          <button onClick={ () => supabaseClient.auth.signOut() }>Sign out</button>
+          <Account session={session} />
         </>
       )}
     </div>
