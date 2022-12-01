@@ -10,22 +10,6 @@
   align-items: center;
 }
 
-.liked_songs {
-  box-sizing: border-box;
-  text-align: center;
-  position: absolute;
-  width: 200px;
-  height: 44px;
-  left: 47px;
-  top: 60px;
-  background: #FFE4ED;
-  border: 2px solid #000000;
-  border-radius: 25.5px;
-  font-size: 25px;
-  font-weight: 500;
-  padding: 0px;
-}
-
 .footer {
   display: flex;
   flex: 1;

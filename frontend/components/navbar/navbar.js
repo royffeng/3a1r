@@ -46,6 +46,7 @@ export default function Navbar() {
         width: "100%",
         marginTop: "0.5rem",
         marginBottom: "2rem",
+        padding: "10px",
       }}
       gap="xl"
     >
@@ -56,10 +57,10 @@ export default function Navbar() {
           </a>
         </Link>
         <Link href="/">
-          <a style={{ pointerEvents: "none" }}>My Playlists</a>
+          <a style={{ pointerEvents: "none", textDecoration: "none", color: "black" }}>My Playlists</a>
         </Link>
         <Link href="/">
-          <a style={{ pointerEvents: "none" }}>Settings</a>
+          <a style={{ pointerEvents: "none", textDecoration: "none", color: "black" }}>Settings</a>
         </Link>
       </Flex>
       <Flex

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Navbar from "../components/navbar/navbar"
+import Landing from "../components/home/landing";
+
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -10,10 +11,7 @@ export default function Home() {
         <link rel="icon" href="./appicon.png" />
       </Head>
       <main className={styles.main}>
-        <Navbar />
-        <div>
-          <p className={styles.liked_songs}>Liked Songs</p>
-        </div>
+        <Landing />
       </main>
     </div>
   );

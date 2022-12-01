@@ -16,7 +16,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import Comments from "../components/karaoke/comments";
 import Video from "../components/karaoke/video";
-import Navbar from "../components/navbar/navbar";
 import { rectifyFormat } from "../utils/formatUTC";
 
 export default function Karaoke() {
@@ -222,7 +221,7 @@ export default function Karaoke() {
         justifyContent: "center",
       }}
     >
-      <Navbar />
+      {/* <Navbar /> */}
       {videoMetaData == null || videoMetaData == undefined ? (
         <div
           style={{
