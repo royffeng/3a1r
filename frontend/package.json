@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
-    "@mantine/core": "^5.8.3",
-    "@mantine/hooks": "^5.8.3",
+    "@mantine/core": "^5.6.3",
+    "@mantine/hooks": "^5.6.3",
+    "@supabase/ui": "^0.36.5",
     "@supabase/auth-helpers-nextjs": "^0.5.2",
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/supabase-js": "^2.0.4",
