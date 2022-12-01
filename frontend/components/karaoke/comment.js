@@ -1,218 +1,247 @@
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { AiFillLike, AiFillDislike } from "react-icons/ai";
-import { Avatar } from "@mantine/core";
-import { Button } from "@mantine/core";
+import { Avatar, Button, Flex, Space, Text } from "@mantine/core";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { rectifyFormat } from "../../utils/formatUTC";
-import { useState, useEffect, useCallback} from "react";
+import Reply from "./reply";
 
-/* todo: 
-  - recursive comments
-  - format likes, dislikes and likes, dislike onclick
-*/
-
-function Comment({ props, updateLikes, updateDislikes }) {
-  let { cid, content, created_at } = props;
-  let { username, avatar_url } = props.profiles
-  const [likes, setLikes] = useState(props.likes);
-  const [dislikes, setDislikes] = useState(props.dislikes);
+export default function Comment({
+  commentData,
+  vid,
+  insertLikes,
+  insertDislikes,
+  deleteLikes,
+  deleteDislikes,
+  sessionAvatarUrl,
+}) {
+  const supabase = useSupabaseClient();
+  let { pid, cid, content, created_at } = useMemo(() => {
+    return commentData;
+  }, [commentData]);
+  let { username, avatar_url } = useMemo(() => {
+    return commentData.profiles;
+  }, [commentData]);
+  const [likes, setLikes] = useState(commentData.likes);
+  const [dislikes, setDislikes] = useState(commentData.dislikes);
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
-
-  const handleLike = useCallback(
-    () => {
-      if (disliked) {
-        setDisliked(false);
-        updateDislikes(cid, dislikes - 1);
-        setDislikes((d) => d - 1);
-      }
-      if (liked) {
-        setLiked(false);
-        updateLikes(cid, likes - 1);
-        setLikes((l) => l - 1);
-      } else {
-        setLiked(true);
-        updateLikes(cid, likes + 1);
-        setLikes((l) => l + 1);
-      }
-    },
-    [cid, likes, dislikes]
-  );
-
-  const handleDislike = useCallback(
-    () => {
-      if (liked) {
-        setLiked(false);
-        updateLikes(cid, likes - 1);
-        setLikes((l) => l - 1);
-      }
-      if (disliked) {
-        setDisliked(false);
-        updateDislikes(cid, dislikes - 1);
-        setDislikes((d) => d - 1);
-      } else {
-        setDisliked(true);
-        updateDislikes(cid, dislikes + 1);
-        setDislikes((d) => d + 1);
-        // TODO SET UP LIKES / DISLIKES RELATION TABLE
-      }
-    },
-    [cid, likes, dislikes]
-  );
-
-  return (
-    <div style={{ display: "flex", flexDirection: "row", marginBottom: "1rem" }}>
-      <div>
-        {avatar_url !== undefined ? (
-          <Avatar
-            src={avatar_url}
-            style={{ marginRight: "1rem" }}
-            radius="xl"
-            alt="no image here"
-          />
-        ) : (
-          <Avatar
-            style={{ marginRight: "1rem" }}
-            radius="xl"
-            alt="no image here"
-          />
-        )}
-      </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignContent: "flex-start",
-            marginBottom: "0.5rem",
-          }}
-        >
-          <p style={{ fontWeight: "bold",marginBottom: 0, marginTop: 0, marginRight: "0.5rem" }}>
-            {username}
-          </p>
-          <p
-            style={{
-              color: "gray",
-              fontSize: "0.9rem",
-              marginTop: 0,
-              marginBottom: 0,
-              marginRight: "0.5rem",
-            }}
-          >
-            {rectifyFormat(created_at)}
-          </p>
-        </div>
-        <p style={{ marginTop: 0, marginBottom: "0.5rem" }}>{content}</p>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            onClick={() => handleLike()}
-            style={{ marginRight: "0.25rem" }}
-            color="gray"
-            compact
-            size="sm"
-            variant="light"
-            radius="xl"
-            on
-          >
-            <AiFillLike color={liked ? 'green' : 'gray'} size={12} />
-            <p style={{ marginLeft: "0.5rem", color: liked ? 'green' : 'gray'}}>{likes}</p>
-          </Button>
-          <Button
-            onClick={() => handleDislike()}
-            style={{ marginRight: "0.25rem" }}
-            color="gray"
-            compact
-            size="sm"
-            variant="light"
-            radius="xl"
-          >
-            <AiFillDislike color={disliked ? 'red' : 'gray'} size={12} />
-            <p style={{marginLeft: "0.5rem", color: disliked ? 'red' : 'gray'}}>{dislikes}</p>
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function Comments({vid}) {
-  const supabase = useSupabaseClient();
-  const [commentData, setCommentData] = useState([])
-
-  const updateLikes = useCallback(async (cid, likes) => {
-    let { error } = await supabase
-      .from("comments")
-      .update({ likes: likes })
-      .eq("cid", cid);
-
-    if (error) {
-      console.log("error: ", error);
-    }
-  }, []);
-
-  const updateDislikes = useCallback(async (cid, dislikes) => {
-    let { error } = await supabase
-      .from("comments")
-      .update({ dislikes: dislikes })
-      .eq("cid", cid);
-
-    if (error) {
-      console.log("error: ", error);
-    }
+  const [showReply, setShowReply] = useState(false);
+  const uid = useMemo(() => {
+    return "753b8a89-0624-4dd5-9592-89c664a806c3";
+    // temp value until auth is finished
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      let { data, error } = await supabase
-        .from("comments")
-        .select(`
-          cid, 
-          content,
-          created_at,
-          likes,
-          dislikes,
-          profiles(
-            username,
-            avatar_url
-          )
-        `)
-        .filter("vid", "eq", vid)
-        .order('likes', {ascending: false});
-      if (error) {
-        console.log("error: ", error);
-        return;
+    const getInitialLikedState = async () => {
+      if (pid !== null && pid !== undefined) {
+        // reply
+        let replyLikedData = await supabase
+          .from("replyLikes")
+          .select()
+          .eq("uid", uid)
+          .eq("rid", cid);
+
+        let replyDisLikedData = await supabase
+          .from("replyDislikes")
+          .select()
+          .eq("uid", uid)
+          .eq("rid", cid);
+
+        if (replyLikedData.error) {
+          console.log(
+            "error getting initial reply liked state: ",
+            replyLikedData.error
+          );
+        }
+
+        if (replyDisLikedData.error) {
+          console.log(
+            "error getting initial reply disliked state: ",
+            replyDisLikedData.error
+          );
+        }
+
+        setLiked(replyLikedData.data.length !== 0);
+        setDisliked(replyDisLikedData.data.length !== 0);
       } else {
-        setCommentData(data);
+        // comment
+        let commentLikedData = await supabase
+          .from("commentLikes")
+          .select()
+          .eq("uid", uid)
+          .eq("cid", cid);
+
+        let commentDislikedData = await supabase
+          .from("commentDislikes")
+          .select()
+          .eq("uid", uid)
+          .eq("cid", cid);
+
+        if (commentLikedData.error) {
+          console.log(
+            "error getting initial comment liked state: ",
+            commentLikedData.error
+          );
+        }
+
+        if (commentDislikedData.error) {
+          console.log(
+            "error getting initial comment disliked state: ",
+            commentLikedData.error
+          );
+        }
+        setLiked(commentLikedData.data.length !== 0);
+        setDisliked(commentDislikedData.data.length !== 0);
       }
     };
 
-    if (vid) {
-      fetchData();
+    if (vid && uid) {
+      getInitialLikedState();
     }
-  }, [vid]);
+  }, [uid, pid, vid]);
+
+  const handleLike = useCallback(() => {
+    if (disliked) {
+      setDisliked(false);
+      deleteDislikes(cid);
+      setDislikes((d) => d - 1);
+    }
+    if (liked) {
+      setLiked(false);
+      deleteLikes(cid);
+      setLikes((l) => l - 1);
+    } else {
+      setLiked(true);
+      insertLikes(cid);
+      setLikes((l) => l + 1);
+    }
+  }, [cid, likes, dislikes]);
+
+  const handleDislike = useCallback(() => {
+    if (liked) {
+      setLiked(false);
+      deleteLikes(cid);
+      setLikes((l) => l - 1);
+    }
+    if (disliked) {
+      setDisliked(false);
+      deleteDislikes(cid);
+      setDislikes((d) => d - 1);
+    } else {
+      setDisliked(true);
+      insertDislikes(cid);
+      setDislikes((d) => d + 1);
+    }
+  }, [cid, likes, dislikes]);
+
+  const closeReply = useCallback(() => {
+    setShowReply(false);
+  });
 
   return (
     <>
-      {commentData !== undefined && commentData.length !== 0 && (
-      <>  
-        <p
-          style={{
-            marginTop: "0.5rem",
-            fontSize: "1.5rem",
-            marginBottom: "1rem",
-          }}
-        >
-        {commentData.length} Comments
-      </p>
-        {commentData.map((comment) => (
-          <Comment key={comment.cid} props={comment} updateLikes={updateLikes} updateDislikes={updateDislikes}/>
-        ))}
-      </>)}
+      <Flex direction="row" gap="md">
+        <>
+          {avatar_url !== undefined ? (
+            <Avatar src={avatar_url} radius="xl" alt="no image here" />
+          ) : (
+            <Avatar radius="xl" alt="no image here" />
+          )}
+        </>
+        <Flex direction="column" sx={{ width: "100%" }}>
+          <Flex direction="row" gap="sm">
+            <Text fz="sm" fw={500}>
+              {username}
+            </Text>
+            <Text
+              fz="sm"
+              style={{
+                color: "gray",
+              }}
+            >
+              {rectifyFormat(created_at)}
+            </Text>
+          </Flex>
+          <Text fz="sm" sx={{ marginBottom: "0.25rem" }}>
+            {content}
+          </Text>
+          <Flex
+            direction="row"
+            wrap="wrap"
+            align="center"
+            justify="flex-start"
+            gap="xs"
+          >
+            <Button
+              onClick={() => handleLike()}
+              leftIcon={
+                <AiFillLike color={liked ? "green" : "gray"} size={12} />
+              }
+              color="gray"
+              compact
+              size="xs"
+              variant="light"
+              radius="xl"
+            >
+              <Text
+                fz="xs"
+                sx={{
+                  color: liked ? "green" : "gray",
+                }}
+              >
+                {likes}
+              </Text>
+            </Button>
+            <Button
+              onClick={() => handleDislike()}
+              leftIcon={
+                <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
+              }
+              color="gray"
+              compact
+              size="xs"
+              variant="light"
+              radius="xl"
+            >
+              <Text
+                fz="xs"
+                style={{
+                  color: disliked ? "red" : "gray",
+                }}
+              >
+                {dislikes}
+              </Text>
+            </Button>
+            <Button
+              onClick={() => {
+                setShowReply(true);
+              }}
+              color="dark"
+              compact
+              size="xs"
+              variant="subtle"
+              radius="xl"
+            >
+              Reply
+            </Button>
+          </Flex>
+        </Flex>
+      </Flex>
+      {showReply && (
+        <>
+          <Space h="sm" />
+          <Flex direction="column" sx={{ marginLeft: "3.375rem" }}>
+            <Reply
+              placeholder={"Add a reply..."}
+              type="Reply"
+              pid={pid !== undefined ? pid : cid}
+              avatar_url={sessionAvatarUrl}
+              closeReply={closeReply}
+            />
+            <Space h="xs" />
+          </Flex>
+        </>
+      )}
     </>
   );
 }
