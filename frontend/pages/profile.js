@@ -1,9 +1,5 @@
 import { Auth, Typography, Button } from '@supabase/ui'
-import Link from 'next/link'
-
-import Layout from '../components/Layout'
-import { useAuth, VIEWS } from '../lib/auth'
-import { supabase } from '../lib/initSupabase'
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const Container = (props) => {
   const { user } = Auth.useUser()
@@ -20,6 +16,7 @@ const Container = (props) => {
 }
 
 export default function AuthBasic() {
+  const [supabase] = useState(() => createBrowserSupabaseClient());
   return (
     <Auth.UserContextProvider supabaseClient={supabase}>
       <Container supabaseClient={supabase}>
