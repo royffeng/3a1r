@@ -7,7 +7,7 @@ import Reply from "./reply";
 
 export default function Comments({ vid }) {
   const supabase = useSupabaseClient();
-  const [commentData, setCommentData] = useState([]);
+  const [commentData, setCommentData] = useState(null);
   const [avatarWait, setAvatarWait] = useState(true);
   const [avatar_url, setAvatarUrl] = useState("");
   const uid = useMemo(() => {
@@ -94,6 +94,20 @@ export default function Comments({ vid }) {
         console.log("error getting comments: ", error);
         return;
       } else {
+        for (let i = 0; i < data.length; i++) {
+          let d = data[i];
+          if (!d.profiles.avatar_url.includes("https")) {
+            let { data: avatar, error: error } = await supabase.storage
+              .from("avatars")
+              .download(`${d.profiles.avatar_url}`);
+            if (error) {
+              console.log(error);
+            } else {
+              const url = URL.createObjectURL(avatar);
+              d.profiles.avatar_url = url;
+            }
+          }
+        }
         setCommentData(data);
       }
 
@@ -118,7 +132,7 @@ export default function Comments({ vid }) {
 
   return (
     <>
-      {commentData !== undefined && commentData.length !== 0 && !avatarWait && (
+      {commentData !== null && commentData !== undefined && !avatarWait && (
         <Flex direction="column" style={{ width: "100%" }}>
           <Text
             fz="xl"
@@ -138,7 +152,7 @@ export default function Comments({ vid }) {
           />
           <Space h="xl" />
           {commentData.map((comment) => (
-            <>
+            <div key={comment.cid}>
               <Flex
                 direction="column"
                 key={`comment: ${comment.cid}`}
@@ -161,7 +175,7 @@ export default function Comments({ vid }) {
                 />
               </Flex>
               <Space h="lg" />
-            </>
+            </div>
           ))}
         </Flex>
       )}

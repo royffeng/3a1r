@@ -1,4 +1,4 @@
-# Project Karaoke(Name TBD)
+# Micdrop
 by Ashley Kim, Andre Amante, Andrei Dimaano, Roy Feng
 
 ## Background

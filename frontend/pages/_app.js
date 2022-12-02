@@ -1,8 +1,10 @@
 import "../styles/globals.css";
 import { MantineProvider } from "@mantine/core";
 import { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import Navbar from "../components/navbar/navbar";
 
 function MyApp({ Component, pageProps }) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
@@ -28,6 +30,7 @@ function MyApp({ Component, pageProps }) {
           },
         }}
       >
+        <Navbar />
         <Component {...pageProps} />
       </MantineProvider>
     </SessionContextProvider>
