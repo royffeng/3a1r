@@ -185,7 +185,7 @@
   "resolved" "https://registry.npmjs.org/@floating-ui/dom/-/dom-1.0.7.tgz"
   "version" "1.0.7"
   dependencies:
-    "@floating-ui/core" "^1.0.1"
+    "@floating-ui/core" "^1.0.2"
 
 "@floating-ui/react-dom-interactions@^0.10.1":
   "integrity" "sha512-UEHqdnzyoiWNU5az/tAljr9iXFzN18DcvpMqW+/cXz4FEhDEB1ogLtWldOWCujLerPBnSRocADALafelOReMpw=="
@@ -200,7 +200,7 @@
   "resolved" "https://registry.npmjs.org/@floating-ui/react-dom/-/react-dom-1.0.1.tgz"
   "version" "1.0.1"
   dependencies:
-    "@floating-ui/dom" "^1.0.0"
+    "@floating-ui/dom" "^1.0.5"
 
 "@humanwhocodes/config-array@^0.10.5":
   "integrity" "sha512-MDl6D6sBsaV452/QSdX+4CXIjZhIcI0PELsxUjk4U828yd58vk3bTIvk/6w5FY+4hIy9sLW0sfrV7K7Kc++j/w=="
@@ -262,9 +262,9 @@
   dependencies:
     "glob" "7.1.7"
 
-"@next/swc-darwin-x64@12.3.1":
-  "integrity" "sha512-9S6EVueCVCyGf2vuiLiGEHZCJcPAxglyckTZcEwLdJwozLqN0gtS0Eq0bQlGS3dH49Py/rQYpZ3KVWZ9BUf/WA=="
-  "resolved" "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-12.3.1.tgz"
+"@next/swc-darwin-arm64@12.3.1":
+  "integrity" "sha512-hT/EBGNcu0ITiuWDYU9ur57Oa4LybD5DOQp4f22T6zLfpoBMfBibPtR8XktXmOyFHrL/6FC2p9ojdLZhWhvBHg=="
+  "resolved" "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-12.3.1.tgz"
   "version" "12.3.1"
 
 "@nodelib/fs.scandir@2.1.5":
@@ -444,10 +444,10 @@
   "resolved" "https://registry.npmjs.org/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.2.3.tgz"
   "version" "0.2.3"
 
-"@supabase/functions-js@^2.0.0":
-  "integrity" "sha512-ozb7bds2yvf5k7NM2ZzUkxvsx4S4i2eRKFSJetdTADV91T65g4gCzEs9L3LUXSrghcGIkUaon03VPzOrFredqg=="
-  "resolved" "https://registry.npmjs.org/@supabase/functions-js/-/functions-js-2.0.0.tgz"
-  "version" "2.0.0"
+"@supabase/auth-ui-react@^0.2.6":
+  "integrity" "sha512-N2qxgsjxPQZPdDotVumzruj4RHaKNFb9ZRecttMeGOvrYFbMWRQVpWT/rYkTPsRW2phKiGXQlMwha6YxUE+t6Q=="
+  "resolved" "https://registry.npmjs.org/@supabase/auth-ui-react/-/auth-ui-react-0.2.6.tgz"
+  "version" "0.2.6"
   dependencies:
     "@stitches/core" "^1.2.8"
     "@stitches/react" "^1.2.8"
