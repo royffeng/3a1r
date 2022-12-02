@@ -17,6 +17,6 @@ jobs:
         with:
           node-version: "16.14.2"
       - run: yarn install
-      - run: add prettier
+      - run: yarn add prettier
       - run: yarn check
       
