@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "format": "prettier --write \"frontend/components/**/*.js\" \"frontend/pages/**/*.js\""
+    "format": "prettier --write \"frontend/components/**/*.js\" \"frontend/pages/**/*.js\"", 
+    "check": "prettier --check \"frontend/components/**/*.js\" \"frontend/pages/**/*.js\""
   },
   "dependencies": {
     "prettier": "2.7.1"
