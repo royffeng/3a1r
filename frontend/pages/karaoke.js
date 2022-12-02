@@ -160,13 +160,15 @@ export default function Karaoke() {
         return;
       } else {
         let d = data[0];
-        if(!d.profiles.avatar_url.includes("https")) {
-          let {data: avatar , error: error} = await supabase.storage.from('avatars').download(`${d.profiles.avatar_url}`);
-          if(error) {
+        if (!d.profiles.avatar_url.includes("https")) {
+          let { data: avatar, error: error } = await supabase.storage
+            .from("avatars")
+            .download(`${d.profiles.avatar_url}`);
+          if (error) {
             console.log(error);
           } else {
             const url = URL.createObjectURL(avatar);
-            d.profiles.avatar_url = url
+            d.profiles.avatar_url = url;
           }
         }
 

@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }) {
           },
         }}
       >
-        <Navbar/>
+        <Navbar />
         <Component {...pageProps} />
       </MantineProvider>
     </SessionContextProvider>

@@ -94,15 +94,17 @@ export default function Comments({ vid }) {
         console.log("error getting comments: ", error);
         return;
       } else {
-        for(let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
           let d = data[i];
-          if(!d.profiles.avatar_url.includes("https")) {
-            let {data: avatar , error: error} = await supabase.storage.from('avatars').download(`${d.profiles.avatar_url}`);
-            if(error) {
+          if (!d.profiles.avatar_url.includes("https")) {
+            let { data: avatar, error: error } = await supabase.storage
+              .from("avatars")
+              .download(`${d.profiles.avatar_url}`);
+            if (error) {
               console.log(error);
             } else {
               const url = URL.createObjectURL(avatar);
-              d.profiles.avatar_url = url
+              d.profiles.avatar_url = url;
             }
           }
         }

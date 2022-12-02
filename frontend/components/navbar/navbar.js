@@ -57,10 +57,26 @@ export default function Navbar() {
           </a>
         </Link>
         <Link href="/">
-          <a style={{ pointerEvents: "none", textDecoration: "none", color: "black" }}>My Playlists</a>
+          <a
+            style={{
+              pointerEvents: "none",
+              textDecoration: "none",
+              color: "black",
+            }}
+          >
+            My Playlists
+          </a>
         </Link>
         <Link href="/">
-          <a style={{ pointerEvents: "none", textDecoration: "none", color: "black" }}>Settings</a>
+          <a
+            style={{
+              pointerEvents: "none",
+              textDecoration: "none",
+              color: "black",
+            }}
+          >
+            Settings
+          </a>
         </Link>
       </Flex>
       <Flex
