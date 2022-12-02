@@ -16,7 +16,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import Comments from "../components/karaoke/comments";
 import Video from "../components/karaoke/video";
-import Navbar from "../components/navbar/navbar";
 import { rectifyFormat } from "../utils/formatUTC";
 
 export default function Karaoke() {
@@ -160,6 +159,19 @@ export default function Karaoke() {
         console.log("error getting videos: ", error);
         return;
       } else {
+        let d = data[0];
+        if (!d.profiles.avatar_url.includes("https")) {
+          let { data: avatar, error: error } = await supabase.storage
+            .from("avatars")
+            .download(`${d.profiles.avatar_url}`);
+          if (error) {
+            console.log(error);
+          } else {
+            const url = URL.createObjectURL(avatar);
+            d.profiles.avatar_url = url;
+          }
+        }
+
         let { error } = await supabase
           .from("video")
           .update({ views: data[0].views + 1 })
@@ -222,7 +234,7 @@ export default function Karaoke() {
         justifyContent: "center",
       }}
     >
-      <Navbar />
+      {/* <Navbar /> */}
       {videoMetaData == null || videoMetaData == undefined ? (
         <div
           style={{
