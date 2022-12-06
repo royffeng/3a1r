@@ -115,7 +115,7 @@ export default function Comment({
       insertLikes(cid);
       setLikes((l) => l + 1);
     }
-  }, [cid, likes, dislikes]);
+  }, [cid, liked, disliked]);
 
   const handleDislike = useCallback(() => {
     if (liked) {
@@ -132,7 +132,7 @@ export default function Comment({
       insertDislikes(cid);
       setDislikes((d) => d + 1);
     }
-  }, [cid, likes, dislikes]);
+  }, [cid, liked, disliked]);
 
   const closeReply = useCallback(() => {
     setShowReply(false);
