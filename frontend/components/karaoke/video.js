@@ -144,10 +144,10 @@ export default function Video({ videoSource, lyricsArr }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            left: "10%",
-            bottom: "50%",
-            right: "10%",
-            top: "50%",
+            left: "5%",
+            bottom: "10%",
+            right: "5%",
+            top: "10%",
           }}
         >
           <Text
@@ -155,7 +155,7 @@ export default function Video({ videoSource, lyricsArr }) {
             align="center"
             color="white"
             style={{
-              fontSize: "3rem",
+              fontSize: "clamp(1rem, 8vw, 20vw)",
               textShadow:
                 "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
             }}
