@@ -1,6 +1,6 @@
 import { Button, Collapse, Flex, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
 import Comment from "./comment";
 
@@ -8,63 +8,51 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
   const supabase = useSupabaseClient();
   const [commentData, setCommentData] = useState([]);
   const [opened, setOpened] = useState(false);
+  const [avatarWait, setAvatarWait] = useState(true);
 
+  const insertLikes = useCallback(async (uid, rid) => {
+    let { error } = await supabase
+      .from("replyLikes")
+      .insert({ uid: uid, rid: rid });
 
-  const insertLikes = useCallback(
-    async (uid, rid) => {
-      let { error } = await supabase
-        .from("replyLikes")
-        .insert({ uid: uid, rid: rid });
+    if (error) {
+      console.log("insert reply likes error: ", error);
+    }
+  }, []);
 
-      if (error) {
-        console.log("insert reply likes error: ", error);
-      }
-    },
-    []
-  );
+  const deleteLikes = useCallback(async (uid, rid) => {
+    let { error } = await supabase
+      .from("replyLikes")
+      .delete()
+      .eq("uid", uid)
+      .eq("rid", rid);
 
-  const deleteLikes = useCallback(
-    async (uid,rid) => {
-      let { error } = await supabase
-        .from("replyLikes")
-        .delete()
-        .eq("uid", uid)
-        .eq("rid", rid);
+    if (error) {
+      console.log("delete reply likes error: ", error);
+    }
+  }, []);
 
-      if (error) {
-        console.log("delete reply likes error: ", error);
-      }
-    },
-    []
-  );
+  const insertDislikes = useCallback(async (uid, rid) => {
+    let { error } = await supabase
+      .from("replyDislikes")
+      .insert({ uid: uid, rid: rid });
 
-  const insertDislikes = useCallback(
-    async (uid, rid) => {
-      let { error } = await supabase
-        .from("replyDislikes")
-        .insert({ uid: uid, rid: rid });
+    if (error) {
+      console.log("insert reply dislikes error: ", error);
+    }
+  }, []);
 
-      if (error) {
-        console.log("insert reply dislikes error: ", error);
-      }
-    },
-    []
-  );
+  const deleteDislikes = useCallback(async (uid, rid) => {
+    let { error } = await supabase
+      .from("replyDislikes")
+      .delete()
+      .eq("uid", uid)
+      .eq("rid", rid);
 
-  const deleteDislikes = useCallback(
-    async (uid, rid) => {
-      let { error } = await supabase
-        .from("replyDislikes")
-        .delete()
-        .eq("uid", uid)
-        .eq("rid", rid);
-
-      if (error) {
-        console.log("delete reply dislikes error: ", error);
-      }
-    },
-    []
-  );
+    if (error) {
+      console.log("delete reply dislikes error: ", error);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,9 +77,29 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
       if (error) {
         console.log("error: ", error);
         return;
+      }
+      if (error) {
+        console.log("error getting comments: ", error);
+        return;
       } else {
+        for (let i = 0; i < data.length; i++) {
+          let d = data[i];
+          if (!d.profiles.avatar_url.includes("https")) {
+            let { data: avatar, error: error } = await supabase.storage
+              .from("avatars")
+              .download(`${d.profiles.avatar_url}`);
+            if (error) {
+              console.log(error);
+            } else {
+              const url = URL.createObjectURL(avatar);
+              d.profiles.avatar_url = url;
+            }
+          }
+        }
         setCommentData(data);
       }
+
+      setAvatarWait(false);
     };
 
     if (pid) {
@@ -101,7 +109,7 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
 
   return (
     <>
-      {commentData !== undefined && commentData.length !== 0 && (
+      {commentData !== undefined && commentData.length !== 0 && !avatarWait && (
         <Flex
           direction="column"
           className="reply"

@@ -1,6 +1,6 @@
 import { Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/UserContext";
 import Comment from "./comment";
 import Replies from "./replies";
@@ -10,64 +10,51 @@ export default function Comments({ vid }) {
   const supabase = useSupabaseClient();
   const [commentData, setCommentData] = useState(null);
   const [avatarWait, setAvatarWait] = useState(true);
-  const [avatar_url, setAvatarUrl] = useState("");
   const user = useContext(UserContext);
 
-  const insertLikes = useCallback(
-    async (uid, cid) => {
-      let { error } = await supabase
-        .from("commentLikes")
-        .insert({ uid: uid, cid: cid });
+  const insertLikes = useCallback(async (uid, cid) => {
+    let { error } = await supabase
+      .from("commentLikes")
+      .insert({ uid: uid, cid: cid });
 
-      if (error) {
-        console.log("insert comment likes error: ", error);
-      }
-    },
-    []
-  );
+    if (error) {
+      console.log("insert comment likes error: ", error);
+    }
+  }, []);
 
-  const deleteLikes = useCallback(
-    async (uid, cid) => {
-      let { error } = await supabase
-        .from("commentLikes")
-        .delete()
-        .eq("uid", uid)
-        .eq("cid", cid);
+  const deleteLikes = useCallback(async (uid, cid) => {
+    let { error } = await supabase
+      .from("commentLikes")
+      .delete()
+      .eq("uid", uid)
+      .eq("cid", cid);
 
-      if (error) {
-        console.log("delete comment likes error: ", error);
-      }
-    },
-    []
-  );
+    if (error) {
+      console.log("delete comment likes error: ", error);
+    }
+  }, []);
 
-  const insertDislikes = useCallback(
-    async (uid, cid) => {
-      let { error } = await supabase
-        .from("commentDislikes")
-        .insert({ uid: uid, cid: cid });
+  const insertDislikes = useCallback(async (uid, cid) => {
+    let { error } = await supabase
+      .from("commentDislikes")
+      .insert({ uid: uid, cid: cid });
 
-      if (error) {
-        console.log("insert comment dislikes error: ", error);
-      }
-    },
-    []
-  );
+    if (error) {
+      console.log("insert comment dislikes error: ", error);
+    }
+  }, []);
 
-  const deleteDislikes = useCallback(
-    async (uid, cid) => {
-      let { error } = await supabase
-        .from("commentDislikes")
-        .delete()
-        .eq("uid", uid)
-        .eq("cid", cid);
+  const deleteDislikes = useCallback(async (uid, cid) => {
+    let { error } = await supabase
+      .from("commentDislikes")
+      .delete()
+      .eq("uid", uid)
+      .eq("cid", cid);
 
-      if (error) {
-        console.log("delete comment dislikes error: ", error);
-      }
-    },
-    []
-  );
+    if (error) {
+      console.log("delete comment dislikes error: ", error);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,24 +96,13 @@ export default function Comments({ vid }) {
         setCommentData(data);
       }
 
-      ({ data, error } = await supabase
-        .from("profiles")
-        .select(`avatar_url`)
-        .filter("id", "eq", user.id));
-
-      if (error) {
-        console.log("error getting user profile: ", error);
-        return;
-      } else {
-        setAvatarUrl(data[0].avatar_url);
-      }
       setAvatarWait(false);
     };
 
-    if (vid && user) {
+    if (vid) {
       fetchData();
     }
-  }, [vid, user]);
+  }, [vid]);
 
   return (
     <>
@@ -143,7 +119,7 @@ export default function Comments({ vid }) {
           </Text>
           <Reply
             placeholder={"Add a comment..."}
-            avatar_url={avatar_url}
+            avatar_url={user.avatarUrl}
             type="Comment"
             vid={vid}
             initialShowButtons={false}
@@ -163,13 +139,13 @@ export default function Comments({ vid }) {
                   insertDislikes={insertDislikes}
                   deleteLikes={deleteLikes}
                   deleteDislikes={deleteDislikes}
-                  sessionAvatarUrl={avatar_url}
+                  sessionAvatarUrl={user.avatarUrl}
                 />
                 <Replies
                   key={`${comment.cid} replies`}
                   vid={vid}
                   pid={comment.cid}
-                  sessionAvatarUrl={avatar_url}
+                  sessionAvatarUrl={user.avatarUrl}
                 />
               </Flex>
               <Space h="lg" />

@@ -12,11 +12,12 @@ import {
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import "plyr/dist/plyr.css";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useContext } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import Comments from "../components/karaoke/comments";
 import Video from "../components/karaoke/video";
 import { rectifyFormat } from "../utils/formatUTC";
+import { UserContext } from "../utils/UserContext";
 
 export default function Karaoke() {
   const supabase = useSupabaseClient();
@@ -29,106 +30,85 @@ export default function Karaoke() {
   const [dislikes, setDislikes] = useState();
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
-  const uid = useMemo(() => {
-    return "753b8a89-0624-4dd5-9592-89c664a806c3";
-    // temp value until auth is finished
+  const user = useContext(UserContext);
+
+  const insertLikes = useCallback(async (uid, vid) => {
+    let { error } = await supabase
+      .from("videoLikes")
+      .insert({ uid: uid, vid: vid });
+
+    if (error) {
+      console.log("insert video likes error: ", error);
+    }
   }, []);
 
-  const insertLikes = useCallback(
-    async (vid) => {
-      let { error } = await supabase
-        .from("videoLikes")
-        .insert({ uid: uid, vid: vid });
+  const deleteLikes = useCallback(async (uid, vid) => {
+    let { error } = await supabase
+      .from("videoLikes")
+      .delete()
+      .eq("uid", uid)
+      .eq("vid", vid);
 
-      if (error) {
-        console.log("insert video likes error: ", error);
-      }
-    },
-    [uid]
-  );
+    if (error) {
+      console.log("delete video likes error: ", error);
+    }
+  }, []);
 
-  const deleteLikes = useCallback(
-    async (vid) => {
-      let { error } = await supabase
-        .from("videoLikes")
-        .delete()
-        .eq("uid", uid)
-        .eq("vid", vid);
+  const insertDislikes = useCallback(async (uid, vid) => {
+    let { error } = await supabase
+      .from("videoDislikes")
+      .insert({ uid: uid, vid: vid });
 
-      if (error) {
-        console.log("delete video likes error: ", error);
-      }
-    },
-    [uid]
-  );
+    if (error) {
+      console.log("insert video dislikes error: ", error);
+    }
+  }, []);
 
-  const insertDislikes = useCallback(
-    async (vid) => {
-      let { error } = await supabase
-        .from("videoDislikes")
-        .insert({ uid: uid, vid: vid });
+  const deleteDislikes = useCallback(async (uid, vid) => {
+    let { error } = await supabase
+      .from("videoDislikes")
+      .delete()
+      .eq("uid", uid)
+      .eq("vid", vid);
 
-      if (error) {
-        console.log("insert video dislikes error: ", error);
-      }
-    },
-    [uid]
-  );
+    if (error) {
+      console.log("delete video dislikes error: ", error);
+    }
+  }, []);
 
-  const deleteDislikes = useCallback(
-    async (vid) => {
-      let { error } = await supabase
-        .from("videoDislikes")
-        .delete()
-        .eq("uid", uid)
-        .eq("vid", vid);
+  const handleLike = useCallback((uid, vid, liked, disliked) => {
+    if (disliked) {
+      setDisliked(false);
+      deleteDislikes(uid, vid);
+      setDislikes((d) => d - 1);
+    }
+    if (liked) {
+      setLiked(false);
+      deleteLikes(uid, vid);
+      setLikes((l) => l - 1);
+    } else {
+      setLiked(true);
+      insertLikes(uid, vid);
+      setLikes((l) => l + 1);
+    }
+  }, []);
 
-      if (error) {
-        console.log("delete video dislikes error: ", error);
-      }
-    },
-    [uid]
-  );
-
-  const handleLike = useCallback(
-    (vid) => {
-      if (disliked) {
-        setDisliked(false);
-        deleteDislikes(vid);
-        setDislikes((d) => d - 1);
-      }
-      if (liked) {
-        setLiked(false);
-        deleteLikes(vid);
-        setLikes((l) => l - 1);
-      } else {
-        setLiked(true);
-        insertLikes(vid);
-        setLikes((l) => l + 1);
-      }
-    },
-    [likes, dislikes]
-  );
-
-  const handleDislike = useCallback(
-    (vid) => {
-      if (liked) {
-        setLiked(false);
-        deleteLikes(vid);
-        setLikes((l) => l - 1);
-      }
-      if (disliked) {
-        setDisliked(false);
-        deleteDislikes(vid);
-        setDislikes((d) => d - 1);
-      } else {
-        setDisliked(true);
-        insertDislikes(vid);
-        setDislikes((d) => d + 1);
-      }
-    },
-    [likes, dislikes]
-  );
+  const handleDislike = useCallback((uid, vid, liked, disliked) => {
+    if (liked) {
+      setLiked(false);
+      deleteLikes(uid, vid);
+      setLikes((l) => l - 1);
+    }
+    if (disliked) {
+      setDisliked(false);
+      deleteDislikes(uid, vid);
+      setDislikes((d) => d - 1);
+    } else {
+      setDisliked(true);
+      insertDislikes(uid, vid);
+      setDislikes((d) => d + 1);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -182,21 +162,6 @@ export default function Karaoke() {
         if (error) {
           console.log("error updating views for video: ", error);
         }
-
-        let videoLikedData = await supabase
-          .from("videoLikes")
-          .select()
-          .eq("uid", uid)
-          .eq("vid", vid);
-
-        let videoDislikedData = await supabase
-          .from("videoDislikes")
-          .select()
-          .eq("uid", uid)
-          .eq("vid", vid);
-
-        setLiked(videoLikedData.data.length !== 0);
-        setDisliked(videoDislikedData.data.length !== 0);
         setVideoMediaData(data[0]);
         setLikes(data[0].likes);
         setDislikes(data[0].dislikes);
@@ -207,6 +172,29 @@ export default function Karaoke() {
       fetchData();
     }
   }, [vid]);
+
+  useEffect(() => {
+    const setUserMetaData = async () => {
+      let videoLikedData = await supabase
+        .from("videoLikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("vid", vid);
+
+      let videoDislikedData = await supabase
+        .from("videoDislikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("vid", vid);
+
+      setLiked(videoLikedData.data.length !== 0);
+      setDisliked(videoDislikedData.data.length !== 0);
+    };
+
+    if (vid && user) {
+      setUserMetaData();
+    }
+  }, [vid, user]);
 
   const dateString = useMemo(() => {
     if (videoMetaData) {
@@ -234,7 +222,6 @@ export default function Karaoke() {
         justifyContent: "center",
       }}
     >
-      {/* <Navbar /> */}
       {videoMetaData == null || videoMetaData == undefined ? (
         <div
           style={{
@@ -312,7 +299,9 @@ export default function Karaoke() {
                 gap="xs"
               >
                 <Button
-                  onClick={() => handleLike(videoMetaData.id)}
+                  onClick={() =>
+                    handleLike(user.id, videoMetaData.id, liked, disliked)
+                  }
                   leftIcon={
                     <AiFillLike color={liked ? "green" : "gray"} size={12} />
                   }
@@ -325,7 +314,9 @@ export default function Karaoke() {
                   <Text>{likes}</Text>
                 </Button>
                 <Button
-                  onClick={() => handleDislike(videoMetaData.id)}
+                  onClick={() =>
+                    handleDislike(user.id, videoMetaData.id, liked, disliked)
+                  }
                   leftIcon={
                     <AiFillDislike
                       color={disliked ? "red" : "gray"}

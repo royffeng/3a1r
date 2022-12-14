@@ -30,87 +30,89 @@ export default function Comment({
   const user = useContext(UserContext);
 
   useEffect(() => {
-    const getInitialLikedState = async () => {
-      if (pid !== null && pid !== undefined) {
-        // reply
-        let replyLikedData = await supabase
-          .from("replyLikes")
-          .select()
-          .eq("uid", user.id)
-          .eq("rid", cid);
+    const getInitialRepliedLikedState = async () => {
+      let replyLikedData = await supabase
+        .from("replyLikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("rid", cid);
 
-        let replyDisLikedData = await supabase
-          .from("replyDislikes")
-          .select()
-          .eq("uid", user.id)
-          .eq("rid", cid);
+      let replyDisLikedData = await supabase
+        .from("replyDislikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("rid", cid);
 
-        if (replyLikedData.error) {
-          console.log(
-            "error getting initial reply liked state: ",
-            replyLikedData.error
-          );
-        }
-
-        if (replyDisLikedData.error) {
-          console.log(
-            "error getting initial reply disliked state: ",
-            replyDisLikedData.error
-          );
-        }
-
-        setLiked(replyLikedData.data.length !== 0);
-        setDisliked(replyDisLikedData.data.length !== 0);
-      } else {
-        // comment
-        let commentLikedData = await supabase
-          .from("commentLikes")
-          .select()
-          .eq("uid", user.id)
-          .eq("cid", cid);
-
-        let commentDislikedData = await supabase
-          .from("commentDislikes")
-          .select()
-          .eq("uid", user.id)
-          .eq("cid", cid);
-
-        if (commentLikedData.error) {
-          console.log(
-            "error getting initial comment liked state: ",
-            commentLikedData.error
-          );
-        }
-
-        if (commentDislikedData.error) {
-          console.log(
-            "error getting initial comment disliked state: ",
-            commentLikedData.error
-          );
-        }
-        setLiked(commentLikedData.data.length !== 0);
-        setDisliked(commentDislikedData.data.length !== 0);
+      if (replyLikedData.error) {
+        console.log(
+          "error getting initial reply liked state: ",
+          replyLikedData.error
+        );
       }
+
+      if (replyDisLikedData.error) {
+        console.log(
+          "error getting initial reply disliked state: ",
+          replyDisLikedData.error
+        );
+      }
+
+      setLiked(replyLikedData.data.length !== 0);
+      setDisliked(replyDisLikedData.data.length !== 0);
+    };
+
+    const getInitalCommentLikedState = async () => {
+      let commentLikedData = await supabase
+        .from("commentLikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("cid", cid);
+
+      let commentDislikedData = await supabase
+        .from("commentDislikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("cid", cid);
+
+      if (commentLikedData.error) {
+        console.log(
+          "error getting initial comment liked state: ",
+          commentLikedData.error
+        );
+      }
+
+      if (commentDislikedData.error) {
+        console.log(
+          "error getting initial comment disliked state: ",
+          commentLikedData.error
+        );
+      }
+      setLiked(commentLikedData.data.length !== 0);
+      setDisliked(commentDislikedData.data.length !== 0);
     };
 
     if (vid && user) {
-      getInitialLikedState();
+      if (pid !== null && pid !== undefined) {
+        getInitialRepliedLikedState();
+      } else {
+        getInitalCommentLikedState();
+      }
     }
   }, [user, pid, vid]);
 
   const handleLike = useCallback((uid, cid, liked, disliked) => {
     if (disliked) {
       setDisliked(false);
-      deleteDislikes(uid,cid);
+      deleteDislikes(uid, cid);
       setDislikes((d) => d - 1);
     }
     if (liked) {
       setLiked(false);
-      deleteLikes(uid,cid);
+      deleteLikes(uid, cid);
       setLikes((l) => l - 1);
     } else {
       setLiked(true);
-      insertLikes(uid,cid);
+      insertLikes(uid, cid);
       setLikes((l) => l + 1);
     }
   }, []);
