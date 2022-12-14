@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styles from "./landing.module.css";
-import Thumbnail from "../thumbnail/thumbnail";
+import { Center, Flex, Grid, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Grid, Space, Text, Flex, Center } from "@mantine/core";
-import LikedVideos from "./likedvideos";
-import AllVideos from "./allvideos";
+import React, { useEffect, useState } from "react";
+import Thumbnail from "../thumbnail/thumbnail";
+import styles from "./landing.module.css";
 
-const landing = () => {
+const AllVideos = () => {
   const supabase = useSupabaseClient();
   const [videos, setVideos] = useState(null);
 
@@ -55,12 +53,30 @@ const landing = () => {
   }, []);
 
   return (
-    <>
-      <LikedVideos />
+    <Flex justify="flex-start" align="flex-start" className={styles.category}>
+      <Center className={styles.header} sx={{ background: "#E6E1FF" }}>
+        <Text fz={32} fw={500}>
+          All Videos
+        </Text>
+      </Center>
       <Space h={16} />
-      <AllVideos />
-    </>
+      <Grid gutter="md">
+        {videos?.map((video, index) => (
+          <Grid.Col xs={6} sm={6} md={6} lg={3} key={index}>
+            <Thumbnail
+              id={video.id}
+              thumbnail={video.thumbnail}
+              title={video.title}
+              username={video.profiles?.username}
+              views={video.views}
+              avatar_url={video.profiles.avatar_url}
+              date={video.created_at}
+            />
+          </Grid.Col>
+        ))}
+      </Grid>
+    </Flex>
   );
 };
 
-export default landing;
+export default AllVideos;

@@ -1,5 +1,4 @@
-.liked_songs {
-    background: #FFE4ED;
+.header {
     border: 2px solid #000000;
     border-radius: 25.5px;
     font-size: 25px;
@@ -8,7 +7,7 @@
     width: fit-content;
 }
 
-.liked_songs_header {
+.category {
     width: 100%;
     display: flex;
     flex-direction: column;
