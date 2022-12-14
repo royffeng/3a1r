@@ -1,6 +1,6 @@
 import { Button, Collapse, Flex, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
 import Comment from "./comment";
 
@@ -9,13 +9,9 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
   const [commentData, setCommentData] = useState([]);
   const [opened, setOpened] = useState(false);
 
-  const uid = useMemo(() => {
-    return "753b8a89-0624-4dd5-9592-89c664a806c3";
-    // temp value until auth is finished
-  }, []);
 
   const insertLikes = useCallback(
-    async (rid) => {
+    async (uid, rid) => {
       let { error } = await supabase
         .from("replyLikes")
         .insert({ uid: uid, rid: rid });
@@ -24,11 +20,11 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
         console.log("insert reply likes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   const deleteLikes = useCallback(
-    async (rid) => {
+    async (uid,rid) => {
       let { error } = await supabase
         .from("replyLikes")
         .delete()
@@ -39,11 +35,11 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
         console.log("delete reply likes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   const insertDislikes = useCallback(
-    async (rid) => {
+    async (uid, rid) => {
       let { error } = await supabase
         .from("replyDislikes")
         .insert({ uid: uid, rid: rid });
@@ -52,11 +48,11 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
         console.log("insert reply dislikes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   const deleteDislikes = useCallback(
-    async (rid) => {
+    async (uid, rid) => {
       let { error } = await supabase
         .from("replyDislikes")
         .delete()
@@ -67,7 +63,7 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
         console.log("delete reply dislikes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   useEffect(() => {

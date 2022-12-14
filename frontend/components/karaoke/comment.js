@@ -1,8 +1,9 @@
 import { Avatar, Button, Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { rectifyFormat } from "../../utils/formatUTC";
+import { UserContext } from "../../utils/UserContext";
 import Reply from "./reply";
 
 export default function Comment({
@@ -26,10 +27,7 @@ export default function Comment({
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
   const [showReply, setShowReply] = useState(false);
-  const uid = useMemo(() => {
-    return "753b8a89-0624-4dd5-9592-89c664a806c3";
-    // temp value until auth is finished
-  }, []);
+  const user = useContext(UserContext);
 
   useEffect(() => {
     const getInitialLikedState = async () => {
@@ -38,13 +36,13 @@ export default function Comment({
         let replyLikedData = await supabase
           .from("replyLikes")
           .select()
-          .eq("uid", uid)
+          .eq("uid", user.id)
           .eq("rid", cid);
 
         let replyDisLikedData = await supabase
           .from("replyDislikes")
           .select()
-          .eq("uid", uid)
+          .eq("uid", user.id)
           .eq("rid", cid);
 
         if (replyLikedData.error) {
@@ -68,13 +66,13 @@ export default function Comment({
         let commentLikedData = await supabase
           .from("commentLikes")
           .select()
-          .eq("uid", uid)
+          .eq("uid", user.id)
           .eq("cid", cid);
 
         let commentDislikedData = await supabase
           .from("commentDislikes")
           .select()
-          .eq("uid", uid)
+          .eq("uid", user.id)
           .eq("cid", cid);
 
         if (commentLikedData.error) {
@@ -95,44 +93,44 @@ export default function Comment({
       }
     };
 
-    if (vid && uid) {
+    if (vid && user) {
       getInitialLikedState();
     }
-  }, [uid, pid, vid]);
+  }, [user, pid, vid]);
 
-  const handleLike = useCallback(() => {
+  const handleLike = useCallback((uid, cid, liked, disliked) => {
     if (disliked) {
       setDisliked(false);
-      deleteDislikes(cid);
+      deleteDislikes(uid,cid);
       setDislikes((d) => d - 1);
     }
     if (liked) {
       setLiked(false);
-      deleteLikes(cid);
+      deleteLikes(uid,cid);
       setLikes((l) => l - 1);
     } else {
       setLiked(true);
-      insertLikes(cid);
+      insertLikes(uid,cid);
       setLikes((l) => l + 1);
     }
-  }, [cid, liked, disliked]);
+  }, []);
 
-  const handleDislike = useCallback(() => {
+  const handleDislike = useCallback((uid, cid, liked, disliked) => {
     if (liked) {
       setLiked(false);
-      deleteLikes(cid);
+      deleteLikes(uid, cid);
       setLikes((l) => l - 1);
     }
     if (disliked) {
       setDisliked(false);
-      deleteDislikes(cid);
+      deleteDislikes(uid, cid);
       setDislikes((d) => d - 1);
     } else {
       setDisliked(true);
-      insertDislikes(cid);
+      insertDislikes(uid, cid);
       setDislikes((d) => d + 1);
     }
-  }, [cid, liked, disliked]);
+  }, []);
 
   const closeReply = useCallback(() => {
     setShowReply(false);
@@ -173,7 +171,7 @@ export default function Comment({
             gap="xs"
           >
             <Button
-              onClick={() => handleLike()}
+              onClick={() => handleLike(user.id, cid, liked, disliked)}
               leftIcon={
                 <AiFillLike color={liked ? "green" : "gray"} size={12} />
               }
@@ -193,7 +191,7 @@ export default function Comment({
               </Text>
             </Button>
             <Button
-              onClick={() => handleDislike()}
+              onClick={() => handleDislike(user.id, cid, liked, disliked)}
               leftIcon={
                 <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
               }

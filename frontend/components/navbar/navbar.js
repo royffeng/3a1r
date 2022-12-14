@@ -1,41 +1,24 @@
-import { Avatar, Flex, Input } from "@mantine/core";
+import { Avatar, Button, Flex, Group, Input, Menu, Text } from "@mantine/core";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useCallback, useContext } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useEffect, useState, useMemo } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { BsFilePerson } from "react-icons/bs";
+import { MdOutlineLogout } from "react-icons/md";
 import icon from "../../public/appicon.png";
+import { UserContext } from "../../utils/UserContext";
 
 export default function Navbar() {
+  const router = useRouter();
   const supabase = useSupabaseClient();
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const uid = useMemo(() => {
-    return "753b8a89-0624-4dd5-9592-89c664a806c3";
-    // temp value until auth is finished
-  }, []);
+  const userData = useContext(UserContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let { data, error } = await supabase
-        .from("profiles")
-        .select(
-          `
-          avatar_url
-        `
-        )
-        .filter("id", "eq", uid);
-
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(data);
-        setAvatarUrl(data[0].avatar_url);
-      }
-    };
-    if (uid) {
-      fetchData();
-    }
-  }, [uid]);
+  const handleLogout = useCallback(async () => {
+    await supabase.auth.signOut();
+    router.push("/signout");
+  }, [supabase]);
 
   return (
     <Flex
@@ -96,10 +79,75 @@ export default function Navbar() {
           placeholder="Search for a song"
         />
       </Flex>
-      {avatarUrl !== undefined ? (
-        <Avatar src={avatarUrl} radius="xl" alt="no image here" />
+      {userData ? (
+        <Menu shadow="md" position="bottom-end">
+          <Menu.Target>
+            {userData?.avatarUrl !== undefined ? (
+              <Avatar
+                sx={{ cursor: "pointer" }}
+                src={userData?.avatarUrl}
+                radius="xl"
+                alt="no image here"
+              />
+            ) : (
+              <Avatar
+                sx={{ cursor: "pointer" }}
+                radius="xl"
+                alt="no image here"
+              />
+            )}
+          </Menu.Target>
+
+          <Menu.Dropdown sx={{ padding: "0.75rem" }}>
+            <Group>
+              {userData?.avatarUrl !== undefined ? (
+                <Avatar
+                  sx={{ cursor: "pointer" }}
+                  src={userData?.avatarUrl}
+                  radius="xl"
+                  alt="no image here"
+                />
+              ) : (
+                <Avatar
+                  sx={{ cursor: "pointer" }}
+                  radius="xl"
+                  alt="no image here"
+                />
+              )}
+              <div style={{ flex: 1 }}>
+                <Text>{userData.full_name}</Text>
+                <Text>@{userData.username}</Text>
+              </div>
+            </Group>
+            <Menu.Divider color="red" />
+            <Menu.Item icon={<BsFilePerson size={20} />}>
+              <Link href={`/profile?id=${userData?.id}`}>Your Profile</Link>
+            </Menu.Item>
+            <Menu.Item
+              icon={<MdOutlineLogout size={20} />}
+              onClick={handleLogout}
+            >
+              Logout
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       ) : (
-        <Avatar radius="xl" alt="no image here" />
+        <Button
+          size="lg"
+          leftIcon={
+            <Avatar
+              size="sm"
+              variant="outline"
+              color="dark"
+              radius="xl"
+              alt="no image here"
+            />
+          }
+          variant="subtle"
+          color="dark"
+        >
+          <Link href="/auth">Sign In</Link>
+        </Button>
       )}
     </Flex>
   );

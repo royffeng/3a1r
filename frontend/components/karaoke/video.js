@@ -151,6 +151,7 @@ export default function Video({ videoSource, lyricsArr }) {
           }}
         >
           <Text
+            className="lyrics"
             align="center"
             color="white"
             style={{

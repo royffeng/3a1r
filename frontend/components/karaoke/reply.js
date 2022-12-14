@@ -6,9 +6,10 @@ import {
   Space,
   Textarea,
 } from "@mantine/core";
-import { useMemo, useState } from "react";
+import { useContext, useState } from "react";
 
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { UserContext } from "../../utils/UserContext";
 
 export default function Reply({
   placeholder,
@@ -23,10 +24,7 @@ export default function Reply({
   const [showButtons, setShowButtons] = useState(initialShowButtons ?? true);
   const [loading, setLoading] = useState(false);
   const supabase = useSupabaseClient();
-  const uid = useMemo(() => {
-    return "753b8a89-0624-4dd5-9592-89c664a806c3";
-    // temp value until auth is finished
-  }, []);
+  const user = useContext(UserContext);
 
   const handleCommentSubmit = async (vid, uid, content) => {
     const { error } = await supabase
@@ -100,8 +98,8 @@ export default function Reply({
                   onClick={() => {
                     setLoading(true);
                     type === "Comment"
-                      ? handleCommentSubmit(vid, uid, value)
-                      : handleReplySubmit(pid, uid, value);
+                      ? handleCommentSubmit(vid, user.id, value)
+                      : handleReplySubmit(pid, user.id, value);
                   }}
                   size="xs"
                   radius="xl"

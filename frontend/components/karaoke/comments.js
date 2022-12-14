@@ -1,6 +1,7 @@
 import { Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { UserContext } from "../../utils/UserContext";
 import Comment from "./comment";
 import Replies from "./replies";
 import Reply from "./reply";
@@ -10,13 +11,10 @@ export default function Comments({ vid }) {
   const [commentData, setCommentData] = useState(null);
   const [avatarWait, setAvatarWait] = useState(true);
   const [avatar_url, setAvatarUrl] = useState("");
-  const uid = useMemo(() => {
-    return "753b8a89-0624-4dd5-9592-89c664a806c3";
-    // temp value until auth is finished
-  }, []);
+  const user = useContext(UserContext);
 
   const insertLikes = useCallback(
-    async (cid) => {
+    async (uid, cid) => {
       let { error } = await supabase
         .from("commentLikes")
         .insert({ uid: uid, cid: cid });
@@ -25,11 +23,11 @@ export default function Comments({ vid }) {
         console.log("insert comment likes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   const deleteLikes = useCallback(
-    async (cid) => {
+    async (uid, cid) => {
       let { error } = await supabase
         .from("commentLikes")
         .delete()
@@ -40,11 +38,11 @@ export default function Comments({ vid }) {
         console.log("delete comment likes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   const insertDislikes = useCallback(
-    async (cid) => {
+    async (uid, cid) => {
       let { error } = await supabase
         .from("commentDislikes")
         .insert({ uid: uid, cid: cid });
@@ -53,11 +51,11 @@ export default function Comments({ vid }) {
         console.log("insert comment dislikes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   const deleteDislikes = useCallback(
-    async (cid) => {
+    async (uid, cid) => {
       let { error } = await supabase
         .from("commentDislikes")
         .delete()
@@ -68,7 +66,7 @@ export default function Comments({ vid }) {
         console.log("delete comment dislikes error: ", error);
       }
     },
-    [uid]
+    []
   );
 
   useEffect(() => {
@@ -114,7 +112,7 @@ export default function Comments({ vid }) {
       ({ data, error } = await supabase
         .from("profiles")
         .select(`avatar_url`)
-        .filter("id", "eq", uid));
+        .filter("id", "eq", user.id));
 
       if (error) {
         console.log("error getting user profile: ", error);
@@ -125,10 +123,10 @@ export default function Comments({ vid }) {
       setAvatarWait(false);
     };
 
-    if (vid && uid) {
+    if (vid && user) {
       fetchData();
     }
-  }, [vid, uid]);
+  }, [vid, user]);
 
   return (
     <>
