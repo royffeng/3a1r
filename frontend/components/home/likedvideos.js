@@ -1,9 +1,9 @@
-import { Center, Flex, Grid, Space, Text } from "@mantine/core";
+import { Center, Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/UserContext";
-import Thumbnail from "../thumbnail/thumbnail";
 import styles from "./landing.module.css";
+import { VideoGrid } from "./videoGrid";
 
 export default function LikedVideos() {
   const supabase = useSupabaseClient();
@@ -65,21 +65,7 @@ export default function LikedVideos() {
         </Text>
       </Center>
       <Space h={16} />
-      <Grid gutter="md">
-        {videos?.map((video, index) => (
-          <Grid.Col xs={6} sm={6} md={6} lg={3} key={index}>
-            <Thumbnail
-              id={video.id}
-              thumbnail={video.thumbnail}
-              title={video.title}
-              username={video.profiles?.username}
-              views={video.views}
-              avatar_url={video.profiles.avatar_url}
-              date={video.created_at}
-            />
-          </Grid.Col>
-        ))}
-      </Grid>
+      <VideoGrid videos={videos} />
     </Flex>
   );
 }

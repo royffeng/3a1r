@@ -25,6 +25,7 @@ export default function PageWrapper(props) {
         console.log(error);
       } else {
         let avatarUrl = null;
+        let genresArray = null;
         if (!data[0].avatar_url.includes("https")) {
           let { data: avatar, error: error } = await supabase.storage
             .from("avatars")
@@ -36,10 +37,21 @@ export default function PageWrapper(props) {
             avatarUrl = url;
           }
         }
+        let {data: genres, error: error} = await supabase
+          .from("genreLikes")
+          .select(`genre`)
+          .filter("uid", "eq", user.id);
+        
+        if(error) {
+          console.log(error)
+        } else {
+          genresArray = genres.map(g => g.genre);
+        }
         setUserData({
           username: data[0].username,
           full_name: data[0].full_name,
-          avatarUrl: avatarUrl
+          avatarUrl: avatarUrl,
+          genres: genresArray,
         });
       }
     };
@@ -48,19 +60,9 @@ export default function PageWrapper(props) {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (user) {
-      console.log("yo");
-      // fetchData();
-    } else {
-      console.log("oy");
-    }
-  }, [user])
-
-
   return (
-    <UserContext.Provider value={ user ?
-      {id: user?.id, username: userData?.username, full_name: userData?.full_name, avatarUrl: userData?.avatarUrl}
+    <UserContext.Provider value={ user && userData ?
+      {id: user?.id, username: userData?.username, full_name: userData?.full_name, avatarUrl: userData?.avatarUrl, genres: userData?.genres}
       : null}
     >
       {props.children}
