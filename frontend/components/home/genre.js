@@ -119,21 +119,32 @@ const Genre = () => {
   }, []);
 
   return (
-    <Flex justify="flex-start" align="flex-start" className={styles.category}>
-      <Text fz={32} fw={500}>
-        Your Genres
-      </Text>
-      {genre && genres && (
-        <SegmentedControl
-          value={genre}
-          onChange={(value) => handleGenreChange(value)}
-          data={genres}
-          color="green"
-        />
+    <>
+      {user && (
+        <>
+          <Flex
+            justify="flex-start"
+            align="flex-start"
+            className={styles.category}
+          >
+            <Text fz={32} fw={500}>
+              Your Genres
+            </Text>
+            {genre && genres && (
+              <SegmentedControl
+                value={genre}
+                onChange={(value) => handleGenreChange(value)}
+                data={genres}
+                color="green"
+              />
+            )}
+            <Space h={4} />
+            <VideoGrid videos={videos} />
+          </Flex>
+          <Space h={48} />
+        </>
       )}
-      <Space h={4} />
-      <VideoGrid videos={videos} />
-    </Flex>
+    </>
   );
 };
 

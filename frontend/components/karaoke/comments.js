@@ -119,7 +119,7 @@ export default function Comments({ vid }) {
           </Text>
           <Reply
             placeholder={"Add a comment..."}
-            avatar_url={user.avatarUrl}
+            avatar_url={user?.avatarUrl}
             type="Comment"
             vid={vid}
             initialShowButtons={false}
@@ -139,13 +139,13 @@ export default function Comments({ vid }) {
                   insertDislikes={insertDislikes}
                   deleteLikes={deleteLikes}
                   deleteDislikes={deleteDislikes}
-                  sessionAvatarUrl={user.avatarUrl}
+                  sessionAvatarUrl={user?.avatarUrl}
                 />
                 <Replies
                   key={`${comment.cid} replies`}
                   vid={vid}
                   pid={comment.cid}
-                  sessionAvatarUrl={user.avatarUrl}
+                  sessionAvatarUrl={user?.avatarUrl}
                 />
               </Flex>
               <Space h="lg" />

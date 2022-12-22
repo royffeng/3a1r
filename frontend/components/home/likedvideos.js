@@ -58,14 +58,25 @@ export default function LikedVideos() {
   }, [user]);
 
   return (
-    <Flex justify="flex-start" align="flex-start" className={styles.category}>
-      <Center className={styles.header} sx={{ background: "#FFE4ED" }}>
-        <Text fz={32} fw={500}>
-          Liked Videos
-        </Text>
-      </Center>
-      <Space h={16} />
-      <VideoGrid videos={videos} />
-    </Flex>
+    <>
+      {user && (
+        <>
+          <Flex
+            justify="flex-start"
+            align="flex-start"
+            className={styles.category}
+          >
+            <Center className={styles.header} sx={{ background: "#FFE4ED" }}>
+              <Text fz={32} fw={500}>
+                Liked Videos
+              </Text>
+            </Center>
+            <Space h={16} />
+            <VideoGrid videos={videos} />
+          </Flex>
+          <Space h={48} />
+        </>
+      )}
+    </>
   );
 }

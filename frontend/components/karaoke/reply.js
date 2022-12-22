@@ -65,15 +65,31 @@ export default function Reply({
           )}
         </>
         <Flex direction="column" gap="sm" sx={{ width: "100%" }}>
-          <Textarea
-            onFocus={() => setShowButtons(true)}
-            sx={{ width: "100%" }}
-            value={value}
-            onChange={(e) => setValue(e.currentTarget.value)}
-            placeholder={placeholder}
-            autosize
-            minRows={1}
-          />
+          <>
+            {user ? (
+              <Textarea
+                onFocus={() => setShowButtons(true)}
+                sx={{ width: "100%" }}
+                value={value}
+                onChange={(e) => setValue(e.currentTarget.value)}
+                placeholder={placeholder}
+                autosize
+                minRows={1}
+              />
+            ) : (
+              <Textarea
+                onFocus={() => setShowButtons(true)}
+                sx={{ width: "100%" }}
+                value={value}
+                onChange={(e) => setValue(e.currentTarget.value)}
+                placeholder={"Sign in to Comment"}
+                autosize
+                minRows={1}
+                disabled
+              />
+            )}
+          </>
+
           {showButtons && (
             <Flex justify="flex-end">
               <Button

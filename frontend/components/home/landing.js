@@ -8,9 +8,7 @@ const landing = () => {
   return (
     <>
       <LikedVideos />
-      <Space h={48} />
       <AllVideos />
-      <Space h={48} />
       <Genre />
     </>
   );

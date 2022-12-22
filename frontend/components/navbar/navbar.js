@@ -120,8 +120,12 @@ export default function Navbar() {
               </div>
             </Group>
             <Menu.Divider color="red" />
-            <Menu.Item icon={<BsFilePerson size={20} />}>
-              <Link href={`/profile?id=${userData?.id}`}>Your Profile</Link>
+            <Menu.Item
+              component="a"
+              href={`/profile?id=${userData.id}`}
+              icon={<BsFilePerson size={20} />}
+            >
+              Your Profile
             </Menu.Item>
             <Menu.Item
               icon={<MdOutlineLogout size={20} />}
