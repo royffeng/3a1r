@@ -1,5 +1,13 @@
-import { BackgroundImage, Flex, Image, Space, Text } from "@mantine/core";
+import {
+  BackgroundImage,
+  Container,
+  Flex,
+  Image,
+  Space,
+  Text,
+} from "@mantine/core";
 import { useEffect } from "react";
+import { AiFillHeart } from "react-icons/ai";
 
 const Playlist = ({ playlistData }) => {
   useEffect(() => {
@@ -12,7 +20,8 @@ const Playlist = ({ playlistData }) => {
       justify="center"
       sx={{
         border: "solid black",
-        padding: "1.5rem 1.5rem 3.5rem 1.5rem",
+        padding: "1.5rem",
+        height: "100%",
         borderRadius: "34px",
       }}
     >
@@ -30,6 +39,13 @@ const Playlist = ({ playlistData }) => {
       </div>
       <Space h={8} />
       <Text lineClamp={1} truncate size={"md"}>{`${playlistData.name}`}</Text>
+      <Space h={28} />
+      <Flex justify={"flex-end"}>
+        <Flex justify="center" align="center" gap="xs">
+          <AiFillHeart />
+          <Text>{`${playlistData.likes}`}</Text>
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
