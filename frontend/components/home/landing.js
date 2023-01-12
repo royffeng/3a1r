@@ -10,6 +10,7 @@ const landing = () => {
       <LikedVideos />
       <AllVideos />
       <Genre />
+      <Space h={16} />
     </>
   );
 };

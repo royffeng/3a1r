@@ -39,28 +39,6 @@ export default function Navbar() {
             <Image width="40px" height="40px" src={icon} />
           </a>
         </Link>
-        <Link href="/">
-          <a
-            style={{
-              pointerEvents: "none",
-              textDecoration: "none",
-              color: "black",
-            }}
-          >
-            My Playlists
-          </a>
-        </Link>
-        <Link href="/">
-          <a
-            style={{
-              pointerEvents: "none",
-              textDecoration: "none",
-              color: "black",
-            }}
-          >
-            Settings
-          </a>
-        </Link>
       </Flex>
       <Flex
         direction="row"

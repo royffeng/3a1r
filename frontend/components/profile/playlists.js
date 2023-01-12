@@ -1,18 +1,30 @@
-import { useMemo, useState, useCallback } from "react";
-import { SegmentedControl, Space, Text } from "@mantine/core";
+import { useMemo, useState, useCallback, useEffect } from "react";
+import { SegmentedControl, Space, Text, Grid } from "@mantine/core";
+import Playlist from "./playlist";
 
-const Playlists = ({ user }) => {
+const Playlists = ({ playlists, user }) => {
   const [tab, setTab] = useState("*");
+  const [display, setDisplay] = useState(playlists);
   const playlistTabs = useMemo(() => {
     return [
       { value: "*", label: "all" },
-      { value: "favorites", label: "favorites" },
       { value: "public", label: "public" },
       { value: "private", label: "private" },
     ];
   });
 
+  useEffect(() => {
+    console.log(display);
+  }, [display]);
+
   const handleTabChange = useCallback((value) => {
+    if (value === "public") {
+      setDisplay(playlists.filter((playlist) => playlist.public));
+    } else if (value === "private") {
+      setDisplay(playlists.filter((playlist) => !playlist.public));
+    } else {
+      setDisplay(playlists);
+    }
     setTab(value);
   }, []);
   return (
@@ -30,6 +42,16 @@ const Playlists = ({ user }) => {
           color="green"
         />
       }
+      <Space h={32} />
+      {display && (
+        <Grid gutter="md">
+          {display?.map((video, index) => (
+            <Grid.Col xs={6} sm={6} md={6} lg={3} key={index}>
+              <Playlist playlistData={video} />
+            </Grid.Col>
+          ))}
+        </Grid>
+      )}
     </>
   );
 };
