@@ -29,7 +29,7 @@ const Playlist = ({ playlistData }) => {
         />
       </div>
       <Space h={8} />
-      <Text fz={"md"}>{`${playlistData.name}`}</Text>
+      <Text lineClamp={1} truncate size={"md"}>{`${playlistData.name}`}</Text>
     </Flex>
   );
 };

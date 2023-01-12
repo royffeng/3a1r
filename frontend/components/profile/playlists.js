@@ -52,6 +52,7 @@ const Playlists = ({ playlists, user }) => {
           ))}
         </Grid>
       )}
+      <Space h={32} />
     </>
   );
 };
