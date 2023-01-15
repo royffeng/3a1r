@@ -1,8 +1,8 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { SegmentedControl, Space, Text, Grid } from "@mantine/core";
 import Playlist from "./playlist";
 
-const Playlists = ({ playlists, user }) => {
+const Playlists = ({ playlists }) => {
   const [tab, setTab] = useState("*");
   const [display, setDisplay] = useState(playlists);
   const playlistTabs = useMemo(() => {
@@ -12,10 +12,6 @@ const Playlists = ({ playlists, user }) => {
       { value: "private", label: "private" },
     ];
   });
-
-  useEffect(() => {
-    console.log(display);
-  }, [display]);
 
   const handleTabChange = useCallback((value) => {
     if (value === "public") {

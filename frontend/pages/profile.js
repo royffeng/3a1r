@@ -26,7 +26,8 @@ const landing = () => {
           ),
           public,
           name,
-          likes
+          likes,
+          thumbnail_url
         `
         )
         .filter("uid", "eq", user.id);
