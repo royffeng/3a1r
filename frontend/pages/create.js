@@ -12,7 +12,7 @@ import { FilePond, registerPlugin } from "react-filepond";
 
 // Import FilePond styles
 import {
-  Button, Flex, JsonInput, Notification, SegmentedControl, Space, Textarea
+  Button, Flex, JsonInput, Notification, SegmentedControl, Space, Textarea, TextInput, MultiSelect
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import S3 from "aws-sdk/clients/s3";
@@ -22,6 +22,7 @@ import { AiFillCheckCircle } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import { TimestampInput } from "../components/create/timestamps";
 import { UserContext } from "../utils/UserContext";
+import { GENRE_LIST } from "../utils/genres";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -47,7 +48,13 @@ export default function Create() {
   const [jsonTimestamps, setJsonTimeStamps] = useState("");
   const [timestamps, setTimestamps] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [genres, setGenres] = useState([]);
+  const [searchValue, onSearchChange] = useState('');
   const uuid = useMemo(() => uuidv4(), []);
+
+  useEffect(() => {
+    console.log(genres)
+  }, [genres])
 
   const insertVideo = useCallback(
     async (user, title, description, uuid, lyrics, timestamps) => {
@@ -69,7 +76,17 @@ export default function Create() {
 
       if (error) {
         console.log("insert video likes error: ", error);
-      } else if (data) {
+      } else  {
+        console.log(data)
+        console.log(genres.map((g) => {return {"genre": g, "vid": data[0].id}}))
+        genres.forEach(async g => {
+          let { data: d, error } = await supabase
+          .from("videoGenres")
+          .insert(genres.map((g) => {return {"genre": g, "vid": data[0].id}}))
+          if(error) {
+            console.log("insert video genres error: ", error);
+          }
+        })
         setSuccess(true);
       }
     },
@@ -187,6 +204,16 @@ export default function Create() {
         onChange={(e) => setDescription(e.currentTarget.value)}
         size="xl"
       />
+      <MultiSelect
+        data={GENRE_LIST}
+        placeholder="Genre(s)"
+        label="Choose all that apply"
+        searchable
+        searchValue={searchValue}
+        onSearchChange={onSearchChange}
+        onChange={setGenres}
+        error={genres.length === 0 ? "genre is required" : null}
+      />
       <Textarea
         placeholder="Lyrics"
         label="Enter your lyrics"
@@ -246,7 +273,7 @@ export default function Create() {
         <Button
           size="xl"
           disabled={
-            title !== "" && lyrics !== "" && timestamps.length !== 0
+            title !== "" && lyrics !== "" && timestamps.length !== 0 && genres.length !== 0
               ? null
               : true
           }

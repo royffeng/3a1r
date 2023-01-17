@@ -26,7 +26,7 @@ const AllVideos = () => {
           `
         )
         .filter("title", "neq", null)
-        .limit(4);
+        .limit(8);
       if (error) {
         console.log(error);
         return;
