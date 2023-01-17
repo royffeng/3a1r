@@ -25,18 +25,18 @@ const Playlist = ({ playlistData }) => {
         borderRadius: "34px",
       }}
     >
-      <img
-        style={{
+      <Image
+        radius="lg"
+        sx={{
           maxHeight: "100%",
           maxWidth: "100%",
           aspectRatio: "41 / 40",
-          borderRadius: "25px",
           objectFit: "cover",
         }}
         src={`${playlistData.thumbnail_url}`}
         alt="playlist thumbnail image"
       />
-      <Space h={8} />
+      <Space h={16} />
       <Text lineClamp={1} truncate size={"md"}>{`${playlistData.name}`}</Text>
       <Space h={28} />
       <Flex justify={"flex-end"}>

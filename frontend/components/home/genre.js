@@ -57,7 +57,6 @@ const Genre = () => {
           d.videoGenres = d.videoGenres.map((g) => g.genre);
         }
 
-        console.log(data.filter((d) => d.videoGenres.length > 0));
         setVideos(data.filter((d) => d.videoGenres.length > 0));
         setGenres(user.genres.map((g) => ({ value: g, label: g })));
         setGenre(user.genres[0]);

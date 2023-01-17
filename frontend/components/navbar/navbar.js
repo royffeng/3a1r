@@ -1,12 +1,13 @@
 import { Avatar, Button, Flex, Group, Input, Menu, Text } from "@mantine/core";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilePerson } from "react-icons/bs";
 import { MdOutlineLogout } from "react-icons/md";
+import { TbVideoPlus } from "react-icons/tb";
 import icon from "../../public/appicon.png";
 import { UserContext } from "../../utils/UserContext";
 
@@ -14,6 +15,7 @@ export default function Navbar() {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const userData = useContext(UserContext);
+  const [search, setSearch] = useState("");
 
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
@@ -46,38 +48,31 @@ export default function Navbar() {
           flex: 1,
         }}
       >
-        <Input
-          disabled
-          stroke={1.5}
-          variant="filled"
-          size="md"
-          radius="lg"
+        <form
           style={{ width: "100%" }}
-          icon={<AiOutlineSearch />}
-          placeholder="Search for a song"
-        />
+          onSubmit={(e) => {
+            e.preventDefault();
+            router.push(`/search?query=${search}`);
+          }}
+        >
+          <Input
+            stroke={1.5}
+            variant="filled"
+            size="md"
+            radius="lg"
+            icon={<AiOutlineSearch />}
+            onChange={(e) => setSearch(e.currentTarget.value)}
+            placeholder="Search for a song"
+          />
+        </form>
       </Flex>
       {userData ? (
-        <Menu shadow="md" position="bottom-end">
-          <Menu.Target>
-            {userData?.avatarUrl !== undefined ? (
-              <Avatar
-                sx={{ cursor: "pointer" }}
-                src={userData?.avatarUrl}
-                radius="xl"
-                alt="no image here"
-              />
-            ) : (
-              <Avatar
-                sx={{ cursor: "pointer" }}
-                radius="xl"
-                alt="no image here"
-              />
-            )}
-          </Menu.Target>
-
-          <Menu.Dropdown sx={{ padding: "0.75rem" }}>
-            <Group>
+        <>
+          <Button size="md" leftIcon={<TbVideoPlus />} color="green">
+            <Link href="/create">Create</Link>
+          </Button>
+          <Menu shadow="md" position="bottom-end">
+            <Menu.Target>
               {userData?.avatarUrl !== undefined ? (
                 <Avatar
                   sx={{ cursor: "pointer" }}
@@ -92,27 +87,46 @@ export default function Navbar() {
                   alt="no image here"
                 />
               )}
-              <div style={{ flex: 1 }}>
-                <Text>{userData.full_name}</Text>
-                <Text>@{userData.username}</Text>
-              </div>
-            </Group>
-            <Menu.Divider color="red" />
-            <Menu.Item
-              component="a"
-              href={`/profile?id=${userData.id}`}
-              icon={<BsFilePerson size={20} />}
-            >
-              Your Profile
-            </Menu.Item>
-            <Menu.Item
-              icon={<MdOutlineLogout size={20} />}
-              onClick={handleLogout}
-            >
-              Logout
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+            </Menu.Target>
+
+            <Menu.Dropdown sx={{ padding: "0.75rem" }}>
+              <Group>
+                {userData?.avatarUrl !== undefined ? (
+                  <Avatar
+                    sx={{ cursor: "pointer" }}
+                    src={userData?.avatarUrl}
+                    radius="xl"
+                    alt="no image here"
+                  />
+                ) : (
+                  <Avatar
+                    sx={{ cursor: "pointer" }}
+                    radius="xl"
+                    alt="no image here"
+                  />
+                )}
+                <div style={{ flex: 1 }}>
+                  <Text>{userData.full_name}</Text>
+                  <Text>@{userData.username}</Text>
+                </div>
+              </Group>
+              <Menu.Divider color="red" />
+              <Menu.Item
+                component="a"
+                href={`/profile?id=${userData.id}`}
+                icon={<BsFilePerson size={20} />}
+              >
+                Your Profile
+              </Menu.Item>
+              <Menu.Item
+                icon={<MdOutlineLogout size={20} />}
+                onClick={handleLogout}
+              >
+                Logout
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </>
       ) : (
         <Button
           size="lg"
