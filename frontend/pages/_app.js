@@ -10,10 +10,12 @@ import PageWrapper from "../utils/PageWrapper";
 function MyApp({ Component, pageProps }) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
   const [userDataLoading, setUserDataLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   const handleDataLoading = () => {
     setUserDataLoading(false);
   };
+
 
   return (
     <SessionContextProvider
@@ -55,8 +57,8 @@ function MyApp({ Component, pageProps }) {
             <></>
           ) : (
             <>
-              <Navbar />
-              <Component {...pageProps} />
+              <Navbar searchContext={setSearch}/>
+              <Component search={search} {...pageProps} />
             </>
           )}
         </PageWrapper>

@@ -5,12 +5,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { VideoGrid } from "../components/home/videoGrid";
 import Playlist from "../components/profile/playlist";
 
-export default function Search() {
-  const router = useRouter();
+export default function Search({search, ...props}) {
+  // const router = useRouter();
   const [display, setDisplay] = useState("videos");
   const [playlists, setPlaylists] = useState(null);
   const supabase = useSupabaseClient();
   const [videos, setVideos] = useState(null);
+  const [dataLoading, setDataLoading] = useState(true)
   const tabs = useMemo(() => {
     return [
       { value: "videos", label: "videos" },
@@ -20,6 +21,7 @@ export default function Search() {
 
   useEffect(() => {
     const fetchVideoData = async () => {
+      setDataLoading(true);
       let { data, error } = await supabase
         .from("video")
         .select(
@@ -35,7 +37,7 @@ export default function Search() {
             )
           `
         )
-        .ilike("title", `%${router.query.query}%`);
+        .ilike("title", `%${search}%`);
       if (error) {
         console.log(error);
         return;
@@ -57,9 +59,12 @@ export default function Search() {
         }
         setVideos(data);
       }
+      setDataLoading(false);
     };
 
     const fetchPlaylistData = async () => {
+      console.log("search", search)
+      setDataLoading(true);
       let { data, error } = await supabase
         .from("playlists")
         .select(
@@ -77,13 +82,15 @@ export default function Search() {
         `
         )
         .filter("public", "eq", "true")
-        .ilike("title", `%${router.query.query}%`);
+        .ilike("name", `%${search}%`);
       if (error) {
         console.log("error getting playlists: ", error);
         return;
       } else {
+        console.log("data", data)
         setPlaylists(data);
       }
+      setDataLoading(false);
     };
 
     if (display === "videos") {
@@ -93,10 +100,15 @@ export default function Search() {
     if (display === "playlists") {
       fetchPlaylistData();
     }
-  }, [display]);
+  }, [display,search]);
 
   return (
-    <>
+    <Flex
+      direction="column"
+      sx={{
+        padding: "0 2rem",
+      }}
+    >
       <SegmentedControl
         value={display}
         onChange={(value) => setDisplay(value)}
@@ -104,22 +116,9 @@ export default function Search() {
         color="green"
       />
       <Space h={32} />
-      {display === "videos" ? (
-        <Flex
-          justify="flex-start"
-          align="flex-start"
-          direction="column"
-          sx={{ padding: "0 2rem" }}
-        >
+      {!dataLoading && display === "videos" ? (
           <VideoGrid videos={videos} />
-        </Flex>
-      ) : display === "playlists" ? (
-        <Flex
-          justify="flex-start"
-          align="flex-start"
-          direction="column"
-          sx={{ padding: "0 2rem" }}
-        >
+      ) : !dataLoading && display === "playlists" ? (
           <Grid gutter="md">
             {playlists?.map((playlist, index) => (
               <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
@@ -127,10 +126,9 @@ export default function Search() {
               </Grid.Col>
             ))}
           </Grid>
-        </Flex>
       ) : null}
 
       <Space h={48} />
-    </>
+    </Flex>
   );
 }

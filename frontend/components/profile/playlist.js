@@ -10,9 +10,6 @@ import { useEffect } from "react";
 import { AiFillHeart } from "react-icons/ai";
 
 const Playlist = ({ playlistData }) => {
-  useEffect(() => {
-    console.log(playlistData);
-  }, []);
   return (
     <Flex
       bg="white"

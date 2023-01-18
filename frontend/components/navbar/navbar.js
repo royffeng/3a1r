@@ -3,7 +3,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilePerson } from "react-icons/bs";
 import { MdOutlineLogout } from "react-icons/md";
@@ -11,7 +11,10 @@ import { TbVideoPlus } from "react-icons/tb";
 import icon from "../../public/appicon.png";
 import { UserContext } from "../../utils/UserContext";
 
-export default function Navbar() {
+export default function Navbar({searchContext}) {
+  useEffect(() => {
+    console.log("first load")
+  }, [])
   const router = useRouter();
   const supabase = useSupabaseClient();
   const userData = useContext(UserContext);
@@ -52,6 +55,7 @@ export default function Navbar() {
           style={{ width: "100%" }}
           onSubmit={(e) => {
             e.preventDefault();
+            searchContext(search);
             router.push(`/search?query=${search}`);
           }}
         >
