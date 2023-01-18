@@ -5,13 +5,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { VideoGrid } from "../components/home/videoGrid";
 import Playlist from "../components/profile/playlist";
 
-export default function Search({search, ...props}) {
+export default function Search({ search, ...props }) {
   // const router = useRouter();
   const [display, setDisplay] = useState("videos");
   const [playlists, setPlaylists] = useState(null);
   const supabase = useSupabaseClient();
   const [videos, setVideos] = useState(null);
-  const [dataLoading, setDataLoading] = useState(true)
+  const [dataLoading, setDataLoading] = useState(true);
   const tabs = useMemo(() => {
     return [
       { value: "videos", label: "videos" },
@@ -63,7 +63,7 @@ export default function Search({search, ...props}) {
     };
 
     const fetchPlaylistData = async () => {
-      console.log("search", search)
+      console.log("search", search);
       setDataLoading(true);
       let { data, error } = await supabase
         .from("playlists")
@@ -87,7 +87,7 @@ export default function Search({search, ...props}) {
         console.log("error getting playlists: ", error);
         return;
       } else {
-        console.log("data", data)
+        console.log("data", data);
         setPlaylists(data);
       }
       setDataLoading(false);
@@ -100,7 +100,7 @@ export default function Search({search, ...props}) {
     if (display === "playlists") {
       fetchPlaylistData();
     }
-  }, [display,search]);
+  }, [display, search]);
 
   return (
     <Flex
@@ -117,15 +117,15 @@ export default function Search({search, ...props}) {
       />
       <Space h={32} />
       {!dataLoading && display === "videos" ? (
-          <VideoGrid videos={videos} />
+        <VideoGrid videos={videos} />
       ) : !dataLoading && display === "playlists" ? (
-          <Grid gutter="md">
-            {playlists?.map((playlist, index) => (
-              <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
-                <Playlist playlistData={playlist} />
-              </Grid.Col>
-            ))}
-          </Grid>
+        <Grid gutter="md">
+          {playlists?.map((playlist, index) => (
+            <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
+              <Playlist playlistData={playlist} />
+            </Grid.Col>
+          ))}
+        </Grid>
       ) : null}
 
       <Space h={48} />

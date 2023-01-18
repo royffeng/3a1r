@@ -161,7 +161,7 @@ export default function Video({ videoSource, lyricsArr }) {
             }}
           >
             {`${
-                lyricsIndex < lyricsArr.length && index !== -1
+              lyricsIndex < lyricsArr.length && index !== -1
                 ? lyricsArr[lyricsIndex].lyrics
                 : ""
             }`}

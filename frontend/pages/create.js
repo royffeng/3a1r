@@ -1,7 +1,9 @@
 import React, {
   useCallback,
   useContext,
-  useEffect, useMemo, useState
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
 
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
@@ -12,7 +14,15 @@ import { FilePond, registerPlugin } from "react-filepond";
 
 // Import FilePond styles
 import {
-  Button, Flex, JsonInput, Notification, SegmentedControl, Space, Textarea, TextInput, MultiSelect
+  Button,
+  Flex,
+  JsonInput,
+  Notification,
+  SegmentedControl,
+  Space,
+  Textarea,
+  TextInput,
+  MultiSelect,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import S3 from "aws-sdk/clients/s3";
@@ -49,15 +59,23 @@ export default function Create() {
   const [timestamps, setTimestamps] = useState(null);
   const [success, setSuccess] = useState(false);
   const [genres, setGenres] = useState([]);
-  const [searchValue, onSearchChange] = useState('');
+  const [searchValue, onSearchChange] = useState("");
   const uuid = useMemo(() => uuidv4(), []);
-
-  useEffect(() => {
-    console.log(genres)
-  }, [genres])
 
   const insertVideo = useCallback(
     async (user, title, description, uuid, lyrics, timestamps) => {
+      let lyricTimestamp = lyrics.split("\n").map((l, i) => {
+        return { lyrics: l, ...timestamps[i] };
+      });
+      if (lyricTimestamp[0].start !== 0) {
+        lyricTimestamp = [
+          { lyrics: "", start: 0, end: lyricTimestamp[0].start },
+          ...lyricTimestamp,
+        ];
+      }
+      if (lyricTimestamp[0].start !== 0) {
+        console.log("yo");
+      }
       let { data, error } = await supabase
         .from("video")
         .insert([
@@ -66,9 +84,7 @@ export default function Create() {
             title: title,
             description: description,
             thumbnail: `${process.env.NEXT_PUBLIC_THUMBNAIL_BASE}/${uuid}/Thumbnails/${uuid}.0000000.jpg`,
-            lyrics: lyrics.split("\n").map((l, i) => {
-              return { lyrics: l, ...timestamps[i] };
-            }),
+            lyrics: lyricTimestamp,
             videourl: `${uuid}/${process.env.NEXT_PUBLIC_URL_BASE}/HLS/${uuid}_720.m3u8`,
           },
         ])
@@ -76,17 +92,23 @@ export default function Create() {
 
       if (error) {
         console.log("insert video likes error: ", error);
-      } else  {
-        console.log(data)
-        console.log(genres.map((g) => {return {"genre": g, "vid": data[0].id}}))
-        genres.forEach(async g => {
-          let { data: d, error } = await supabase
-          .from("videoGenres")
-          .insert(genres.map((g) => {return {"genre": g, "vid": data[0].id}}))
-          if(error) {
+      } else {
+        console.log(data);
+        console.log(
+          genres.map((g) => {
+            return { genre: g, vid: data[0].id };
+          })
+        );
+        genres.forEach(async (g) => {
+          let { data: d, error } = await supabase.from("videoGenres").insert(
+            genres.map((g) => {
+              return { genre: g, vid: data[0].id };
+            })
+          );
+          if (error) {
             console.log("insert video genres error: ", error);
           }
-        })
+        });
         setSuccess(true);
       }
     },
@@ -273,7 +295,10 @@ export default function Create() {
         <Button
           size="xl"
           disabled={
-            title !== "" && lyrics !== "" && timestamps.length !== 0 && genres.length !== 0
+            title !== "" &&
+            lyrics !== "" &&
+            timestamps.length !== 0 &&
+            genres.length !== 0
               ? null
               : true
           }

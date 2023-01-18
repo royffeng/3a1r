@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }) {
     setUserDataLoading(false);
   };
 
-
   return (
     <SessionContextProvider
       supabaseClient={supabaseClient}
@@ -57,7 +56,7 @@ function MyApp({ Component, pageProps }) {
             <></>
           ) : (
             <>
-              <Navbar searchContext={setSearch}/>
+              <Navbar searchContext={setSearch} />
               <Component search={search} {...pageProps} />
             </>
           )}

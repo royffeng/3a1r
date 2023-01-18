@@ -11,10 +11,10 @@ import { TbVideoPlus } from "react-icons/tb";
 import icon from "../../public/appicon.png";
 import { UserContext } from "../../utils/UserContext";
 
-export default function Navbar({searchContext}) {
+export default function Navbar({ searchContext }) {
   useEffect(() => {
-    console.log("first load")
-  }, [])
+    console.log("first load");
+  }, []);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const userData = useContext(UserContext);
