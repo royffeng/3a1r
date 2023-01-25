@@ -12,9 +12,8 @@ function MyApp({ Component, pageProps }) {
   const [search, setSearch] = useState("");
 
   const handleDataLoading = () => {
-    setUserDataLoading(false);
+    setUserDataLoading(true);
   };
-
   return (
     <SessionContextProvider
       supabaseClient={supabaseClient}
@@ -51,14 +50,18 @@ function MyApp({ Component, pageProps }) {
         }}
       >
         <PageWrapper loading={handleDataLoading}>
-          {userDataLoading ? (
+          <>
+            <Navbar searchContext={setSearch} />
+            <Component search={search} {...pageProps} />
+          </>
+          {/* {userDataLoading ? (
             <></>
           ) : (
             <>
               <Navbar searchContext={setSearch} />
               <Component search={search} {...pageProps} />
             </>
-          )}
+          )} */}
         </PageWrapper>
       </MantineProvider>
     </SessionContextProvider>

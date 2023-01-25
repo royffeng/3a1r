@@ -41,7 +41,7 @@ export default function Navbar({ searchContext }) {
       <Flex direction="row" align="center" justify="center" gap="md">
         <Link href="/">
           <a style={{ display: "flex", alignItems: "center" }}>
-            <Image width="40px" height="40px" src={icon} alt = "Icon"/>
+            <Image width="40px" height="40px" src={icon} alt="Icon" />
           </a>
         </Link>
       </Flex>

@@ -17,7 +17,7 @@ const Thumbnail = ({
     <Flex className={tn_styles.thumbnail}>
       <Flex direction="column">
         <Link target="_blank" href={`/karaoke?vid=${id}`}>
-          <Image src={thumbnail} layout="fill" radius="md" alt = "Thumbnail" />
+          <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail" />
         </Link>
         <Space h={8} />
         <Flex sx={{ paddingRight: "1rem" }} direction="row">
