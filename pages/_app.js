@@ -1,13 +1,20 @@
 import { MantineProvider } from "@mantine/core";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/navbar/navbar";
 import "../styles/globals.css";
 import PageWrapper from "../utils/PageWrapper";
 
 function MyApp({ Component, pageProps }) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+  const [userDataLoading, setUserDataLoading] = useState(true);
+  const [search, setSearch] = useState("");
+
+  const handleDataLoading = () => {
+    setUserDataLoading(false);
+  };
 
   return (
     <SessionContextProvider
@@ -44,9 +51,15 @@ function MyApp({ Component, pageProps }) {
           },
         }}
       >
-        <PageWrapper>
-          <Navbar />
-          <Component {...pageProps} />
+        <PageWrapper loading={handleDataLoading}>
+          {userDataLoading ? (
+            <></>
+          ) : (
+            <>
+              <Navbar searchContext={setSearch} />
+              <Component search={search} {...pageProps} />
+            </>
+          )}
         </PageWrapper>
       </MantineProvider>
     </SessionContextProvider>

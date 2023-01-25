@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
 import { UserContext } from "../utils/UserContext";
 
-const landing = () => {
+const Profile = () => {
   const supabase = useSupabaseClient();
   const user = useContext(UserContext);
   const [playlists, setPlaylists] = useState(null);
@@ -26,7 +26,8 @@ const landing = () => {
           ),
           public,
           name,
-          likes
+          likes,
+          thumbnail_url
         `
         )
         .filter("uid", "eq", user.id);
@@ -59,4 +60,4 @@ const landing = () => {
   );
 };
 
-export default landing;
+export default Profile;
