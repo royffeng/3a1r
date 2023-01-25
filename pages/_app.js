@@ -1,8 +1,7 @@
 import { MantineProvider } from "@mantine/core";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/navbar/navbar";
 import "../styles/globals.css";
 import PageWrapper from "../utils/PageWrapper";

@@ -1,6 +1,5 @@
 import { Flex, Grid, SegmentedControl, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { VideoGrid } from "../components/home/videoGrid";
 import Playlist from "../components/profile/playlist";

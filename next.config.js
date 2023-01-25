@@ -2,15 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-    async redirects() {
-      return [
-        {
-          source: '/signout',
-          destination: '/',
-          permanent: false
-        },
-      ]
-    },
+  async redirects() {
+    return [
+      {
+        source: "/signout",
+        destination: "/",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

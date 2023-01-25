@@ -1,27 +1,27 @@
 .thumbnail {
-    /* width: 210px; */
-    width: 100%;
-    display: flex;
-    margin: 1px;
+  /* width: 210px; */
+  width: 100%;
+  display: flex;
+  margin: 1px;
 }
 
 .thumbnail:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .vid_img {
-    /* width: 210px;
+  /* width: 210px;
     height: 150px; */
-    width: 100%;
-    border-radius: 10px;
+  width: 100%;
+  border-radius: 10px;
 }
 
 .info {
-    font-size: 15px;
-    padding: 0px;
-    margin: 0px;
+  font-size: 15px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .title {
-    font-size: 25px;
+  font-size: 25px;
 }

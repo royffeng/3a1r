@@ -21,7 +21,6 @@ import {
   SegmentedControl,
   Space,
   Textarea,
-  TextInput,
   MultiSelect,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -100,7 +99,7 @@ export default function Create() {
           })
         );
         genres.forEach(async (g) => {
-          let { data: d, error } = await supabase.from("videoGenres").insert(
+          let { data, error } = await supabase.from("videoGenres").insert(
             genres.map((g) => {
               return { genre: g, vid: data[0].id };
             })
