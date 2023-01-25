@@ -35,7 +35,7 @@ const ProfileInfo = ({ user }) => {
                 <Flex direction="row" gap={4}>
                   {user.genres.map((g, index) => (
                     <Badge
-                    key = {index}
+                      key={index}
                       variant="gradient"
                       gradient={{ from: "#ed6ea0", to: "#ec8c69", deg: 35 }}
                     >

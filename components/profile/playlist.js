@@ -1,9 +1,4 @@
-import {
-  Flex,
-  Image,
-  Space,
-  Text,
-} from "@mantine/core";
+import { Flex, Image, Space, Text } from "@mantine/core";
 import { AiFillHeart } from "react-icons/ai";
 
 const Playlist = ({ playlistData }) => {
