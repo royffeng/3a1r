@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { UserContext } from "../utils/UserContext";
 
 
-export default function PageWrapper(props) {
+export default function  PageWrapper({loading, children}) {
   const supabase = useSupabaseClient();
   const user = useUser();
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getUserData = async () => {
       let { data, error } = await supabase
         .from("profiles")
         .select(
@@ -54,9 +54,11 @@ export default function PageWrapper(props) {
           genres: genresArray,
         });
       }
+
+      loading();
     };
     if (user) {
-      fetchData();
+      getUserData();
     }
   }, [user]);
 
@@ -65,7 +67,7 @@ export default function PageWrapper(props) {
       {id: user?.id, username: userData?.username, full_name: userData?.full_name, avatarUrl: userData?.avatarUrl, genres: userData?.genres}
       : null}
     >
-      {props.children}
+      {children}
     </UserContext.Provider>
   );
 }
