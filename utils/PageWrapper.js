@@ -58,6 +58,8 @@ export default function PageWrapper({ loading, children }) {
     };
     if (user) {
       getUserData();
+    } else {
+      loading();
     }
   }, [user]);
 

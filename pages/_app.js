@@ -8,12 +8,12 @@ import PageWrapper from "../utils/PageWrapper";
 
 function MyApp({ Component, pageProps }) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
-  // const [userDataLoading, setUserDataLoading] = useState(true);
+  const [userDataLoading, setUserDataLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  // const handleDataLoading = () => {
-  //   setUserDataLoading(true);
-  // };
+  const handleDataLoading = () => {
+    setUserDataLoading(false);
+  };
   return (
     <SessionContextProvider
       supabaseClient={supabaseClient}
@@ -50,18 +50,14 @@ function MyApp({ Component, pageProps }) {
         }}
       >
         <PageWrapper loading={handleDataLoading}>
-          <>
-            <Navbar searchContext={setSearch} />
-            <Component search={search} {...pageProps} />
-          </>
-          {/* {userDataLoading ? (
+          {userDataLoading ? (
             <></>
           ) : (
             <>
               <Navbar searchContext={setSearch} />
               <Component search={search} {...pageProps} />
             </>
-          )} */}
+          )}
         </PageWrapper>
       </MantineProvider>
     </SessionContextProvider>

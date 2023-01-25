@@ -12,6 +12,8 @@
     "eslint": "eslint . --ext js --ext jsx"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.257.0",
+    "@aws-sdk/signature-v4-crt": "^3.257.0",
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^5.6.3",
     "@mantine/hooks": "^5.6.3",
@@ -20,8 +22,15 @@
     "@supabase/auth-ui-react": "^0.2.6",
     "@supabase/supabase-js": "^2.0.4",
     "@supabase/ui": "^0.36.5",
+    "add": "^2.0.6",
+    "aws-sdk": "^2.1301.0",
+    "axios": "^1.2.4",
     "bootstrap": "^5.2.3",
     "eslint-config-prettier": "^8.6.0",
+    "filepond": "^4.30.4",
+    "filepond-plugin-file-validate-type": "^1.2.8",
+    "filepond-plugin-image-exif-orientation": "^1.0.11",
+    "filepond-plugin-image-preview": "^4.6.11",
     "hls.js": "^1.2.4",
     "next": "12.3.1",
     "plyr": "^3.7.2",
@@ -29,8 +38,10 @@
     "react-animejs-wrapper": "^1.0.35",
     "react-bootstrap": "^2.6.0",
     "react-dom": "18.2.0",
+    "react-filepond": "^7.1.2",
     "react-icons": "^4.6.0",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "eslint": "^8.32.0",
