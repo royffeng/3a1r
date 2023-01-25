@@ -1,12 +1,9 @@
 import {
-  BackgroundImage,
-  Container,
   Flex,
   Image,
   Space,
   Text,
 } from "@mantine/core";
-import { useEffect } from "react";
 import { AiFillHeart } from "react-icons/ai";
 
 const Playlist = ({ playlistData }) => {

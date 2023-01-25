@@ -1,10 +1,9 @@
-import { Auth, Button, ThemeSupa } from "@supabase/auth-ui-react";
+import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import {
   useSession,
   useSupabaseClient,
   useUser,
 } from "@supabase/auth-helpers-react";
-import { useState } from "react";
 import Account from "../components/profile";
 
 const Profile = () => {

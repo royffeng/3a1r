@@ -1,6 +1,5 @@
-import { Avatar, Badge, Flex, Grid, Space, Text } from "@mantine/core";
+import { Avatar, Badge, Flex, Grid, Text } from "@mantine/core";
 import React from "react";
-import styles from "../../styles/Home.module.css";
 
 const ProfileInfo = ({ user }) => {
   return (
@@ -34,8 +33,9 @@ const ProfileInfo = ({ user }) => {
               </Text>
               <>
                 <Flex direction="row" gap={4}>
-                  {user.genres.map((g) => (
+                  {user.genres.map((g, index) => (
                     <Badge
+                    key = {index}
                       variant="gradient"
                       gradient={{ from: "#ed6ea0", to: "#ec8c69", deg: 35 }}
                     >

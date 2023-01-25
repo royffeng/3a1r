@@ -1,5 +1,5 @@
 import { Avatar, Button, Flex, Group, Input, Menu, Text } from "@mantine/core";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -41,7 +41,7 @@ export default function Navbar({ searchContext }) {
       <Flex direction="row" align="center" justify="center" gap="md">
         <Link href="/">
           <a style={{ display: "flex", alignItems: "center" }}>
-            <Image width="40px" height="40px" src={icon} />
+            <Image width="40px" height="40px" src={icon} alt = "Icon"/>
           </a>
         </Link>
       </Flex>

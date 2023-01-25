@@ -1,12 +1,42 @@
 {
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "format": "prettier --write \"frontend/components/**/*.js\" \"frontend/pages/**/*.js\"", 
-    "check": "prettier --check \"frontend/components/**/*.js\" \"frontend/pages/**/*.js\""
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "check": "prettier --check .",
+    "eslint": "eslint . --ext js --ext jsx"
   },
   "dependencies": {
-    "prettier": "2.7.1"
+    "@emotion/react": "^11.10.5",
+    "@mantine/core": "^5.6.3",
+    "@mantine/hooks": "^5.6.3",
+    "@supabase/auth-helpers-nextjs": "^0.5.2",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/auth-ui-react": "^0.2.6",
+    "@supabase/supabase-js": "^2.0.4",
+    "@supabase/ui": "^0.36.5",
+    "bootstrap": "^5.2.3",
+    "eslint-config-prettier": "^8.6.0",
+    "hls.js": "^1.2.4",
+    "next": "12.3.1",
+    "plyr": "^3.7.2",
+    "react": "18.2.0",
+    "react-animejs-wrapper": "^1.0.35",
+    "react-bootstrap": "^2.6.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.6.0",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
-    "@testing-library/react": "^13.4.0"
+    "eslint": "^8.32.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-next": "^12.3.1",
+    "eslint-plugin-react": "^7.32.1",
+    "prettier": "^2.8.3"
   }
 }
