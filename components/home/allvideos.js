@@ -1,7 +1,7 @@
 import { Center, Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useEffect, useState } from "react";
-import styles from "./landing.module.css";
+import styles from "../../styles/landing.module.css";
 import { VideoGrid } from "./videoGrid";
 
 const AllVideos = () => {
