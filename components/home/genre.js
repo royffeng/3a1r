@@ -2,7 +2,7 @@ import { Flex, SegmentedControl, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/UserContext";
-import styles from "./landing.module.css";
+import styles from "../../styles/landing.module.css";
 import { VideoGrid } from "./videoGrid";
 
 const Genre = () => {

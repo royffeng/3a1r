@@ -1,5 +1,5 @@
 import { Grid, Text } from "@mantine/core";
-import Thumbnail from "../thumbnail/thumbnail";
+import Thumbnail from "../thumbnail";
 
 export const VideoGrid = ({ videos }) => {
   return (

@@ -8,8 +8,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilePerson } from "react-icons/bs";
 import { MdOutlineLogout } from "react-icons/md";
 import { TbVideoPlus } from "react-icons/tb";
-import icon from "../../public/appicon.png";
-import { UserContext } from "../../utils/UserContext";
+import icon from "../public/appicon.png";
+import { UserContext } from "../utils/UserContext";
 
 export default function Navbar({ searchContext }) {
   useEffect(() => {

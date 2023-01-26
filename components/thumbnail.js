@@ -1,8 +1,8 @@
 import React from "react";
-import tn_styles from "./thumbnail.module.css";
+import tn_styles from "../styles/thumbnail.module.css";
 import Link from "next/link";
 import { Avatar, Text, Flex, Space, Image } from "@mantine/core";
-import { rectifyFormat } from "../../utils/formatUTC";
+import { rectifyFormat } from "../utils/formatUTC";
 
 const Thumbnail = ({
   id,
