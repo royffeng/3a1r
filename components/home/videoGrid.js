@@ -6,12 +6,12 @@ export const VideoGrid = ({ videos }) => {
     <>
       {videos && (
         <>
-          <Text fz={16} fw={500}>
+          <Text aria-label="video count" fz={16} fw={500}>
             {videos.length} videos
           </Text>
-          <Grid gutter="md" sx={{ width: "100%" }}>
+          <Grid aria-label="video thumbnail grid" gutter="md" sx={{ width: "100%" }}>
             {videos?.map((video, index) => (
-              <Grid.Col xs={6} sm={6} md={6} lg={3} key={index}>
+              <Grid.Col aria-label="video thumbnail"xs={6} sm={6} md={6} lg={3} key={index}>
                 <Thumbnail
                   id={video.id}
                   thumbnail={video.thumbnail}
