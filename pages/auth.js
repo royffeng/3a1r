@@ -7,10 +7,6 @@ import {
 import Account from "../components/profile";
 
 const Profile = () => {
-  /*
-  const session = useSession()
-  const supabase = useSupabaseClient()
-  */
   const supabaseClient = useSupabaseClient();
   const user = useUser();
   const session = useSession();
