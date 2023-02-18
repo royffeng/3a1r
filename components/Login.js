@@ -41,7 +41,7 @@ const Login = () => {
               type="email"
               name="email"
               placeholder="email"
-              className="rounded-full border-2 border-black px-3 py-2.5 font-semibold text-xl"
+              className="rounded-full border-2 border-black px-3 py-2.5 font-semibold text-xl outline-none"
             />
           </div>
           <div className="flex flex-col w-1/2 mt-3">
@@ -52,7 +52,7 @@ const Login = () => {
               type="password"
               name="password"
               placeholder="password"
-              className="rounded-full border-2 border-black px-3 py-2.5 font-semibold text-xl"
+              className="rounded-full border-2 border-black px-3 py-2.5 font-semibold text-xl outline-none"
             />
           </div>
           <div className="w-1/2 mt-4">
