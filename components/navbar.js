@@ -22,7 +22,7 @@ export default function Navbar({ searchContext }) {
 
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
-    router.push("/signout");
+    router.push("/auth");
   }, [supabase]);
 
   return (
