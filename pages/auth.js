@@ -5,6 +5,7 @@ import {
   useUser,
 } from "@supabase/auth-helpers-react";
 import Account from "../components/profile";
+import Login from "../components/Login";
 
 const Profile = () => {
   const supabaseClient = useSupabaseClient();
@@ -12,20 +13,15 @@ const Profile = () => {
   const session = useSession();
 
   return (
-    <div className="container" style={{ padding: "50px 0 100px 0" }}>
+    <>
       {!user ? (
-        <Auth
-          supabaseClient={supabaseClient}
-          providers={["google", "spotify"]}
-          appearance={{ theme: ThemeSupa }}
-          theme="light"
-        />
+        <Login />
       ) : (
         <>
           <Account session={session} />
         </>
       )}
-    </div>
+    </>
   );
 };
 
