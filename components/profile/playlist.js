@@ -1,40 +1,17 @@
-import { Flex, Image, Space, Text } from "@mantine/core";
 import { AiFillHeart } from "react-icons/ai";
 
 const Playlist = ({ playlistData }) => {
   return (
-    <Flex
-      bg="white"
-      direction="column"
-      justify="center"
-      sx={{
-        border: "solid black",
-        padding: "1.5rem",
-        height: "100%",
-        borderRadius: "34px",
-      }}
-    >
-      <Image
-        radius="lg"
-        sx={{
-          maxHeight: "100%",
-          maxWidth: "100%",
-          aspectRatio: "41 / 40",
-          objectFit: "cover",
-        }}
-        src={`${playlistData.thumbnail_url}`}
-        alt="playlist thumbnail image"
-      />
-      <Space h={16} />
-      <Text lineClamp={1} truncate size={"md"}>{`${playlistData.name}`}</Text>
-      <Space h={28} />
-      <Flex justify={"flex-end"}>
-        <Flex justify="center" align="center" gap="xs">
-          <AiFillHeart />
-          <Text>{`${playlistData.likes}`}</Text>
-        </Flex>
-      </Flex>
-    </Flex>
+    <div className="border-2 border-black p-4 bg-white rounded-3xl w-fit">
+      <img src={playlistData.thumbnail_url} className="rounded-2xl" />
+      <div className="flex justify-between items-center p-2">
+        <p className="text-2xl m-0">{playlistData.name}</p>
+        <div className="flex justify-center items-center">
+          <p className="text-2xl m-0 mx-1">{playlistData.likes}</p>
+          <AiFillHeart className="text-2xl" />
+        </div>
+      </div>
+    </div>
   );
 };
 

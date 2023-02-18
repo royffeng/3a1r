@@ -6,7 +6,7 @@ const colors = [
   "bg-micdrop-yellow",
   "bg-micdrop-pink",
   "bg-micdrop-purple",
-]
+];
 
 const ProfileInfo = ({ user }) => {
   return (
@@ -43,8 +43,13 @@ const ProfileInfo = ({ user }) => {
                   {user.genres.map((g, index) => (
                     <div
                       key={index}
-                      className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${colors[index % colors.length]} ${colors[index % colors.length] === "bg-micdrop-green" ? "!text-white" : "text-black"}`}
-                      
+                      className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${
+                        colors[index % colors.length]
+                      } ${
+                        colors[index % colors.length] === "bg-micdrop-green"
+                          ? "!text-white"
+                          : "text-black"
+                      }`}
                     >
                       {g}
                     </div>

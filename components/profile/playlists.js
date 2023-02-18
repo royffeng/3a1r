@@ -42,7 +42,7 @@ const Playlists = ({ playlists }) => {
       {display && (
         <Grid gutter="md">
           {display?.map((video, index) => (
-            <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
+            <Grid.Col xs={4} sm={4} md={4} lg={2} key={index}>
               <Playlist playlistData={video} />
             </Grid.Col>
           ))}

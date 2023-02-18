@@ -18,8 +18,8 @@ module.exports = {
           yellow: "#FFD85F",
           lightpurple: "#E6E1FF",
           beige: "#F1EAE0",
-        }
-      }
+        },
+      },
     },
   },
   plugins: [],
