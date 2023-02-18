@@ -3,8 +3,10 @@ import { Col, Row } from "react-bootstrap";
 import LoginLogo from "./LoginLogo";
 import { FaGoogle, FaSpotify } from "react-icons/fa";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 
 const Login = () => {
+  const router = useRouter();
   const supabase = useSupabaseClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +14,7 @@ const Login = () => {
   const handleLogin = async (provider) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider,
-      redirectTo: "/karaoke",
+      redirectTo: "/",
     });
 
     if (error) {
@@ -26,8 +28,8 @@ const Login = () => {
       password: password,
     });
 
-    if (error) {
-      alert("Error Signing in with email and password");
+    if (data) {
+      router.push("/");
     }
   };
 
@@ -54,6 +56,7 @@ const Login = () => {
               email
             </label>
             <input
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               name="email"
               placeholder="email"
@@ -65,6 +68,7 @@ const Login = () => {
               password
             </label>
             <input
+              onChange={(e) => setPassword(e.target.value)}
               type="password"
               name="password"
               placeholder="password"
@@ -75,7 +79,10 @@ const Login = () => {
             <button className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 mr-2 bg-white">
               signup
             </button>
-            <button className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 ml-2 bg-white">
+            <button
+              onClick={handlePasswordLogin}
+              className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 ml-2 bg-white"
+            >
               login
             </button>
           </div>

@@ -8,19 +8,13 @@ import Account from "../components/profile";
 import Login from "../components/Login";
 
 const Profile = () => {
-  const supabaseClient = useSupabaseClient();
-  const user = useUser();
-  const session = useSession();
+  // const supabaseClient = useSupabaseClient();
+  // const user = useUser();
+  // const session = useSession();
 
   return (
     <>
-      {!user ? (
-        <Login />
-      ) : (
-        <>
-          <Account session={session} />
-        </>
-      )}
+      <Login />
     </>
   );
 };
