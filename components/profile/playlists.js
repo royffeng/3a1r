@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useState } from "react";
 import { Space, Text, Grid } from "@mantine/core";
 import SegmentedControl from "./SegmentedControl";
 import Playlist from "./playlist";
@@ -13,7 +13,7 @@ const Playlists = ({ playlists }) => {
         My Playlists
       </Text>
       <Space h={16} />
-      <SegmentedControl setDisplay={setDisplay} playlists = {playlists}/>
+      <SegmentedControl setDisplay={setDisplay} playlists={playlists} />
       <Space h={32} />
       {display && (
         <Grid gutter="md">
