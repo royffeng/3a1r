@@ -1,28 +1,11 @@
 import { useMemo, useState, useCallback } from "react";
-import { SegmentedControl, Space, Text, Grid } from "@mantine/core";
+import { Space, Text, Grid } from "@mantine/core";
+import SegmentedControl from "./SegmentedControl";
 import Playlist from "./playlist";
 
 const Playlists = ({ playlists }) => {
-  const [tab, setTab] = useState("*");
   const [display, setDisplay] = useState(playlists);
-  const playlistTabs = useMemo(() => {
-    return [
-      { value: "*", label: "all" },
-      { value: "public", label: "public" },
-      { value: "private", label: "private" },
-    ];
-  });
 
-  const handleTabChange = useCallback((value) => {
-    if (value === "public") {
-      setDisplay(playlists.filter((playlist) => playlist.public));
-    } else if (value === "private") {
-      setDisplay(playlists.filter((playlist) => !playlist.public));
-    } else {
-      setDisplay(playlists);
-    }
-    setTab(value);
-  }, []);
   return (
     <>
       <Space h={32} />
@@ -30,14 +13,7 @@ const Playlists = ({ playlists }) => {
         My Playlists
       </Text>
       <Space h={16} />
-      {
-        <SegmentedControl
-          value={tab}
-          onChange={(value) => handleTabChange(value)}
-          data={playlistTabs}
-          color="green"
-        />
-      }
+      <SegmentedControl setDisplay={setDisplay} playlists = {playlists}/>
       <Space h={32} />
       {display && (
         <Grid gutter="md">
