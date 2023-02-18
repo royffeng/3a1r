@@ -5,15 +5,19 @@ import { useState } from "react";
 import Navbar from "../components/navbar";
 import "../styles/globals.css";
 import PageWrapper from "../utils/PageWrapper";
+import { useRouter } from "next/router";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function MyApp({ Component, pageProps }) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
   const [userDataLoading, setUserDataLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   const handleDataLoading = () => {
     setUserDataLoading(false);
   };
+
   return (
     <SessionContextProvider
       supabaseClient={supabaseClient}
@@ -54,7 +58,11 @@ function MyApp({ Component, pageProps }) {
             <></>
           ) : (
             <>
-              <Navbar searchContext={setSearch} />
+              {router.pathname === "/auth" ? (
+                <></>
+              ) : (
+                <Navbar searchContext={setSearch} />
+              )}
               <Component search={search} {...pageProps} />
             </>
           )}
