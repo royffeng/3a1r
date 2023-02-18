@@ -2,8 +2,23 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import LoginLogo from "./LoginLogo";
 import { FaGoogle, FaSpotify } from "react-icons/fa";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const Login = () => {
+
+    const supabase = useSupabaseClient();
+
+  const handleLogin = async (provider) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: provider,
+      redirectTo: "/karaoke"
+    });
+
+    if (error) {
+        alert ("Error Signing in with " + provider )
+    }
+  };
+
   return (
     <div className="w-full h-screen">
       <Row className="h-full">
@@ -42,14 +57,16 @@ const Login = () => {
             />
           </div>
           <div className="w-1/2 mt-4">
-            <p className="text-xl text-center">or sign in with a social account</p>
+            <p className="text-xl text-center">
+              or sign in with a social account
+            </p>
             <div className="flex justify-evenly items-center w-full">
-              <button className="border-2 border-black px-8 py-2 bg-white rounded-full flex hover:!bg-black hover:text-white">
-                <FaGoogle className="mr-2"/>
+              <button className="border-2 border-black px-8 py-2 bg-white rounded-full flex hover:!bg-black hover:text-white" onClick = {() => handleLogin("google")}>
+                <FaGoogle className="mr-2" />
                 Google
               </button>
-              <button className="border-2 border-black px-8 py-2 bg-white rounded-full flex hover:!bg-black hover:text-white">
-                <FaSpotify className="mr-2"/>
+              <button className="border-2 border-black px-8 py-2 bg-white rounded-full flex hover:!bg-black hover:text-white" onClick = {() => handleLogin("spotify")}>
+                <FaSpotify className="mr-2" />
                 Spotify
               </button>
             </div>
