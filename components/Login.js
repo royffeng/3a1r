@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import LoginLogo from "./LoginLogo";
-import { FaGoogle, FaSpotify } from "react-icons/fa";
+import { FaGoogle, FaSpotify, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 
@@ -10,6 +10,7 @@ const Login = () => {
   const supabase = useSupabaseClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [view, setView] = useState(false);
 
   const handleLogin = async (provider) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -67,13 +68,19 @@ const Login = () => {
             <label htmlFor="password" className="m-0.5 text-xl">
               password
             </label>
+            <div className="rounded-full border-2 border-black px-3 py-2.5 font-semibold text-xl bg-white flex justify-center items-center">
             <input
               onChange={(e) => setPassword(e.target.value)}
-              type="password"
+              type={view ? "text" : "password"}
               name="password"
               placeholder="password"
-              className="rounded-full border-2 border-black px-3 py-2.5 font-semibold text-xl outline-none"
+              className=" outline-none w-full"
             />
+             {
+                view ? <FaRegEyeSlash onClick = {() => setView(false)} className= "hover:cursor-pointer text-2xl"/> : <FaRegEye onClick = {() => setView(true)} className= "hover:cursor-pointer text-2xl"/>
+             }
+            </div>
+            
           </div>
           <div className="w-1/2 flex justify-center items-center">
             <button className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 mr-2 bg-white">
