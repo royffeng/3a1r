@@ -13,7 +13,7 @@ const Login = () => {
   const [view, setView] = useState(false);
 
   const handleLogin = async (provider) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       redirectTo: "/",
     });
@@ -24,7 +24,7 @@ const Login = () => {
   };
 
   const handlePasswordLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
@@ -69,18 +69,25 @@ const Login = () => {
               password
             </label>
             <div className="rounded-full border-2 border-black px-3 py-2.5 font-semibold text-xl bg-white flex justify-center items-center">
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              type={view ? "text" : "password"}
-              name="password"
-              placeholder="password"
-              className=" outline-none w-full"
-            />
-             {
-                view ? <FaRegEyeSlash onClick = {() => setView(false)} className= "hover:cursor-pointer text-2xl"/> : <FaRegEye onClick = {() => setView(true)} className= "hover:cursor-pointer text-2xl"/>
-             }
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                type={view ? "text" : "password"}
+                name="password"
+                placeholder="password"
+                className=" outline-none w-full"
+              />
+              {view ? (
+                <FaRegEyeSlash
+                  onClick={() => setView(false)}
+                  className="hover:cursor-pointer text-2xl"
+                />
+              ) : (
+                <FaRegEye
+                  onClick={() => setView(true)}
+                  className="hover:cursor-pointer text-2xl"
+                />
+              )}
             </div>
-            
           </div>
           <div className="w-1/2 flex justify-center items-center">
             <button className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 mr-2 bg-white">
