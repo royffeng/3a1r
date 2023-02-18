@@ -132,22 +132,24 @@ export default function Navbar({ searchContext }) {
           </Menu>
         </>
       ) : (
-        <Button
-          size="lg"
-          leftIcon={
-            <Avatar
-              size="sm"
-              variant="outline"
-              color="dark"
-              radius="xl"
-              alt="no image here"
-            />
-          }
-          variant="subtle"
-          color="dark"
-        >
-          <Link href="/auth">Sign In</Link>
-        </Button>
+        <Link href="/auth">
+          <Button
+            size="lg"
+            leftIcon={
+              <Avatar
+                size="sm"
+                variant="outline"
+                color="dark"
+                radius="xl"
+                alt="no image here"
+              />
+            }
+            variant="subtle"
+            color="dark"
+          >
+            Sign In
+          </Button>
+        </Link>
       )}
     </Flex>
   );
