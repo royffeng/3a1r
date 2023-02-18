@@ -72,10 +72,10 @@ const Login = () => {
             />
           </div>
           <div className="w-1/2 flex justify-center items-center">
-            <button className="px-8 py-2 rounded-full border-2 border-black hover:bg-black hover:text-white text-xl mt-8 w-1/2 mr-2">
+            <button className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 mr-2 bg-white">
               signup
             </button>
-            <button className="px-8 py-2 rounded-full border-2 border-black hover:bg-black hover:text-white text-xl mt-8 w-1/2 ml-2">
+            <button className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 ml-2 bg-white">
               login
             </button>
           </div>
