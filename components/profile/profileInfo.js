@@ -1,6 +1,13 @@
 import { Avatar, Badge, Flex, Grid, Text } from "@mantine/core";
 import React from "react";
 
+const colors = [
+  "bg-micdrop-green",
+  "bg-micdrop-yellow",
+  "bg-micdrop-pink",
+  "bg-micdrop-purple",
+]
+
 const ProfileInfo = ({ user }) => {
   return (
     <>
@@ -34,13 +41,13 @@ const ProfileInfo = ({ user }) => {
               <>
                 <Flex direction="row" gap={4}>
                   {user.genres.map((g, index) => (
-                    <Badge
+                    <div
                       key={index}
-                      variant="gradient"
-                      gradient={{ from: "#ed6ea0", to: "#ec8c69", deg: 35 }}
+                      className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${colors[index % colors.length]} ${colors[index % colors.length] === "bg-micdrop-green" ? "!text-white" : "text-black"}`}
+                      
                     >
                       {g}
-                    </Badge>
+                    </div>
                   ))}
                 </Flex>
               </>
