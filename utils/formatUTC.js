@@ -1,5 +1,5 @@
 export function rectifyFormat(s) {
-  if(s === undefined || s === null) {
+  if (s === undefined || s === null) {
     return "";
   }
   let b = s.split(/\D/);

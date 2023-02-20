@@ -129,16 +129,25 @@ const Genre = () => {
             <Text fz={32} fw={500}>
               Your Genres
             </Text>
-            {genre && genres && (
-              <SegmentedControl
-                value={genre}
-                onChange={(value) => handleGenreChange(value)}
-                data={genres}
-                color="green"
-              />
+            {genre && genres ? (
+              <>
+                <SegmentedControl
+                  aria-label="genre picker"
+                  value={genre}
+                  onChange={(value) => handleGenreChange(value)}
+                  data={genres}
+                  color="green"
+                />
+                <Space h={4} />
+                <VideoGrid videos={videos} />
+              </>
+            ) : (
+              <>
+                <Text aria-label="genre count" fz={16} fw={500}>
+                  no liked genres
+                </Text>
+              </>
             )}
-            <Space h={4} />
-            <VideoGrid videos={videos} />
           </Flex>
           <Space h={48} />
         </>
