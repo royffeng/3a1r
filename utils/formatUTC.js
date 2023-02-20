@@ -1,4 +1,7 @@
 export function rectifyFormat(s) {
+  if(s === undefined || s === null) {
+    return "";
+  }
   let b = s.split(/\D/);
   const date =
     b[0] +
