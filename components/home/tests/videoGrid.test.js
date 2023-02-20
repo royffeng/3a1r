@@ -22,6 +22,27 @@ let videoMockData = [
         videoUrl: "http://video.com",
         views: 0,
         date: "2022-10-23 20:07:44+00",
+    },
+    {
+        title: "title4",
+        description: "description",
+        videoUrl: "http://video.com",
+        views: 0,
+        date: "2022-10-23 20:07:44+00",
+    },
+    {
+        title: "title5",
+        description: "description",
+        videoUrl: "http://video.com",
+        views: 0,
+        date: "2022-10-23 20:07:44+00",
+    },
+    {
+        title: "title6",
+        description: "description",
+        videoUrl: "http://video.com",
+        views: 0,
+        date: "2022-10-23 20:07:44+00",
     }
 ];
 
@@ -35,12 +56,18 @@ test("handles 0 videos", () => {
     expect(videoThumbnail).toHaveLength(0);
 })
 
+test("handles one videos", () => {
+    render(<VideoGrid videos={[videoMockData[0]]}/>)
+    const videoCount = screen.queryByLabelText('video count').textContent;
+    expect(videoCount).toEqual("1 video")
+})
+
 test("handles multiple videos", () => {
     render(<VideoGrid videos={videoMockData}/>)
     const videoCount = screen.queryByLabelText('video count').textContent;
     const videoGrid = screen.queryAllByLabelText('video-thumbnail-grid');
     const videoThumbnail = screen.queryAllByLabelText('one-video-thumbnail');
-    expect(videoCount).toEqual("3 videos")
+    expect(videoCount).toEqual("6 videos")
     expect(videoGrid).toHaveLength(1);
-    expect(videoThumbnail).toHaveLength(3);
+    expect(videoThumbnail).toHaveLength(6);
 })

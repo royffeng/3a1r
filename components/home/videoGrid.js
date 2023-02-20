@@ -7,7 +7,7 @@ export const VideoGrid = ({ videos }) => {
       {videos && (
         <>
           <Text aria-label="video count" fz={16} fw={500}>
-            {videos.length} videos
+            {videos.length} {`video${videos.length == 1 ? '' : 's'}`}
           </Text>
           {videos.length > 0 &&
             <Grid aria-label="video-thumbnail-grid" gutter="md" sx={{ width: "100%" }}>
