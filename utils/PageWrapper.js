@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { UserContext } from "../utils/UserContext";
 
 export default function PageWrapper({ loading, children }) {
-  const supabase = useSupabaseClient();
   const user = useUser();
+  const supabase = useSupabaseClient();
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -61,6 +61,7 @@ export default function PageWrapper({ loading, children }) {
     } else {
       loading();
     }
+    console.log("user changed", user);
   }, [user]);
 
   return (
