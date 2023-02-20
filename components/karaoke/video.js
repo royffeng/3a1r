@@ -94,7 +94,7 @@ export default function Video({ videoSource, lyricsArr }) {
       const newTimeoutId = setTimeout(() => {
         if (lyricsIndex < lyricsArr.length - 1) {
           setRemainingTime(
-            lyricsIndex < lyricsArr.length && index !== -1
+            lyricsIndex < lyricsArr.length && lyricsIndex !== -1
               ? lyricsArr[lyricsIndex + 1].end -
                   lyricsArr[lyricsIndex + 1].start
               : 10
@@ -161,7 +161,7 @@ export default function Video({ videoSource, lyricsArr }) {
             }}
           >
             {`${
-              lyricsIndex < lyricsArr.length && index !== -1
+              lyricsIndex < lyricsArr.length && lyricsIndex !== -1
                 ? lyricsArr[lyricsIndex].lyrics
                 : ""
             }`}
