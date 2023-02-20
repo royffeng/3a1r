@@ -13,8 +13,12 @@ const Thumbnail = ({
   avatar_url,
   date,
 }) => {
+  if (username === null || username === undefined) {
+    return <></>;
+  }
+
   return (
-    <Flex className={tn_styles.thumbnail}>
+    <Flex aria-label="video thumbnail" className={tn_styles.thumbnail}>
       <Flex direction="column">
         <Link target="_blank" href={`/karaoke?vid=${id}`}>
           <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail" />
@@ -23,13 +27,19 @@ const Thumbnail = ({
         <Flex sx={{ paddingRight: "1rem" }} direction="row">
           {avatar_url !== undefined ? (
             <Avatar
+              aria-label="avatar of user who created this video"
               src={avatar_url}
               radius="xl"
               size="sm"
               alt="no image here"
             />
           ) : (
-            <Avatar radius="xl" size="xs" alt="no image here" />
+            <Avatar
+              aria-label="avatar of user who created this video"
+              radius="xl"
+              size="xs"
+              alt="no image here"
+            />
           )}
           <Space w={8} />
           <Flex direction="column">
@@ -38,9 +48,13 @@ const Thumbnail = ({
             </Text>
             <Text fz="xs">{username}</Text>
             <Flex direction="row">
-              <Text fz="xs">{`${views} views`}</Text>
+              <Text aria-label="video views" fz="xs">{`${views} view${
+                views == 1 ? "" : "s"
+              }`}</Text>
               <Space w={8} />
-              <Text fz="xs">{`${rectifyFormat(date)}`}</Text>
+              <Text aria-label="date of video" fz="xs">{`${rectifyFormat(
+                date
+              )}`}</Text>
             </Flex>
           </Flex>
         </Flex>
