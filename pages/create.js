@@ -29,7 +29,7 @@ import axios from "axios";
 import "filepond/dist/filepond.min.css";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
-import { TimestampInput } from "../components/create/timestamps";
+import { TimestampInput } from "../components/timestamps";
 import { UserContext } from "../utils/UserContext";
 import { GENRE_LIST } from "../utils/genres";
 
