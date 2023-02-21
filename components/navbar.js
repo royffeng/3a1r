@@ -37,19 +37,23 @@ export default function Navbar({ searchContext }) {
     >
       <Flex direction="row" align="center" justify="center" gap="md">
         <Link href="/">
-          <>
-            <Image width="40px" height="40px" src={icon} alt="Icon" />
-            <p className="font-lexend font-bold no-underline m-0 text-3xl">
+          <div className="flex hover:cursor-pointer" >
+            <Image width="40px" height="40px" src={icon} alt="Icon"/>
+            <p className="font-lexend font-bold no-underline m-0 text-3xl pl-2">
               micDrop
             </p>
-          </>
+          </div>
         </Link>
       </Flex>
-      <Link href="/">
-        <p className="m-0 font-lexend font-semibold hover:cursor-pointer text-lg hover:text-[#666666]">
-          My Playlists
-        </p>
-      </Link>
+
+      {userData && (
+        <Link href={`/profile?id=${userData.id}`}>
+          <p className="m-0 font-lexend font-semibold hover:cursor-pointer text-lg hover:text-[#666666]">
+            My Playlists
+          </p>
+        </Link>
+      )}
+
       <Flex
         direction="row"
         sx={{
@@ -77,9 +81,9 @@ export default function Navbar({ searchContext }) {
       </Flex>
       {userData ? (
         <>
-          <Button size="md" leftIcon={<TbVideoPlus />} color="green">
+          {/* <Button size="md" leftIcon={<TbVideoPlus />} color="green">
             <Link href="/create">Create</Link>
-          </Button>
+          </Button> */}
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
               {userData?.avatarUrl !== undefined ? (
