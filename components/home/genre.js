@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/UserContext";
 import styles from "../../styles/landing.module.css";
 import { VideoGrid } from "./videoGrid";
-import SegmentedControl from "./SegmentedControl"
+import SegmentedControl from "./SegmentedControl";
 
 const Genre = () => {
   const supabase = useSupabaseClient();
@@ -132,9 +132,9 @@ const Genre = () => {
             </Text>
             {genre && genres && (
               <SegmentedControl
-                values = {genres}
-                handleValue = {handleGenreChange}
-                value = {genre}
+                values={genres}
+                handleValue={handleGenreChange}
+                value={genre}
               />
             )}
             <Space h={4} />
