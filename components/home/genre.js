@@ -134,6 +134,7 @@ const Genre = () => {
               <SegmentedControl
                 genres = {genres}
                 handleGenreChange = {handleGenreChange}
+                genre = {genre}
               />
             )}
             <Space h={4} />

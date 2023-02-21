@@ -6,12 +6,18 @@ const colors = [
     "bg-micdrop-lightpurple"
 ]
 
-const SegmentedControl = ({ genres, handleGenreChange }) => {
+const hoverColors = [
+    "hover:!bg-micdrop-pink",
+    "hover:!bg-micdrop-yellow",
+    "hover:!bg-micdrop-lightpurple"
+]
+
+const SegmentedControl = ({ genre, genres, handleGenreChange }) => {
   return (
     <div className="flex justify-center items-center">
       
-      {genres.map((genre, index) => (
-        <div key={index} className= {`px-4 py-2 hover:cursor-pointer ${colors[index % colors.length]} rounded-full font-lexend border-black border-2 mx-1 font-semibold`} onClick = {() => handleGenreChange(genre.value)}>{genre.value}</div>
+      {genres.map((genreObj, index) => (
+        <div key={index} className= {`px-4 py-2 hover:cursor-pointer ${hoverColors[index % hoverColors.length]} ${genre === genreObj.value ? colors[index % colors.length] : "bg-white"} rounded-full font-lexend border-black border-2 mx-1 font-semibold`} onClick = {() => handleGenreChange(genreObj.value)}>{genreObj.value}</div>
       ))}
     </div>
   );
