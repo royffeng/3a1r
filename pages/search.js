@@ -1,8 +1,9 @@
-import { Flex, Grid, SegmentedControl, Space } from "@mantine/core";
+import { Flex, Grid, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { VideoGrid } from "../components/home/videoGrid";
 import Playlist from "../components/profile/playlist";
+import SegmentedControl from "../components/home/SegmentedControl"
 
 export default function Search({ search, ...props }) {
   // const router = useRouter();
@@ -109,10 +110,9 @@ export default function Search({ search, ...props }) {
       }}
     >
       <SegmentedControl
-        value={display}
-        onChange={(value) => setDisplay(value)}
-        data={tabs}
-        color="green"
+        value = {display}
+        values = {tabs}
+        handleValue = {setDisplay}
       />
       <Space h={32} />
       {!dataLoading && display === "videos" ? (

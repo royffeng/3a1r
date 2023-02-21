@@ -132,9 +132,9 @@ const Genre = () => {
             </Text>
             {genre && genres && (
               <SegmentedControl
-                genres = {genres}
-                handleGenreChange = {handleGenreChange}
-                genre = {genre}
+                values = {genres}
+                handleValue = {handleGenreChange}
+                value = {genre}
               />
             )}
             <Space h={4} />
