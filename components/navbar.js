@@ -73,7 +73,7 @@ export default function Navbar({ searchContext }) {
             <input
               className="rounded-r-md py-2 outline-none font-lexend"
               onChange={(e) => setSearch(e.currentTarget.value)}
-              placeholder="search songs"
+              placeholder="search songs/artists"
             />
           </div>
         </form>
