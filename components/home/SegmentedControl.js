@@ -1,13 +1,13 @@
 import React from "react";
 
 const colors = [
-  "bg-micdrop-pink",
+  "bg-micdrop-purple",
   "bg-micdrop-yellow",
   "bg-micdrop-lightpurple",
 ];
 
 const hoverColors = [
-  "hover:!bg-micdrop-pink",
+  "hover:!bg-micdrop-purple",
   "hover:!bg-micdrop-yellow",
   "hover:!bg-micdrop-lightpurple",
 ];
