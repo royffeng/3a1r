@@ -76,15 +76,6 @@ export default function Navbar({ searchContext }) {
               placeholder="search songs"
             />
           </div>
-          {/* <Input
-            stroke={1.5}
-            variant="filled"
-            size="md"
-            radius="lg"
-            icon={<AiOutlineSearch />}
-            onChange={(e) => setSearch(e.currentTarget.value)}
-            placeholder="Search for a song"
-          /> */}
         </form>
       </Flex>
       {userData ? (
