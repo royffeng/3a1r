@@ -9,7 +9,7 @@ const Playlists = ({ playlists }) => {
   return (
     <>
       <Space h={32} />
-      <p className="text-3xl font-lexend font-semibold">My Playlists</p>
+      <p className="text-3xl font-lexend font-semibold m-0">My Playlists</p>
       <Space h={16} />
       <SegmentedControl setDisplay={setDisplay} playlists={playlists} />
       <Space h={32} />

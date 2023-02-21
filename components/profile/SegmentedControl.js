@@ -28,19 +28,20 @@ const SegmentedControl = ({ setDisplay, playlists }) => {
         <button
           onClick={() => handleTabChange("public")}
           className={`${
-            tab == "public" && "bg-micdrop-lightpurple"
-          } text-xl px-3 py-1.5 w-fit hover:bg-micdrop-lightpurple font-semibold`}
+            tab == "public" && "bg-micdrop-green text-white"
+          } text-xl px-3 py-1.5 w-fit hover:bg-micdrop-green hover:!text-white text-black font-semibold `}
         >
           public
         </button>
         <button
           onClick={() => handleTabChange("private")}
           className={`${
-            tab == "private" && "bg-micdrop-yellow"
-          } text-xl px-3 py-1.5 w-fit hover:bg-micdrop-yellow font-semibold rounded-r-full border-l-2 border-black`}
+            tab == "private" && "bg-micdrop-lightpurple"
+          } text-xl px-3 py-1.5 w-fit hover:bg-micdrop-lightpurple font-semibold rounded-r-full border-l-2 border-black`}
         >
           private
         </button>
+    
       </div>
     </>
   );
