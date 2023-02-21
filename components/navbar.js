@@ -37,8 +37,8 @@ export default function Navbar({ searchContext }) {
     >
       <Flex direction="row" align="center" justify="center" gap="md">
         <Link href="/">
-          <div className="flex hover:cursor-pointer" >
-            <Image width="40px" height="40px" src={icon} alt="Icon"/>
+          <div className="flex hover:cursor-pointer">
+            <Image width="40px" height="40px" src={icon} alt="Icon" />
             <p className="font-lexend font-bold no-underline m-0 text-3xl pl-2">
               micDrop
             </p>
@@ -61,14 +61,22 @@ export default function Navbar({ searchContext }) {
         }}
       >
         <form
-          style={{ width: "100%" }}
+          className="w-full flex justify-end items-center"
           onSubmit={(e) => {
             e.preventDefault();
             searchContext(search);
             router.push(`/search?query=${search}`);
           }}
         >
-          <Input
+          <div className="flex justify-center items-center bg-white rounded-md">
+            <AiOutlineSearch className = "mx-2"/>
+            <input
+              className="rounded-r-md py-2 outline-none font-lexend"
+              onChange={(e) => setSearch(e.currentTarget.value)}
+              placeholder="search songs"
+            />
+          </div>
+          {/* <Input
             stroke={1.5}
             variant="filled"
             size="md"
@@ -76,7 +84,7 @@ export default function Navbar({ searchContext }) {
             icon={<AiOutlineSearch />}
             onChange={(e) => setSearch(e.currentTarget.value)}
             placeholder="Search for a song"
-          />
+          /> */}
         </form>
       </Flex>
       {userData ? (
