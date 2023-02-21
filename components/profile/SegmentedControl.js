@@ -16,7 +16,7 @@ const SegmentedControl = ({ setDisplay, playlists }) => {
 
   return (
     <>
-      <div className = "border-black border-2 w-fit rounded-full">
+      <div className="border-black border-2 w-fit rounded-full">
         <button
           onClick={() => handleTabChange("all")}
           className={`${
@@ -41,7 +41,6 @@ const SegmentedControl = ({ setDisplay, playlists }) => {
         >
           private
         </button>
-    
       </div>
     </>
   );

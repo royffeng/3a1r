@@ -1,17 +1,5 @@
 import React from "react";
 
-const colors = [
-  "bg-micdrop-pink",
-  "bg-micdrop-yellow",
-  "bg-micdrop-lightpurple",
-];
-
-const hoverColors = [
-  "hover:!bg-micdrop-pink",
-  "hover:!bg-micdrop-yellow",
-  "hover:!bg-micdrop-lightpurple",
-];
-
 const Toggle = ({ handleValue, value }) => {
   return (
     <div className="flex justify-center items-center border-2 border-black rounded-full">

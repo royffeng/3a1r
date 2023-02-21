@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Space, Text, Grid } from "@mantine/core";
+import { Space, Grid } from "@mantine/core";
 import SegmentedControl from "./SegmentedControl";
 import Playlist from "./playlist";
 

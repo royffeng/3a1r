@@ -1,6 +1,6 @@
 import { Grid, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VideoGrid } from "../components/home/videoGrid";
 import Playlist from "../components/profile/playlist";
 import Toggle from "../components/Toggle";
@@ -12,12 +12,6 @@ export default function Search({ search, ...props }) {
   const supabase = useSupabaseClient();
   const [videos, setVideos] = useState(null);
   const [dataLoading, setDataLoading] = useState(true);
-  const tabs = useMemo(() => {
-    return [
-      { value: "videos", label: "videos" },
-      { value: "playlists", label: "playlists" },
-    ];
-  });
 
   useEffect(() => {
     const fetchVideoData = async () => {

@@ -1,4 +1,4 @@
-import { Avatar, Flex, Grid, Text } from "@mantine/core";
+import { Avatar, Flex, Grid } from "@mantine/core";
 import React from "react";
 
 const colors = [

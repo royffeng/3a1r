@@ -1,4 +1,4 @@
-import { Center, Flex, Space, Text } from "@mantine/core";
+import { Center, Flex, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/landing.module.css";
@@ -55,9 +55,7 @@ const AllVideos = () => {
   return (
     <Flex justify="flex-start" align="flex-start" className={styles.category}>
       <Center className={styles.header} sx={{ background: "#E6E1FF" }}>
-        <p className="m-0 px-2">
-        All Videos
-        </p>
+        <p className="m-0 px-2">All Videos</p>
       </Center>
       <Space h={16} />
       <VideoGrid videos={videos} />

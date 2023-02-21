@@ -1,13 +1,12 @@
-import { Avatar, Button, Flex, Group, Input, Menu, Text } from "@mantine/core";
+import { Avatar, Button, Flex, Group, Menu, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilePerson } from "react-icons/bs";
 import { MdOutlineLogout } from "react-icons/md";
-import { TbVideoPlus } from "react-icons/tb";
 import icon from "../public/appicon.png";
 import { UserContext } from "../utils/UserContext";
 
