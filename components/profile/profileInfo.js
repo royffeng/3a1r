@@ -28,12 +28,10 @@ const ProfileInfo = ({ user }) => {
               />
             )}
           </Grid.Col>
-          <Grid.Col span={8} className = "mx-2">
+          <Grid.Col span={8} className="mx-2">
             <Flex sx={{ width: "100%" }} direction="column" gap={4}>
               <p className="text-5xl font-bold">{user.full_name}</p>
-              <p className="text-3xl font-medium">
-                @{user.username}
-              </p>
+              <p className="text-3xl font-medium">@{user.username}</p>
               <>
                 <Flex direction="row" gap={4}>
                   {user.genres.map((g, index) => (
