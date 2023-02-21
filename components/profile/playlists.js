@@ -9,9 +9,7 @@ const Playlists = ({ playlists }) => {
   return (
     <>
       <Space h={32} />
-      <Text sx={{ width: "100%", fontSize: "clamp(1rem, 3vw, 3rem)" }}>
-        My Playlists
-      </Text>
+      <p className="text-3xl font-lexend font-semibold">My Playlists</p>
       <Space h={16} />
       <SegmentedControl setDisplay={setDisplay} playlists={playlists} />
       <Space h={32} />

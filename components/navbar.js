@@ -69,7 +69,7 @@ export default function Navbar({ searchContext }) {
           }}
         >
           <div className="flex justify-center items-center bg-white rounded-md">
-            <AiOutlineSearch className = "mx-2"/>
+            <AiOutlineSearch className="mx-2" />
             <input
               className="rounded-r-md py-2 outline-none font-lexend"
               onChange={(e) => setSearch(e.currentTarget.value)}
