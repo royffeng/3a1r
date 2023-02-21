@@ -1,9 +1,10 @@
-import { Flex, SegmentedControl, Space, Text } from "@mantine/core";
+import { Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/UserContext";
 import styles from "../../styles/landing.module.css";
 import { VideoGrid } from "./videoGrid";
+import SegmentedControl from "./SegmentedControl"
 
 const Genre = () => {
   const supabase = useSupabaseClient();
@@ -131,10 +132,8 @@ const Genre = () => {
             </Text>
             {genre && genres && (
               <SegmentedControl
-                value={genre}
-                onChange={(value) => handleGenreChange(value)}
-                data={genres}
-                color="green"
+                genres = {genres}
+                handleGenreChange = {handleGenreChange}
               />
             )}
             <Space h={4} />
