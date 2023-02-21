@@ -103,22 +103,22 @@ export default function Search({ search, ...props }) {
   }, [display, search]);
 
   return (
-      <div className="flex justify-center items-start flex-col px-4">
-        <Toggle handleValue={setDisplay} value={display} />
-        <Space h={32} />
-        {!dataLoading && display === "videos" ? (
-          <VideoGrid videos={videos} />
-        ) : !dataLoading && display === "playlists" ? (
-          <Grid gutter="md">
-            {playlists?.map((playlist, index) => (
-              <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
-                <Playlist playlistData={playlist} />
-              </Grid.Col>
-            ))}
-          </Grid>
-        ) : null}
+    <div className="flex justify-center items-start flex-col px-4">
+      <Toggle handleValue={setDisplay} value={display} />
+      <Space h={32} />
+      {!dataLoading && display === "videos" ? (
+        <VideoGrid videos={videos} />
+      ) : !dataLoading && display === "playlists" ? (
+        <Grid gutter="md">
+          {playlists?.map((playlist, index) => (
+            <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
+              <Playlist playlistData={playlist} />
+            </Grid.Col>
+          ))}
+        </Grid>
+      ) : null}
 
-        <Space h={48} />
-      </div>
+      <Space h={48} />
+    </div>
   );
 }
