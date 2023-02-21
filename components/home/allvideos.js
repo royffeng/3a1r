@@ -55,9 +55,9 @@ const AllVideos = () => {
   return (
     <Flex justify="flex-start" align="flex-start" className={styles.category}>
       <Center className={styles.header} sx={{ background: "#E6E1FF" }}>
-        <Text fz={32} fw={500}>
-          All Videos
-        </Text>
+        <p className="m-0 px-2">
+        All Videos
+        </p>
       </Center>
       <Space h={16} />
       <VideoGrid videos={videos} />

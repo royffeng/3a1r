@@ -30,7 +30,7 @@ export default function Navbar({ searchContext }) {
       style={{
         width: "100%",
         marginTop: "0.5rem",
-        marginBottom: "2rem",
+        marginBottom: "1rem",
         padding: "10px",
       }}
       gap="xl"

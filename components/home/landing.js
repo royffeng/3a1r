@@ -7,8 +7,8 @@ import LikedVideos from "./likedvideos";
 const landing = () => {
   return (
     <>
-      <LikedVideos />
       <AllVideos />
+      <LikedVideos />
       <Genre />
       <Space h={16} />
     </>

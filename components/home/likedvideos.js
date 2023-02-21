@@ -67,9 +67,9 @@ export default function LikedVideos() {
             className={styles.category}
           >
             <Center className={styles.header} sx={{ background: "#FFE4ED" }}>
-              <Text fz={32} fw={500}>
-                Liked Videos
-              </Text>
+              <p className = "m-0 px-2">
+              Liked Videos
+              </p>
             </Center>
             <Space h={16} />
             <VideoGrid videos={videos} />
