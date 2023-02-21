@@ -132,12 +132,11 @@ const Genre = () => {
             </Text>
             {genre && genres ? (
               <>
-                {genre && genres && (
-                  <SegmentedControl
-                    values={genres}
-                    handleValue={handleGenreChange}
-                    value={genre}
-                  />
+                <SegmentedControl
+                  values={genres}
+                  handleValue={handleGenreChange}
+                  value={genre}
+                />
                 <Space h={4} />
                 <VideoGrid videos={videos} />
               </>
