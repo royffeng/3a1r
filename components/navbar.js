@@ -1,20 +1,16 @@
-import { Avatar, Button, Flex, Group, Input, Menu, Text } from "@mantine/core";
+import { Avatar, Button, Flex, Group, Menu, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilePerson } from "react-icons/bs";
 import { MdOutlineLogout } from "react-icons/md";
-import { TbVideoPlus } from "react-icons/tb";
 import icon from "../public/appicon.png";
 import { UserContext } from "../utils/UserContext";
 
 export default function Navbar({ searchContext }) {
-  useEffect(() => {
-    console.log("first load");
-  }, []);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const userData = useContext(UserContext);
@@ -33,18 +29,30 @@ export default function Navbar({ searchContext }) {
       style={{
         width: "100%",
         marginTop: "0.5rem",
-        marginBottom: "2rem",
+        marginBottom: "1rem",
         padding: "10px",
       }}
       gap="xl"
     >
       <Flex direction="row" align="center" justify="center" gap="md">
         <Link href="/">
-          <a style={{ display: "flex", alignItems: "center" }}>
+          <div className="flex hover:cursor-pointer">
             <Image width="40px" height="40px" src={icon} alt="Icon" />
-          </a>
+            <p className="font-lexend font-bold no-underline m-0 text-3xl pl-2">
+              micDrop
+            </p>
+          </div>
         </Link>
       </Flex>
+
+      {userData && (
+        <Link href={`/profile?id=${userData.id}`}>
+          <p className="m-0 font-lexend font-semibold hover:cursor-pointer text-lg hover:text-[#666666]">
+            My Playlists
+          </p>
+        </Link>
+      )}
+
       <Flex
         direction="row"
         sx={{
@@ -52,29 +60,28 @@ export default function Navbar({ searchContext }) {
         }}
       >
         <form
-          style={{ width: "100%" }}
+          className="w-full flex justify-end items-center"
           onSubmit={(e) => {
             e.preventDefault();
             searchContext(search);
             router.push(`/search?query=${search}`);
           }}
         >
-          <Input
-            stroke={1.5}
-            variant="filled"
-            size="md"
-            radius="lg"
-            icon={<AiOutlineSearch />}
-            onChange={(e) => setSearch(e.currentTarget.value)}
-            placeholder="Search for a song"
-          />
+          <div className="flex justify-center items-center bg-white rounded-md">
+            <AiOutlineSearch className="mx-2" />
+            <input
+              className="rounded-r-md py-2 outline-none font-lexend"
+              onChange={(e) => setSearch(e.currentTarget.value)}
+              placeholder="search songs/artists"
+            />
+          </div>
         </form>
       </Flex>
       {userData ? (
         <>
-          <Button size="md" leftIcon={<TbVideoPlus />} color="green">
+          {/* <Button size="md" leftIcon={<TbVideoPlus />} color="green">
             <Link href="/create">Create</Link>
-          </Button>
+          </Button> */}
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
               {userData?.avatarUrl !== undefined ? (

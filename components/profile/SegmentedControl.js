@@ -16,30 +16,32 @@ const SegmentedControl = ({ setDisplay, playlists }) => {
 
   return (
     <>
-      <button
-        onClick={() => handleTabChange("all")}
-        className={`${
-          tab == "all" && "bg-micdrop-green text-white"
-        } mr-1 text-xl border-2 border-black px-4 py-2 w-fit rounded-full hover:bg-micdrop-green hover:text-white font-semibold`}
-      >
-        all
-      </button>
-      <button
-        onClick={() => handleTabChange("public")}
-        className={`${
-          tab == "public" && "bg-micdrop-green text-white"
-        } mx-1 text-xl border-2 border-black px-4 py-2 w-fit rounded-full hover:bg-micdrop-green hover:text-white font-semibold`}
-      >
-        public
-      </button>
-      <button
-        onClick={() => handleTabChange("private")}
-        className={`${
-          tab == "private" && "bg-micdrop-green text-white"
-        } mx-1 text-xl border-2 border-black px-4 py-2 w-fit rounded-full hover:bg-micdrop-green hover:text-white font-semibold`}
-      >
-        private
-      </button>
+      <div className="border-black border-2 w-fit rounded-full">
+        <button
+          onClick={() => handleTabChange("all")}
+          className={`${
+            tab == "all" && "bg-micdrop-pink"
+          } text-xl px-3 py-1.5 w-fit hover:bg-micdrop-pink font-semibold rounded-l-full border-r-2 border-black`}
+        >
+          all
+        </button>
+        <button
+          onClick={() => handleTabChange("public")}
+          className={`${
+            tab == "public" && "bg-micdrop-green text-white"
+          } text-xl px-3 py-1.5 w-fit hover:bg-micdrop-green hover:!text-white text-black font-semibold `}
+        >
+          public
+        </button>
+        <button
+          onClick={() => handleTabChange("private")}
+          className={`${
+            tab == "private" && "bg-micdrop-lightpurple"
+          } text-xl px-3 py-1.5 w-fit hover:bg-micdrop-lightpurple font-semibold rounded-r-full border-l-2 border-black`}
+        >
+          private
+        </button>
+      </div>
     </>
   );
 };
