@@ -1,8 +1,9 @@
-import { Flex, Grid, SegmentedControl, Space } from "@mantine/core";
+import { Grid, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VideoGrid } from "../components/home/videoGrid";
 import Playlist from "../components/profile/playlist";
+import Toggle from "../components/Toggle";
 
 export default function Search({ search, ...props }) {
   // const router = useRouter();
@@ -11,12 +12,6 @@ export default function Search({ search, ...props }) {
   const supabase = useSupabaseClient();
   const [videos, setVideos] = useState(null);
   const [dataLoading, setDataLoading] = useState(true);
-  const tabs = useMemo(() => {
-    return [
-      { value: "videos", label: "videos" },
-      { value: "playlists", label: "playlists" },
-    ];
-  });
 
   useEffect(() => {
     const fetchVideoData = async () => {
@@ -102,18 +97,8 @@ export default function Search({ search, ...props }) {
   }, [display, search]);
 
   return (
-    <Flex
-      direction="column"
-      sx={{
-        padding: "0 2rem",
-      }}
-    >
-      <SegmentedControl
-        value={display}
-        onChange={(value) => setDisplay(value)}
-        data={tabs}
-        color="green"
-      />
+    <div className="flex justify-center items-start flex-col px-4">
+      <Toggle handleValue={setDisplay} value={display} />
       <Space h={32} />
       {!dataLoading && display === "videos" ? (
         <VideoGrid videos={videos} />
@@ -128,6 +113,6 @@ export default function Search({ search, ...props }) {
       ) : null}
 
       <Space h={48} />
-    </Flex>
+    </div>
   );
 }

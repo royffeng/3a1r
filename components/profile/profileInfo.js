@@ -1,4 +1,4 @@
-import { Avatar, Flex, Grid, Text } from "@mantine/core";
+import { Avatar, Flex, Grid } from "@mantine/core";
 import React from "react";
 
 const colors = [
@@ -28,16 +28,10 @@ const ProfileInfo = ({ user }) => {
               />
             )}
           </Grid.Col>
-          <Grid.Col span={8}>
+          <Grid.Col span={8} className="mx-2">
             <Flex sx={{ width: "100%" }} direction="column" gap={4}>
-              <Text sx={{ width: "100%", fontSize: "clamp(1rem, 3vw, 3rem)" }}>
-                {user.full_name}
-              </Text>
-              <Text
-                sx={{ width: "100%", fontSize: "clamp(0.5rem, 1.5vw, 1.5rem)" }}
-              >
-                @{user.username}
-              </Text>
+              <p className="text-5xl font-bold">{user.full_name}</p>
+              <p className="text-3xl font-medium">@{user.username}</p>
               <>
                 <Flex direction="row" gap={4}>
                   {user.genres.map((g, index) => (

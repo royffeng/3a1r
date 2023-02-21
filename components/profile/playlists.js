@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Space, Text, Grid } from "@mantine/core";
+import { Space, Grid } from "@mantine/core";
 import SegmentedControl from "./SegmentedControl";
 import Playlist from "./playlist";
 
@@ -9,16 +9,14 @@ const Playlists = ({ playlists }) => {
   return (
     <>
       <Space h={32} />
-      <Text sx={{ width: "100%", fontSize: "clamp(1rem, 3vw, 3rem)" }}>
-        My Playlists
-      </Text>
+      <p className="text-3xl font-lexend font-semibold m-0">My Playlists</p>
       <Space h={16} />
       <SegmentedControl setDisplay={setDisplay} playlists={playlists} />
       <Space h={32} />
       {display && (
         <Grid gutter="md">
           {display?.map((video, index) => (
-            <Grid.Col xs={4} sm={4} md={4} lg={2} key={index}>
+            <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
               <Playlist playlistData={video} />
             </Grid.Col>
           ))}
