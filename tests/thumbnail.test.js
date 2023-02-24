@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Thumbnail from "../thumbnail";
+import Thumbnail from "../components/thumbnail";
 
 let thumbnailMockData = {
   id: "",
