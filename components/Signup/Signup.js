@@ -7,7 +7,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 const Signup = () => {
   const supabase = useSupabaseClient();
 
-  const [data, setData] = useState({
+  const [user, setData] = useState({
     name: "",
     email: "",
     username: "",
@@ -18,32 +18,22 @@ const Signup = () => {
   const [Genres, setGenres] = useState(new Set([]));
 
   const submit = async () => {
-    if (data.password !== data.confirmPassword) {
+
+    if (user.password !== user.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
-    if(data.password.length < 6) {
+    if(user.password.length < 6) {
       alert("Password must be 6 characters")
       return;
     }
 
     const { data } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
+      email: user.email,
+      password: user.password,
     });
 
-
-
-    // const { error } = supabase
-    //   .from("countries")
-    //   .insert({ id: 1, name: "Denmark" })
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   };
 
   const genres = [
@@ -73,8 +63,8 @@ const Signup = () => {
       <Row className="w-full">
         <Col xl={6}>
           <Input
-            values={data}
-            value={data.name}
+            values={user}
+            value={user.name}
             setData={setData}
             placeholder="Jane Doe"
             name="name"
@@ -82,8 +72,8 @@ const Signup = () => {
             label="name"
           />
           <Input
-            values={data}
-            value={data.email}
+            values={user}
+            value={user.email}
             setData={setData}
             placeholder="jane@ucr.edu"
             name="email"
@@ -91,8 +81,8 @@ const Signup = () => {
             label="email"
           />
           <Input
-            values={data}
-            value={data.password}
+            values={user}
+            value={user.password}
             setData={setData}
             placeholder=""
             name="password"
@@ -100,8 +90,8 @@ const Signup = () => {
             label="password"
           />
           <Input
-            values={data}
-            value={data.confirmPassword}
+            values={user}
+            value={user.confirmPassword}
             setData={setData}
             placeholder=""
             name="confirmPassword"
@@ -112,8 +102,8 @@ const Signup = () => {
 
         <Col xl={6}>
           <Input
-            values={data}
-            value={data.username}
+            values={user}
+            value={user.username}
             setData={setData}
             placeholder="janedoe"
             name="username"
