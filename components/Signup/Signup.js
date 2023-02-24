@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import Input from "./Input";
 import { Row, Col } from "react-bootstrap";
 import Genre from "./Genre";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const Signup = () => {
+  const supabase = useSupabaseClient();
+
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -14,9 +17,33 @@ const Signup = () => {
 
   const [Genres, setGenres] = useState(new Set([]));
 
-  const submit = () => {
-    console.log(data);
-    console.log(Genres);
+  const submit = async () => {
+    if (data.password !== data.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    if(data.password.length < 6) {
+      alert("Password must be 6 characters")
+      return;
+    }
+
+    const { data } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+    });
+
+
+
+    // const { error } = supabase
+    //   .from("countries")
+    //   .insert({ id: 1, name: "Denmark" })
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   const genres = [

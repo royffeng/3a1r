@@ -4,7 +4,6 @@ import LoginLogo from "./LoginLogo";
 import { FaGoogle, FaSpotify, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 const Login = () => {
   const router = useRouter();
