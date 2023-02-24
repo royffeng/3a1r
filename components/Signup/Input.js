@@ -18,10 +18,10 @@ const Input = ({ values, value, setData, placeholder, name, type, label }) => {
   return (
     <div className="flex justify-center items-start flex-col font-lexend w-full my-4">
       <p className="text-2xl mb-2">{label}</p>
-      <div className = "rounded-full border-2 bg-white border-black px-4 py-2 text-2xl w-full">
+      <div className = "rounded-full border-2 bg-white border-black px-4 py-2 text-2xl w-full flex">
       <input
         name={name}
-        type={name === "password" ? password : type}
+        type={(name === "password" || name === "confirmPassword") ? password : type}
         placeholder={placeholder}
         value={value}
         onChange={(e) =>
@@ -30,10 +30,10 @@ const Input = ({ values, value, setData, placeholder, name, type, label }) => {
         className="outline-none w-full"
       />
       {
-        name === "password" && toggle && <RxEyeNone onClick = {() => handlePassword(false)} />
+        (name === "password" || name === "confirmPassword") && toggle && <RxEyeNone onClick = {() => handlePassword(false)} />
       }
       {
-        name === "password" && !toggle && <RxEyeClosed onClick = {() => handlePassword(true)} />
+        (name === "password" || name === "confirmPassword") && !toggle && <RxEyeClosed onClick = {() => handlePassword(true)} />
       }
       </div>
       
