@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Genre = ({ genre }) => {
+  const [state, setState] = useState(false);
+
   return (
-    <div className="bg-white m-0 w-fit whitespace-nowrap rounded-full border-2 border-black font-lexend px-4 py-2">
+    <div
+      onClick={() => setState(!state)}
+      className={`${
+        state ? "bg-micdrop-pink" : "bg-white"
+      } m-0 w-fit hover:cursor-pointer whitespace-nowrap rounded-full border-2 border-black font-lexend px-4 py-2`}
+    >
       {genre}
     </div>
   );
