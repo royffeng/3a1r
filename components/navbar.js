@@ -12,7 +12,7 @@ import icon from "../public/appicon.png";
 export default function Navbar({ searchContext }) {
   const router = useRouter();
   const supabase = useSupabaseClient();
-  const userData = useUser()
+  const userData = useUser();
   const [search, setSearch] = useState("");
 
   const handleLogout = useCallback(async () => {

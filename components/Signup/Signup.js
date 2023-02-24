@@ -18,14 +18,13 @@ const Signup = () => {
   const [Genres, setGenres] = useState(new Set([]));
 
   const submit = async () => {
-
     if (user.password !== user.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
-    if(user.password.length < 6) {
-      alert("Password must be 6 characters")
+    if (user.password.length < 6) {
+      alert("Password must be 6 characters");
       return;
     }
 
@@ -33,7 +32,6 @@ const Signup = () => {
       email: user.email,
       password: user.password,
     });
-
   };
 
   const genres = [
