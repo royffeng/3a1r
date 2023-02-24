@@ -4,15 +4,16 @@ const Genre = ({ genre, Genres, setGenres }) => {
   const [state, setState] = useState(false);
 
   const handleToggle = () => {
-
-    setState(!state)
+    setState(!state);
     if (!state === true) {
-        setGenres(prev => new Set(prev.add(genre)))
+      setGenres((prev) => new Set(prev.add(genre)));
     } else {
-        setGenres(prev => new Set([...prev].filter(genreElement => genreElement !== genre)))
+      setGenres(
+        (prev) =>
+          new Set([...prev].filter((genreElement) => genreElement !== genre))
+      );
     }
-
-  }
+  };
 
   return (
     <div

@@ -12,11 +12,11 @@ const Signup = () => {
     confirmPassword: "",
   });
 
-  const [Genres, setGenres] = useState(new Set([]))
+  const [Genres, setGenres] = useState(new Set([]));
 
   const submit = () => {
     console.log(data);
-    console.log(Genres)
+    console.log(Genres);
   };
 
   const genres = [
@@ -103,7 +103,7 @@ const Signup = () => {
                   key={index}
                   className="m-0 p-0 w-fit flex justify-start !max-w-fit items-center"
                 >
-                  <Genre genre={genre} Genres = {Genres} setGenres = {setGenres}/>
+                  <Genre genre={genre} Genres={Genres} setGenres={setGenres} />
                 </Col>
               ))}
             </Row>
