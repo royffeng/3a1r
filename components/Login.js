@@ -4,6 +4,7 @@ import LoginLogo from "./LoginLogo";
 import { FaGoogle, FaSpotify, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Login = () => {
   const router = useRouter();
@@ -90,12 +91,17 @@ const Login = () => {
             </div>
           </div>
           <div className="w-1/2 flex justify-center items-center">
-            <a
-              href="/signup"
-              className="px-8 py-2 rounded-full border-2 text-black no-underline border-black hover:!bg-black hover:!text-white text-xl mt-8 w-1/2 mr-2 bg-white flex justify-center items-center"
-            >
-              signup
-            </a>
+            <div className = "w-1/2 bg-white text-black rounded-full border-2 border-black fnot-lexend flex justify-center items-center px-8 py-2 mt-8 text-xl hover:!bg-black hover:!text-white hover:cursor-pointer">
+              <Link
+                href="/signup"
+                className=""
+              >
+                <p className="m-0">
+                  signup
+                </p>
+              </Link>
+            </div>
+
             <button
               onClick={handlePasswordLogin}
               className="px-8 py-2 rounded-full border-2 border-black hover:!bg-black hover:text-white text-xl mt-8 w-1/2 ml-2 bg-white font-lexend"
