@@ -28,7 +28,7 @@ const Signup = () => {
       return;
     }
 
-    const { data } = await supabase.auth.signUp({
+    await supabase.auth.signUp({
       email: user.email,
       password: user.password,
     });
