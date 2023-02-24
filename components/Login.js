@@ -91,14 +91,9 @@ const Login = () => {
             </div>
           </div>
           <div className="w-1/2 flex justify-center items-center">
-            <div className = "w-1/2 bg-white text-black rounded-full border-2 border-black fnot-lexend flex justify-center items-center px-8 py-2 mt-8 text-xl hover:!bg-black hover:!text-white hover:cursor-pointer">
-              <Link
-                href="/signup"
-                className=""
-              >
-                <p className="m-0">
-                  signup
-                </p>
+            <div className="w-1/2 bg-white text-black rounded-full border-2 border-black fnot-lexend flex justify-center items-center px-8 py-2 mt-8 text-xl hover:!bg-black hover:!text-white hover:cursor-pointer">
+              <Link href="/signup" className="">
+                <p className="m-0">signup</p>
               </Link>
             </div>
 
