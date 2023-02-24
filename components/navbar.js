@@ -1,19 +1,18 @@
 import { Avatar, Button, Flex, Group, Menu, Text } from "@mantine/core";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilePerson } from "react-icons/bs";
 import { MdOutlineLogout } from "react-icons/md";
 import icon from "../public/appicon.png";
-import { UserContext } from "../utils/UserContext";
 
 export default function Navbar({ searchContext }) {
   const router = useRouter();
   const supabase = useSupabaseClient();
-  const userData = useContext(UserContext);
+  const userData = useUser();
   const [search, setSearch] = useState("");
 
   const handleLogout = useCallback(async () => {
