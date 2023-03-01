@@ -3,13 +3,15 @@ import { Space, Grid } from "@mantine/core";
 import SegmentedControl from "./SegmentedControl";
 import Playlist from "./playlist";
 
-const Playlists = ({ playlists }) => {
+const Playlists = ({ playlists, personal = true }) => {
   const [display, setDisplay] = useState(playlists);
 
   return (
     <>
       <Space h={32} />
-      <p className="text-3xl font-lexend font-semibold m-0">My Playlists</p>
+      <p className="text-3xl font-lexend font-semibold m-0">
+        {personal ? "My" : "Their"} Playlists
+      </p>
       <Space h={16} />
       <SegmentedControl setDisplay={setDisplay} playlists={playlists} />
       <Space h={32} />

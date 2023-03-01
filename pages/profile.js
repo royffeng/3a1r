@@ -50,9 +50,7 @@ const Profile = () => {
         {user && (
           <>
             <ProfileInfo user={user} />
-            {!playlistLoading && (
-              <Playlists playlists={playlists} />
-            )}
+            {!playlistLoading && <Playlists playlists={playlists} />}
           </>
         )}
       </>
