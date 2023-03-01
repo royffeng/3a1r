@@ -1,4 +1,4 @@
-import { Center, Flex, Space } from "@mantine/core";
+import { Center, Flex } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/landing.module.css";
