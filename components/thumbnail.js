@@ -52,13 +52,13 @@ const Thumbnail = ({
                 {title}
               </Text>
               <div className="flex justify-center items-start flex-col w-full">
-                <Text fz="xs">{username}</Text>
+                <p className = "m-0 text-xs text-gray-900" fz="xs">{username}</p>
                 <div className="flex justify-start items-center !w-full">
-                  <Text aria-label="video views" fz="xs">{`${views} view${
+                  <p className = "m-0 text-xs text-gray-900" aria-label="video views" fz="xs">{`${views} view${
                     views == 1 ? "" : "s"
-                  }`}</Text>
+                  }`}</p>
                   <GoPrimitiveDot className="text-[.5rem] mx-1" />
-                  <Text aria-label="date of video" fz="xs">
+                  <p className = "m-0 text-xs text-gray-900" aria-label="date of video" fz="xs">
                     Posted{" "}
                     {`${Math.trunc(
                       Math.round(
@@ -67,7 +67,7 @@ const Thumbnail = ({
                         (1000 * 3600 * 24)
                     )}`}{" "}
                     days ago
-                  </Text>
+                  </p>
                 </div>
               </div>
             </Flex>
