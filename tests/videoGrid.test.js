@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { VideoGrid } from "../videoGrid";
+import { VideoGrid } from "../components/home/videoGrid";
 
 let videoMockData = [
   {
@@ -7,42 +7,36 @@ let videoMockData = [
     description: "description",
     videoUrl: "http://video.com",
     views: 0,
-    date: "2022-10-23 20:07:44+00",
   },
   {
     title: "title2",
     description: "description",
     videoUrl: "http://video.com",
     views: 0,
-    date: "2022-10-23 20:07:44+00",
   },
   {
     title: "title3",
     description: "description",
     videoUrl: "http://video.com",
     views: 0,
-    date: "2022-10-23 20:07:44+00",
   },
   {
     title: "title4",
     description: "description",
     videoUrl: "http://video.com",
     views: 0,
-    date: "2022-10-23 20:07:44+00",
   },
   {
     title: "title5",
     description: "description",
     videoUrl: "http://video.com",
     views: 0,
-    date: "2022-10-23 20:07:44+00",
   },
   {
     title: "title6",
     description: "description",
     videoUrl: "http://video.com",
     views: 0,
-    date: "2022-10-23 20:07:44+00",
   },
 ];
 
