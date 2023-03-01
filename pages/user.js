@@ -88,8 +88,8 @@ const Profile = () => {
 
   return (
     <div className={`${styles.container}`}>
-        {user && <ProfileInfo user={user} genres={genres} />}
-        {playlists && <Playlists playlists={playlists} personal={false} />}
+      {user && <ProfileInfo user={user} genres={genres} />}
+      {playlists && <Playlists playlists={playlists} personal={false} />}
     </div>
   );
 };

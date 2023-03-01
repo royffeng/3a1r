@@ -20,10 +20,13 @@ const Thumbnail = ({
   }
 
   return (
-    <Flex aria-label="video thumbnail" className={`${tn_styles.thumbnail} !z-0`}>
+    <Flex
+      aria-label="video thumbnail"
+      className={`${tn_styles.thumbnail} !z-0`}
+    >
       <Flex direction="column">
         <Link target="_blank" href={`/karaoke?vid=${id}`}>
-          <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail"/>
+          <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail" />
         </Link>
         <Space h={8} />
         <Flex sx={{ paddingRight: "1rem" }} direction="row">
@@ -52,13 +55,21 @@ const Thumbnail = ({
                 {title}
               </Text>
               <div className="flex justify-center items-start flex-col w-full">
-                <p className = "m-0 text-xs text-gray-900" fz="xs">{username}</p>
+                <p className="m-0 text-xs text-gray-900" fz="xs">
+                  {username}
+                </p>
                 <div className="flex justify-start items-center !w-full">
-                  <p className = "m-0 text-xs text-gray-900" aria-label="video views" fz="xs">{`${views} view${
-                    views == 1 ? "" : "s"
-                  }`}</p>
+                  <p
+                    className="m-0 text-xs text-gray-900"
+                    aria-label="video views"
+                    fz="xs"
+                  >{`${views} view${views == 1 ? "" : "s"}`}</p>
                   <GoPrimitiveDot className="text-[.5rem] mx-1" />
-                  <p className = "m-0 text-xs text-gray-900" aria-label="date of video" fz="xs">
+                  <p
+                    className="m-0 text-xs text-gray-900"
+                    aria-label="date of video"
+                    fz="xs"
+                  >
                     Posted{" "}
                     {`${Math.trunc(
                       Math.round(

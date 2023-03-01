@@ -6,7 +6,7 @@ import LikedVideos from "./likedvideos";
 
 const landing = () => {
   return (
-    <div className = "mt-20">
+    <div className="mt-20">
       <AllVideos />
       <LikedVideos />
       <Genre />
