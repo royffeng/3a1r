@@ -3,7 +3,7 @@ import tn_styles from "../styles/thumbnail.module.css";
 import Link from "next/link";
 import { Avatar, Text, Flex, Space, Image } from "@mantine/core";
 import { rectifyFormat } from "../utils/formatUTC";
-import {GoPrimitiveDot} from "react-icons/go"
+import { GoPrimitiveDot } from "react-icons/go";
 
 const Thumbnail = ({
   id,
@@ -57,11 +57,17 @@ const Thumbnail = ({
                   <Text aria-label="video views" fz="xs">{`${views} view${
                     views == 1 ? "" : "s"
                   }`}</Text>
-                  {/* <Text aria-label="date of video" fz="xs">{`${rectifyFormat(
-                    date
-                  ).toLocaleDateString()}`}</Text> */}
-                  <GoPrimitiveDot className = "text-[.5rem] mx-1"/>
-                  <Text aria-label="date of video" fz="xs">Posted {`${Math.trunc(Math.round(new Date().getTime() - rectifyFormat(date).getTime()) / (1000 * 3600 * 24))}`} days ago</Text>
+                  <GoPrimitiveDot className="text-[.5rem] mx-1" />
+                  <Text aria-label="date of video" fz="xs">
+                    Posted{" "}
+                    {`${Math.trunc(
+                      Math.round(
+                        new Date().getTime() - rectifyFormat(date).getTime()
+                      ) /
+                        (1000 * 3600 * 24)
+                    )}`}{" "}
+                    days ago
+                  </Text>
                 </div>
               </div>
             </Flex>
