@@ -13,34 +13,34 @@ export default function Navbar({ searchContext }) {
   const supabase = useSupabaseClient();
   const userData = useUser();
   const [search, setSearch] = useState("");
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState("");
 
   async function getProfile() {
-    if(userData) {
-    try {
-      let { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username`)
-        .eq("id", userData.id)
-        .single();
+    if (userData) {
+      try {
+        let { data, error, status } = await supabase
+          .from("profiles")
+          .select(`username`)
+          .eq("id", userData.id)
+          .single();
 
-      if (error && status !== 406) {
-        throw error;
-      }
+        if (error && status !== 406) {
+          throw error;
+        }
 
-      if (data) {
-        setUsername(data.username);
+        if (data) {
+          setUsername(data.username);
+        }
+      } catch (error) {
+        alert("Error loading user data!");
+        console.log(error);
       }
-    } catch (error) {
-      alert("Error loading user data!");
-      console.log(error);
     }
-  }
   }
 
   useEffect(() => {
-    getProfile()
-  }, [])
+    getProfile();
+  }, []);
 
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
@@ -123,7 +123,10 @@ export default function Navbar({ searchContext }) {
               )}
             </Menu.Target>
 
-            <Menu.Dropdown sx={{ padding: "0.75rem" }} className = "border-black border-2 shadow-none rounded-xl">
+            <Menu.Dropdown
+              sx={{ padding: "0.75rem" }}
+              className="border-black border-2 shadow-none rounded-xl"
+            >
               <Group>
                 <div style={{ flex: 1 }}>
                   <Text>{userData.full_name}</Text>
@@ -139,7 +142,10 @@ export default function Navbar({ searchContext }) {
                 </div>
               </Link>
 
-              <div className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer" onClick = {handleLogout}>
+              <div
+                className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer"
+                onClick={handleLogout}
+              >
                 <MdOutlineLogout className="text-lg mr-2" />
                 <p className="m-0">Logout</p>
               </div>
