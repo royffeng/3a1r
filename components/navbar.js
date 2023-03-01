@@ -18,7 +18,7 @@ export default function Navbar({ searchContext }) {
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
     router.push("/auth");
-  }, [supabase]);
+  }, []);
 
   return (
     <Flex
@@ -78,9 +78,6 @@ export default function Navbar({ searchContext }) {
       </Flex>
       {userData ? (
         <>
-          {/* <Button size="md" leftIcon={<TbVideoPlus />} color="green">
-            <Link href="/create">Create</Link>
-          </Button> */}
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
               {userData?.avatarUrl !== undefined ? (
@@ -120,20 +117,19 @@ export default function Navbar({ searchContext }) {
                   <Text>@{userData.username}</Text>
                 </div>
               </Group>
-              <Menu.Divider color="red" />
-              <Menu.Item
-                component="a"
-                href={`/profile?id=${userData.id}`}
-                icon={<BsFilePerson size={20} />}
-              >
-                Your Profile
-              </Menu.Item>
-              <Menu.Item
-                icon={<MdOutlineLogout size={20} />}
-                onClick={handleLogout}
-              >
-                Logout
-              </Menu.Item>
+              <Menu.Divider color="black" />
+
+              <Link href={`/profile?id=${userData.id}`}>
+                <div className="flex justify-center items-center hover:bg-white rounded p-1 hover:cursor-pointer">
+                  <BsFilePerson className="text-lg mr-2" />
+                  <p className="m-0">Your Profile</p>
+                </div>
+              </Link>
+
+              <div className="flex justify-center items-center hover:bg-white rounded p-1 hover:cursor-pointer">
+                <MdOutlineLogout className="text-lg mr-2" />
+                <p className="m-0">Logout</p>
+              </div>
             </Menu.Dropdown>
           </Menu>
         </>
