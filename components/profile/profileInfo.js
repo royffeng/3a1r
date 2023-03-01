@@ -8,7 +8,7 @@ const colors = [
   "bg-micdrop-purple",
 ];
 
-const ProfileInfo = ({ user }) => {
+const ProfileInfo = ({ user, genres }) => {
   return (
     <>
       {user ? (
@@ -34,8 +34,21 @@ const ProfileInfo = ({ user }) => {
               <p className="text-3xl font-medium">@{user.username}</p>
               <>
                 <Flex direction="row" gap={4}>
-                  {console.log(user.genres)}
-                  {user.genres?.map((g, index) => (
+                  {genres && genres.map((g, index) => (
+                    <div
+                      key={index}
+                      className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${
+                        colors[index % colors.length]
+                      } ${
+                        colors[index % colors.length] === "bg-micdrop-green"
+                          ? "!text-white"
+                          : "text-black"
+                      }`}
+                    >
+                      {g}
+                    </div>
+                  ))}
+                  {user.genres && user.genres.map((g, index) => (
                     <div
                       key={index}
                       className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${

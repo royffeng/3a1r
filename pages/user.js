@@ -11,6 +11,7 @@ const Profile = () => {
   const supabase = useSupabaseClient();
   const [playlists, setPlaylists] = useState(null);
   const [user, setUser] = useState(null);
+  const [genres, setGenres] = useState(null)
 
   const id = router.query.id;
 
@@ -75,7 +76,7 @@ const Profile = () => {
         return;
       } else {
         const genres = data.map((element) => element.genre);
-        setUser({ ...user, genres: genres });
+        setGenres(genres);
       }
     };
 
@@ -89,7 +90,7 @@ const Profile = () => {
   return (
     <div className={styles.container}>
       <>
-        {user && <ProfileInfo user={user} />}
+        {user && <ProfileInfo user={user} genres = {genres}/>}
 
         {playlists && <Playlists playlists={playlists} personal={false} />}
       </>
