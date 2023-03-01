@@ -97,7 +97,7 @@ export default function Search({ search, ...props }) {
   }, [display, search]);
 
   return (
-    <div className="flex justify-center items-start flex-col px-4">
+    <div className="flex justify-center items-start flex-col px-4 pt-20">
       <Toggle handleValue={setDisplay} value={display} />
       <Space h={32} />
       {!dataLoading && display === "videos" ? (
