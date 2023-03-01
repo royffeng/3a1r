@@ -1,6 +1,5 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useEffect, useState } from "react";
-
 import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
@@ -11,7 +10,7 @@ const Profile = () => {
   const supabase = useSupabaseClient();
   const [playlists, setPlaylists] = useState(null);
   const [user, setUser] = useState(null);
-  const [genres, setGenres] = useState(null)
+  const [genres, setGenres] = useState(null);
 
   const id = router.query.id;
 
@@ -90,8 +89,7 @@ const Profile = () => {
   return (
     <div className={styles.container}>
       <>
-        {user && <ProfileInfo user={user} genres = {genres}/>}
-
+        {user && <ProfileInfo user={user} genres={genres} />}
         {playlists && <Playlists playlists={playlists} personal={false} />}
       </>
     </div>
