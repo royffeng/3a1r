@@ -32,6 +32,7 @@ export const VideoGrid = ({ videos }) => {
                     views={video.views}
                     avatar_url={video.profiles?.avatar_url}
                     date={video.created_at}
+                    userid={video.profiles?.id}
                   />
                 </Grid.Col>
               ))}

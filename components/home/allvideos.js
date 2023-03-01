@@ -20,6 +20,7 @@ const AllVideos = () => {
             views,
             created_at,
             profiles(
+              id,
               username,
               avatar_url
             )
