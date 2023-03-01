@@ -13,8 +13,8 @@ let thumbnailMockData = {
 };
 
 test("TEST", () => {
-  expect(0).toEqual(0)
-})
+  expect(0).toEqual(0);
+});
 
 // test("handles missing avatar", () => {
 //   render(
