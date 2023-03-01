@@ -122,7 +122,7 @@ export default function Navbar({ searchContext }) {
               <Link href={`/profile?id=${userData.id}`}>
                 <div className="flex justify-center items-center hover:bg-white rounded p-1 hover:cursor-pointer">
                   <BsFilePerson className="text-lg mr-2" />
-                  <p className="m-0">Your Profile</p>
+                  <p className="m-0">Profile</p>
                 </div>
               </Link>
 
