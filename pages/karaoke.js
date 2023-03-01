@@ -276,9 +276,7 @@ export default function Karaoke() {
               <Flex
                 direction="row"
                 align="center"
-                style={{
-                  width: "100%",
-                }}
+                className = "w-full py-3"
                 gap="sm"
               >
                 {videoMetaData.profiles.avatar_url !== undefined ? (
@@ -293,7 +291,7 @@ export default function Karaoke() {
                 <Text>{videoMetaData.profiles.username}</Text>
               </Flex>
               <Flex
-                className="video-likes-dislikes"
+                className="video-likes-dislikes pt-0"
                 direction="row"
                 align="center"
                 gap="xs"
@@ -333,7 +331,6 @@ export default function Karaoke() {
                 </Button>
               </Flex>
             </Flex>
-            <Space h="md" />
             <Alert color="gray" style={{ width: "100%" }}>
               <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
                 <Text fz="sm">Description:</Text>
