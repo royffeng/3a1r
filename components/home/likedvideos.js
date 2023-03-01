@@ -1,4 +1,4 @@
-import { Center, Flex, Space } from "@mantine/core";
+import { Center, Flex } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/UserContext";
@@ -69,10 +69,8 @@ export default function LikedVideos() {
             <Center className={styles.header} sx={{ background: "#FFE4ED" }}>
               <p className="m-0 px-2">Liked Videos</p>
             </Center>
-            <Space h={16} />
             <VideoGrid videos={videos} />
           </Flex>
-          <Space h={48} />
         </>
       )}
     </>

@@ -10,6 +10,7 @@ import {
   Text,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import "plyr/dist/plyr.css";
 import { useCallback, useEffect, useMemo, useState, useContext } from "react";
@@ -129,7 +130,8 @@ export default function Karaoke() {
             views,
             profiles(
               username,
-              avatar_url
+              avatar_url,
+              id
             )
           `
         )
@@ -198,7 +200,7 @@ export default function Karaoke() {
 
   const dateString = useMemo(() => {
     if (videoMetaData) {
-      return rectifyFormat(videoMetaData?.created_at);
+      return rectifyFormat(videoMetaData?.created_at).toLocaleDateString();
     }
 
     return "";
@@ -221,6 +223,7 @@ export default function Karaoke() {
         alignItems: "center",
         justifyContent: "center",
       }}
+      className="pt-20"
     >
       {videoMetaData == null || videoMetaData == undefined ? (
         <div
@@ -244,7 +247,7 @@ export default function Karaoke() {
             lyricsArr={videoMetaData.lyrics}
           />
           <div
-            className="below-player-wrapper"
+            className="below-player-wrapper mt-2"
             style={{
               display: "flex",
               width: "clamp(100%, 95vw, 100%)",
@@ -273,27 +276,27 @@ export default function Karaoke() {
                 width: "100%",
               }}
             >
+              <Link href={`/user?id=${videoMetaData.profiles.id}`}>
+                <Flex
+                  direction="row"
+                  align="center"
+                  className="w-full py-3 hover:cursor-pointer"
+                  gap="sm"
+                >
+                  {videoMetaData.profiles.avatar_url !== undefined ? (
+                    <Avatar
+                      src={videoMetaData.profiles.avatar_url}
+                      radius="xl"
+                      alt="no image here"
+                    />
+                  ) : (
+                    <Avatar radius="xl" alt="no image here" />
+                  )}
+                  <Text>{videoMetaData.profiles.username}</Text>
+                </Flex>
+              </Link>
               <Flex
-                direction="row"
-                align="center"
-                style={{
-                  width: "100%",
-                }}
-                gap="sm"
-              >
-                {videoMetaData.profiles.avatar_url !== undefined ? (
-                  <Avatar
-                    src={videoMetaData.profiles.avatar_url}
-                    radius="xl"
-                    alt="no image here"
-                  />
-                ) : (
-                  <Avatar radius="xl" alt="no image here" />
-                )}
-                <Text>{videoMetaData.profiles.username}</Text>
-              </Flex>
-              <Flex
-                className="video-likes-dislikes"
+                className="video-likes-dislikes pt-0"
                 direction="row"
                 align="center"
                 gap="xs"
@@ -333,7 +336,6 @@ export default function Karaoke() {
                 </Button>
               </Flex>
             </Flex>
-            <Space h="md" />
             <Alert color="gray" style={{ width: "100%" }}>
               <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
                 <Text fz="sm">Description:</Text>

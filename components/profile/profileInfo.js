@@ -8,11 +8,17 @@ const colors = [
   "bg-micdrop-purple",
 ];
 
-const ProfileInfo = ({ user }) => {
+const ProfileInfo = ({ user, genres }) => {
   return (
-    <>
+    <div className="">
       {user ? (
-        <Grid grow gutter={16} justify="flex-start" align="center">
+        <Grid
+          grow
+          gutter={16}
+          justify="flex-start"
+          align="center"
+          className="pt-20"
+        >
           <Grid.Col sx={{ aspectRatio: "1 / 1" }} span={1}>
             {user.avatarUrl !== undefined ? (
               <Avatar
@@ -34,20 +40,36 @@ const ProfileInfo = ({ user }) => {
               <p className="text-3xl font-medium">@{user.username}</p>
               <>
                 <Flex direction="row" gap={4}>
-                  {user.genres.map((g, index) => (
-                    <div
-                      key={index}
-                      className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${
-                        colors[index % colors.length]
-                      } ${
-                        colors[index % colors.length] === "bg-micdrop-green"
-                          ? "!text-white"
-                          : "text-black"
-                      }`}
-                    >
-                      {g}
-                    </div>
-                  ))}
+                  {genres &&
+                    genres.map((g, index) => (
+                      <div
+                        key={index}
+                        className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${
+                          colors[index % colors.length]
+                        } ${
+                          colors[index % colors.length] === "bg-micdrop-green"
+                            ? "!text-white"
+                            : "text-black"
+                        }`}
+                      >
+                        {g}
+                      </div>
+                    ))}
+                  {user.genres &&
+                    user.genres.map((g, index) => (
+                      <div
+                        key={index}
+                        className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${
+                          colors[index % colors.length]
+                        } ${
+                          colors[index % colors.length] === "bg-micdrop-green"
+                            ? "!text-white"
+                            : "text-black"
+                        }`}
+                      >
+                        {g}
+                      </div>
+                    ))}
                 </Flex>
               </>
             </Flex>
@@ -56,7 +78,7 @@ const ProfileInfo = ({ user }) => {
       ) : (
         <>No User</>
       )}
-    </>
+    </div>
   );
 };
 

@@ -3,10 +3,9 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BsFilePerson } from "react-icons/bs";
-import { MdOutlineLogout } from "react-icons/md";
+import { MdOutlineLogout, MdPerson } from "react-icons/md";
 import icon from "../public/appicon.png";
 
 export default function Navbar({ searchContext }) {
@@ -14,23 +13,46 @@ export default function Navbar({ searchContext }) {
   const supabase = useSupabaseClient();
   const userData = useUser();
   const [search, setSearch] = useState("");
+  const [username, setUsername] = useState("");
+
+  async function getProfile() {
+    if (userData) {
+      try {
+        let { data, error, status } = await supabase
+          .from("profiles")
+          .select(`username`)
+          .eq("id", userData.id)
+          .single();
+
+        if (error && status !== 406) {
+          throw error;
+        }
+
+        if (data) {
+          setUsername(data.username);
+        }
+      } catch (error) {
+        alert("Error loading user data!");
+        console.log(error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
     router.push("/auth");
-  }, [supabase]);
+  }, []);
 
   return (
     <Flex
       direction="row"
       align="center"
       justify="space-between"
-      style={{
-        width: "100%",
-        marginTop: "0.5rem",
-        marginBottom: "1rem",
-        padding: "10px",
-      }}
+      className="w-full py-3 px-8 fixed bg-micdrop-beige !z-[100000000]"
       gap="xl"
     >
       <Flex direction="row" align="center" justify="center" gap="md">
@@ -78,9 +100,6 @@ export default function Navbar({ searchContext }) {
       </Flex>
       {userData ? (
         <>
-          {/* <Button size="md" leftIcon={<TbVideoPlus />} color="green">
-            <Link href="/create">Create</Link>
-          </Button> */}
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
               {userData?.avatarUrl !== undefined ? (
@@ -99,41 +118,32 @@ export default function Navbar({ searchContext }) {
               )}
             </Menu.Target>
 
-            <Menu.Dropdown sx={{ padding: "0.75rem" }}>
+            <Menu.Dropdown
+              sx={{ padding: "0.75rem" }}
+              className="border-black border-2 shadow-none rounded-xl"
+            >
               <Group>
-                {userData?.avatarUrl !== undefined ? (
-                  <Avatar
-                    sx={{ cursor: "pointer" }}
-                    src={userData?.avatarUrl}
-                    radius="xl"
-                    alt="no image here"
-                  />
-                ) : (
-                  <Avatar
-                    sx={{ cursor: "pointer" }}
-                    radius="xl"
-                    alt="no image here"
-                  />
-                )}
                 <div style={{ flex: 1 }}>
                   <Text>{userData.full_name}</Text>
-                  <Text>@{userData.username}</Text>
+                  <Text>@{username}</Text>
                 </div>
               </Group>
-              <Menu.Divider color="red" />
-              <Menu.Item
-                component="a"
-                href={`/profile?id=${userData.id}`}
-                icon={<BsFilePerson size={20} />}
-              >
-                Your Profile
-              </Menu.Item>
-              <Menu.Item
-                icon={<MdOutlineLogout size={20} />}
+              <Menu.Divider color="black" />
+
+              <Link href={`/profile?id=${userData.id}`}>
+                <div className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer">
+                  <MdPerson className="text-lg mr-2" />
+                  <p className="m-0">Profile</p>
+                </div>
+              </Link>
+
+              <div
+                className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer"
                 onClick={handleLogout}
               >
-                Logout
-              </Menu.Item>
+                <MdOutlineLogout className="text-lg mr-2" />
+                <p className="m-0">Logout</p>
+              </div>
             </Menu.Dropdown>
           </Menu>
         </>

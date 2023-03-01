@@ -18,5 +18,5 @@ export function rectifyFormat(s) {
     "." +
     b[6].substr(0, 3) +
     "+00:00";
-  return new Date(date).toLocaleDateString();
+  return new Date(date);
 }

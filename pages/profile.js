@@ -45,14 +45,12 @@ const Profile = () => {
   }, [user]);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container}`}>
       <>
         {user && (
           <>
             <ProfileInfo user={user} />
-            {!playlistLoading && (
-              <Playlists playlists={playlists} user={user} />
-            )}
+            {!playlistLoading && <Playlists playlists={playlists} />}
           </>
         )}
       </>
