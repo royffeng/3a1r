@@ -4,16 +4,19 @@ import React, { useContext, useEffect, useState } from "react";
 import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
-import { UserContext } from "../utils/UserContext";
+import {useRouter} from "next/router"
 
 const Profile = () => {
+const router = useRouter()
   const supabase = useSupabaseClient();
-  const user = useContext(UserContext);
   const [playlists, setPlaylists] = useState(null);
   const [playlistLoading, setPlaylistLoading] = useState(true);
 
+  const id = router.query.id
+
   useEffect(() => {
     const fetchData = async () => {
+        
       let { data, error } = await supabase
         .from("playlists")
         .select(
@@ -30,31 +33,41 @@ const Profile = () => {
           thumbnail_url
         `
         )
-        .filter("uid", "eq", user.id);
+        .filter("uid", "eq", id);
       if (error) {
         console.log("error getting playlists: ", error);
         return;
       } else {
         setPlaylistLoading(false);
         setPlaylists(data);
+        console.log(data)
       }
     };
-    if (user) {
-      fetchData();
+
+    if(id) {
+        fetchData()
     }
-  }, [user]);
+
+
+    
+  }, [id]);
 
   return (
     <div className={styles.container}>
       <>
-        {user && (
+        {/* {user && (
           <>
             <ProfileInfo user={user} />
             {!playlistLoading && (
-              <Playlists playlists={playlists} />
+              <Playlists playlists={playlists} user={user} />
             )}
           </>
-        )}
+        )} */}
+        {
+            playlists &&         <Playlists playlists={playlists} />
+
+        }
+        
       </>
     </div>
   );

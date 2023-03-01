@@ -10,6 +10,7 @@ import {
   Text,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import "plyr/dist/plyr.css";
 import { useCallback, useEffect, useMemo, useState, useContext } from "react";
@@ -129,7 +130,8 @@ export default function Karaoke() {
             views,
             profiles(
               username,
-              avatar_url
+              avatar_url,
+              id
             )
           `
         )
@@ -244,7 +246,7 @@ export default function Karaoke() {
             lyricsArr={videoMetaData.lyrics}
           />
           <div
-            className="below-player-wrapper"
+            className="below-player-wrapper mt-2"
             style={{
               display: "flex",
               width: "clamp(100%, 95vw, 100%)",
@@ -273,23 +275,25 @@ export default function Karaoke() {
                 width: "100%",
               }}
             >
-              <Flex
-                direction="row"
-                align="center"
-                className = "w-full py-3"
-                gap="sm"
-              >
-                {videoMetaData.profiles.avatar_url !== undefined ? (
-                  <Avatar
-                    src={videoMetaData.profiles.avatar_url}
-                    radius="xl"
-                    alt="no image here"
-                  />
-                ) : (
-                  <Avatar radius="xl" alt="no image here" />
-                )}
-                <Text>{videoMetaData.profiles.username}</Text>
-              </Flex>
+              <Link href={`/user?id=${videoMetaData.profiles.id}`}>
+                <Flex
+                  direction="row"
+                  align="center"
+                  className="w-full py-3 hover:cursor-pointer"
+                  gap="sm"
+                >
+                  {videoMetaData.profiles.avatar_url !== undefined ? (
+                    <Avatar
+                      src={videoMetaData.profiles.avatar_url}
+                      radius="xl"
+                      alt="no image here"
+                    />
+                  ) : (
+                    <Avatar radius="xl" alt="no image here" />
+                  )}
+                  <Text>{videoMetaData.profiles.username}</Text>
+                </Flex>
+              </Link>
               <Flex
                 className="video-likes-dislikes pt-0"
                 direction="row"
