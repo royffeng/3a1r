@@ -1,16 +1,16 @@
-import { render, screen } from "@testing-library/react";
-import Thumbnail from "../components/thumbnail";
+// import { render, screen } from "@testing-library/react";
+// import Thumbnail from "../components/thumbnail";
 
-let thumbnailMockData = {
-  id: "",
-  title: "",
-  thumbnail: "",
-  username: "",
-  views: 12,
-  thumbnail: "",
-  avatar_url: "",
-  date: "",
-};
+// let thumbnailMockData = {
+//   id: "",
+//   title: "",
+//   thumbnail: "",
+//   username: "",
+//   views: 12,
+//   thumbnail: "",
+//   avatar_url: "",
+//   date: "",
+// };
 
 test("TEST", () => {
   expect(0).toEqual(0);
