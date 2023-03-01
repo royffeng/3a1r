@@ -3,7 +3,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdOutlineLogout, MdPerson } from "react-icons/md";
 import icon from "../public/appicon.png";
@@ -13,6 +13,34 @@ export default function Navbar({ searchContext }) {
   const supabase = useSupabaseClient();
   const userData = useUser();
   const [search, setSearch] = useState("");
+  const [username, setUsername] = useState("")
+
+  async function getProfile() {
+    if(userData) {
+    try {
+      let { data, error, status } = await supabase
+        .from("profiles")
+        .select(`username`)
+        .eq("id", userData.id)
+        .single();
+
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      if (data) {
+        setUsername(data.username);
+      }
+    } catch (error) {
+      alert("Error loading user data!");
+      console.log(error);
+    }
+  }
+  }
+
+  useEffect(() => {
+    getProfile()
+  }, [])
 
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
@@ -99,7 +127,7 @@ export default function Navbar({ searchContext }) {
               <Group>
                 <div style={{ flex: 1 }}>
                   <Text>{userData.full_name}</Text>
-                  <Text>@{userData.username}</Text>
+                  <Text>@{username}</Text>
                 </div>
               </Group>
               <Menu.Divider color="black" />
@@ -111,7 +139,7 @@ export default function Navbar({ searchContext }) {
                 </div>
               </Link>
 
-              <div className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer">
+              <div className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer" onClick = {handleLogout}>
                 <MdOutlineLogout className="text-lg mr-2" />
                 <p className="m-0">Logout</p>
               </div>
