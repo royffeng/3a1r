@@ -20,10 +20,10 @@ const Thumbnail = ({
   }
 
   return (
-    <Flex aria-label="video thumbnail" className={tn_styles.thumbnail}>
+    <Flex aria-label="video thumbnail" className={`${tn_styles.thumbnail} !z-0`}>
       <Flex direction="column">
         <Link target="_blank" href={`/karaoke?vid=${id}`}>
-          <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail" />
+          <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail"/>
         </Link>
         <Space h={8} />
         <Flex sx={{ paddingRight: "1rem" }} direction="row">

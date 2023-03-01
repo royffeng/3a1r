@@ -10,9 +10,9 @@ const colors = [
 
 const ProfileInfo = ({ user, genres }) => {
   return (
-    <>
+    <div className = "">
       {user ? (
-        <Grid grow gutter={16} justify="flex-start" align="center">
+        <Grid grow gutter={16} justify="flex-start" align="center" className = "pt-20">
           <Grid.Col sx={{ aspectRatio: "1 / 1" }} span={1}>
             {user.avatarUrl !== undefined ? (
               <Avatar
@@ -72,7 +72,7 @@ const ProfileInfo = ({ user, genres }) => {
       ) : (
         <>No User</>
       )}
-    </>
+    </div>
   );
 };
 

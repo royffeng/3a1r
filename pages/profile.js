@@ -45,7 +45,7 @@ const Profile = () => {
   }, [user]);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container}`}>
       <>
         {user && (
           <>

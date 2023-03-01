@@ -87,11 +87,9 @@ const Profile = () => {
   }, [id]);
 
   return (
-    <div className={styles.container}>
-      <>
+    <div className={`${styles.container}`}>
         {user && <ProfileInfo user={user} genres={genres} />}
         {playlists && <Playlists playlists={playlists} personal={false} />}
-      </>
     </div>
   );
 };

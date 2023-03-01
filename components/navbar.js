@@ -52,7 +52,7 @@ export default function Navbar({ searchContext }) {
       direction="row"
       align="center"
       justify="space-between"
-      className = "w-full my-1 py-3 px-8"
+      className = "w-full py-3 px-8 fixed bg-micdrop-beige !z-[100000000]"
       gap="xl"
     >
       <Flex direction="row" align="center" justify="center" gap="md">

@@ -223,6 +223,7 @@ export default function Karaoke() {
         alignItems: "center",
         justifyContent: "center",
       }}
+      className = "pt-20"
     >
       {videoMetaData == null || videoMetaData == undefined ? (
         <div

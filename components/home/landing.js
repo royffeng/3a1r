@@ -6,12 +6,12 @@ import LikedVideos from "./likedvideos";
 
 const landing = () => {
   return (
-    <>
+    <div className = "mt-20">
       <AllVideos />
       <LikedVideos />
       <Genre />
       <Space h={16} />
-    </>
+    </div>
   );
 };
 
