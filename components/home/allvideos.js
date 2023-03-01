@@ -58,7 +58,6 @@ const AllVideos = () => {
       <Center className={styles.header} sx={{ background: "#E6E1FF" }}>
         <p className="m-0 px-2">All Videos</p>
       </Center>
-      <Space h={16} />
       <VideoGrid videos={videos} />
     </Flex>
   );

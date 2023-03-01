@@ -6,7 +6,7 @@ export const VideoGrid = ({ videos }) => {
     <>
       {videos && (
         <>
-          <Text aria-label="video count" fz={16} fw={500}>
+          <Text aria-label="video count" fz={16} fw={500} className = "py-2">
             {videos.length} {`video${videos.length == 1 ? "" : "s"}`}
           </Text>
           {videos.length > 0 && (
