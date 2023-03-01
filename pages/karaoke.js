@@ -200,7 +200,7 @@ export default function Karaoke() {
 
   const dateString = useMemo(() => {
     if (videoMetaData) {
-      return rectifyFormat(videoMetaData?.created_at);
+      return rectifyFormat(videoMetaData?.created_at).toLocaleDateString();
     }
 
     return "";

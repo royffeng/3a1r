@@ -159,7 +159,7 @@ export default function Comment({
                 color: "gray",
               }}
             >
-              {rectifyFormat(created_at)}
+              {rectifyFormat(created_at).toLocaleDateString()}
             </Text>
           </Flex>
           <Text fz="sm" sx={{ marginBottom: "0.25rem" }}>
