@@ -28,9 +28,9 @@ const ProfileInfo = ({ user, genres }) => {
               />
             ) : (
               <Avatar
-                sx={{ cursor: "pointer" }}
                 radius="xl"
                 alt="no image here"
+                sx={{ cursor: "pointer" , width: "100%", height: "100%", borderRadius: "100%" }}
               />
             )}
           </Grid.Col>

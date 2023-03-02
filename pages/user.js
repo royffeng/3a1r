@@ -57,7 +57,19 @@ const Profile = () => {
         console.log("error getting profiles: ", error);
         return;
       } else {
-        setUser(data);
+        let avatarUrl = null;
+        if (!data.avatar_url.includes("https")) {
+          let { data: avatar, error: error } = await supabase.storage
+            .from("avatars")
+            .download(`${data.avatar_url}`);
+          if (error) {
+            console.log(error);
+          } else {
+            const url = URL.createObjectURL(avatar);
+            avatarUrl = url;
+          }
+        }
+        setUser({avatarUrl: avatarUrl, ...data});
       }
     };
 

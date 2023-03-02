@@ -42,6 +42,7 @@ const AllVideos = () => {
               console.log(error);
             } else {
               const url = URL.createObjectURL(avatar);
+              console.log("url", url);
               d.profiles.avatar_url = url;
             }
           }
