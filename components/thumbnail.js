@@ -15,6 +15,7 @@ const Thumbnail = ({
   date,
   userid,
 }) => {
+  
   if (username === null || username === undefined) {
     return <></>;
   }
