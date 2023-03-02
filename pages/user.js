@@ -69,7 +69,7 @@ const Profile = () => {
             avatarUrl = url;
           }
         }
-        setUser({avatarUrl: avatarUrl, ...data});
+        setUser({ avatarUrl: avatarUrl, ...data });
       }
     };
 

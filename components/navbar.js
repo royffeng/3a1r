@@ -10,7 +10,6 @@ import icon from "../public/appicon.png";
 import { UserContext } from "../utils/UserContext";
 import { TbVideoPlus } from "react-icons/tb";
 
-
 export default function Navbar({ searchContext }) {
   const router = useRouter();
   const supabase = useSupabaseClient();
@@ -43,15 +42,21 @@ export default function Navbar({ searchContext }) {
 
       {userData && (
         <>
-        <Link href={`/profile?id=${userData.id}`}>
-          <p className="m-0 font-lexend font-semibold hover:cursor-pointer text-lg hover:text-[#666666]">
-            My Playlists
-          </p>
-        </Link>
-        <Button className="bg-micdrop-green" size="md" leftIcon={<TbVideoPlus />} color="green">
-          <Link href="/create">
-            <p className="m-0">Create</p></Link>
-        </Button>
+          <Link href={`/profile?id=${userData.id}`}>
+            <p className="m-0 font-lexend font-semibold hover:cursor-pointer text-lg hover:text-[#666666]">
+              My Playlists
+            </p>
+          </Link>
+          <Button
+            className="bg-micdrop-green"
+            size="md"
+            leftIcon={<TbVideoPlus />}
+            color="green"
+          >
+            <Link href="/create">
+              <p className="m-0">Create</p>
+            </Link>
+          </Button>
         </>
       )}
 
@@ -106,7 +111,7 @@ export default function Navbar({ searchContext }) {
               <Group>
                 <div style={{ flex: 1 }}>
                   <Flex justify={"center"} align="center" gap="sm">
-                  {userData?.avatarUrl !== undefined ? (
+                    {userData?.avatarUrl !== undefined ? (
                       <Avatar
                         sx={{ cursor: "pointer" }}
                         src={userData?.avatarUrl}
