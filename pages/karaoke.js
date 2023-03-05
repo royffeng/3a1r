@@ -217,7 +217,7 @@ export default function Karaoke() {
   return (
     <div
       style={{
-        padding: "0 2rem",
+        padding: "5rem 2rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
