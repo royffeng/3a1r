@@ -13,7 +13,7 @@ export const VideoGrid = ({ videos }) => {
             <Grid
               aria-label="video-thumbnail-grid"
               gutter="md"
-              className="flex justify-center items-start w-full m-0"
+              className="flex justify-start items-start w-full m-0"
             >
               {videos?.map((video, index) => (
                 <Grid.Col
