@@ -24,7 +24,7 @@ const findIndex = (time, lyricsArr) => {
   return -1;
 };
 
-export default function Video({ videoSource, lyricsArr }) {
+export default function Video({ textColor, videoSource, lyricsArr }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [wasSeeking, setWasSeeking] = useState(false);
   const [lyricsIndex, setLyricsIndex] = useState(0);
@@ -173,7 +173,7 @@ export default function Video({ videoSource, lyricsArr }) {
           <Text
             className="lyrics"
             align="center"
-            color="white"
+            color={textColor}
             style={{
               fontSize: "clamp(1rem, 8vw, 20vw)",
               textShadow:
