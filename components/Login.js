@@ -25,12 +25,14 @@ const Login = () => {
   };
 
   const handlePasswordLogin = async () => {
-    const { data } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
-    if (data) {
+    if(data.user === null){
+      alert("Invalid email or password")
+    } else {
       router.push("/");
     }
   };
