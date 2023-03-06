@@ -1,46 +1,20 @@
 import { Avatar, Button, Flex, Group, Menu, Text } from "@mantine/core";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useContext } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdOutlineLogout, MdPerson } from "react-icons/md";
 import icon from "../public/appicon.png";
+import { UserContext } from "../utils/UserContext";
+import { TbVideoPlus } from "react-icons/tb";
 
 export default function Navbar({ searchContext }) {
   const router = useRouter();
   const supabase = useSupabaseClient();
-  const userData = useUser();
+  const userData = useContext(UserContext);
   const [search, setSearch] = useState("");
-  const [username, setUsername] = useState("");
-
-  async function getProfile() {
-    if (userData) {
-      try {
-        let { data, error, status } = await supabase
-          .from("profiles")
-          .select(`username`)
-          .eq("id", userData.id)
-          .single();
-
-        if (error && status !== 406) {
-          throw error;
-        }
-
-        if (data) {
-          setUsername(data.username);
-        }
-      } catch (error) {
-        alert("Error loading user data!");
-        console.log(error);
-      }
-    }
-  }
-
-  useEffect(() => {
-    getProfile();
-  }, []);
 
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
@@ -67,11 +41,23 @@ export default function Navbar({ searchContext }) {
       </Flex>
 
       {userData && (
-        <Link href={`/profile?id=${userData.id}`}>
-          <p className="m-0 font-lexend font-semibold hover:cursor-pointer text-lg hover:text-[#666666]">
-            My Playlists
-          </p>
-        </Link>
+        <>
+          <Link href={`/profile?id=${userData.id}`}>
+            <p className="m-0 font-lexend font-semibold hover:cursor-pointer text-lg hover:text-[#666666]">
+              My Playlists
+            </p>
+          </Link>
+          <Button
+            className="bg-micdrop-green"
+            size="md"
+            leftIcon={<TbVideoPlus />}
+            color="green"
+          >
+            <Link href="/create">
+              <p className="m-0">Create</p>
+            </Link>
+          </Button>
+        </>
       )}
 
       <Flex
@@ -124,21 +110,39 @@ export default function Navbar({ searchContext }) {
             >
               <Group>
                 <div style={{ flex: 1 }}>
-                  <Text>{userData.full_name}</Text>
-                  <Text>@{username}</Text>
+                  <Flex justify={"center"} align="center" gap="sm">
+                    {userData?.avatarUrl !== undefined ? (
+                      <Avatar
+                        sx={{ cursor: "pointer" }}
+                        src={userData?.avatarUrl}
+                        radius="xl"
+                        alt="no image here"
+                      />
+                    ) : (
+                      <Avatar
+                        sx={{ cursor: "pointer" }}
+                        radius="xl"
+                        alt="no image here"
+                      />
+                    )}
+                    <div>
+                      <Text>{userData?.full_name}</Text>
+                      <Text>@{userData?.username}</Text>
+                    </div>
+                  </Flex>
                 </div>
               </Group>
               <Menu.Divider color="black" />
 
-              <Link href={`/profile?id=${userData.id}`}>
-                <div className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer">
+              <Link href={`/profile?id=${userData?.id}`}>
+                <div className="flex items-center hover:bg-white rounded p-1 hover:cursor-pointer">
                   <MdPerson className="text-lg mr-2" />
                   <p className="m-0">Profile</p>
                 </div>
               </Link>
 
               <div
-                className="flex justify-between items-center hover:bg-white rounded p-1 hover:cursor-pointer"
+                className="flex items-center hover:bg-white rounded p-1 hover:cursor-pointer"
                 onClick={handleLogout}
               >
                 <MdOutlineLogout className="text-lg mr-2" />

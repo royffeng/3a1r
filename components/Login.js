@@ -40,7 +40,7 @@ const Login = () => {
       <Row className="h-full">
         <Col
           xl={6}
-          className="flex justify-center items-center text-center flex-col border-r-8 border-black"
+          className="flex justify-center items-center text-center flex-col border-r-4 border-black"
         >
           <div>
             <LoginLogo />

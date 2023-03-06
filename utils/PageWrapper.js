@@ -46,6 +46,7 @@ export default function PageWrapper({ loading, children }) {
         } else {
           genresArray = genres.map((g) => g.genre);
         }
+
         setUserData({
           username: data[0].username,
           full_name: data[0].full_name,
@@ -61,7 +62,6 @@ export default function PageWrapper({ loading, children }) {
     } else {
       loading();
     }
-    console.log("user changed", user);
   }, [user]);
 
   return (
