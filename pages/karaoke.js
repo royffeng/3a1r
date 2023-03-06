@@ -291,40 +291,108 @@ export default function Karaoke() {
                 align="center"
                 gap="xs"
               >
-                <Button
-                  onClick={() =>
-                    handleLike(user.id, videoMetaData.id, liked, disliked)
-                  }
-                  leftIcon={
-                    <AiFillLike color={liked ? "green" : "gray"} size={12} />
-                  }
-                  className="bg-micdrop-gray"
-                  color="gray"
-                  compact
-                  size="md"
-                  variant="light"
-                  radius="xl"
-                >
-                  <Text color={liked ? "green" : "gray"}>{likes}</Text>
-                </Button>
-                <Button
-                  onClick={() =>
-                    handleDislike(user.id, videoMetaData.id, liked, disliked)
-                  }
-                  leftIcon={
-                    <AiFillDislike
-                      color={disliked ? "red" : "gray"}
-                      size={12}
-                    />
-                  }
-                  className="bg-micdrop-gray"
-                  compact
-                  size="md"
-                  variant="light"
-                  radius="xl"
-                >
-                  <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
-                </Button>
+                {user ? (
+                  <>
+                    <Button
+                      onClick={() => {
+                        if (user !== undefined || user !== null) {
+                          handleLike(
+                            user.id,
+                            videoMetaData.id,
+                            liked,
+                            disliked
+                          );
+                        }
+                      }}
+                      leftIcon={
+                        <AiFillLike
+                          color={liked ? "green" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      color="gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                      disabled
+                    >
+                      <Text color={liked ? "green" : "gray"}>{likes}</Text>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        if (user !== undefined || user !== null) {
+                          handleDislike(
+                            user.id,
+                            videoMetaData.id,
+                            liked,
+                            disliked
+                          );
+                        }
+                      }}
+                      leftIcon={
+                        <AiFillDislike
+                          color={disliked ? "red" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                      disabled
+                    >
+                      <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() =>
+                        handleLike(user.id, videoMetaData.id, liked, disliked)
+                      }
+                      leftIcon={
+                        <AiFillLike
+                          color={liked ? "green" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      color="gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                    >
+                      <Text color={liked ? "green" : "gray"}>{likes}</Text>
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        handleDislike(
+                          user.id,
+                          videoMetaData.id,
+                          liked,
+                          disliked
+                        )
+                      }
+                      leftIcon={
+                        <AiFillDislike
+                          color={disliked ? "red" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                    >
+                      <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
+                    </Button>
+                  </>
+                )}
               </Flex>
             </Flex>
             <Text style={{ fontSize: "1.5rem" }}>{videoMetaData?.title}</Text>
