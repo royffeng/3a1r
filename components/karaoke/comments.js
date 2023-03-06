@@ -2,15 +2,18 @@ import { Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/UserContext";
+import AddCommentTextBox from "./AddCommentTextBox";
 import Comment from "./comment";
-import Replies from "./replies";
-import Reply from "./reply";
 
 export default function Comments({ vid }) {
   const supabase = useSupabaseClient();
   const [commentData, setCommentData] = useState(null);
   const [avatarWait, setAvatarWait] = useState(true);
   const user = useContext(UserContext);
+
+  const handleNewComment = useCallback((comment) => {
+    setCommentData((prev) => [comment, ...prev]);
+  }, []);
 
   const insertLikes = useCallback(async (uid, cid) => {
     let { error } = await supabase
@@ -80,6 +83,7 @@ export default function Comments({ vid }) {
         return;
       } else {
         for (let i = 0; i < data.length; i++) {
+          data[i].newReply = {};
           let d = data[i];
           if (!d.profiles.avatar_url.includes("https")) {
             let { data: avatar, error: error } = await supabase.storage
@@ -93,6 +97,7 @@ export default function Comments({ vid }) {
             }
           }
         }
+        console.log("data:", data);
         setCommentData(data);
       }
 
@@ -117,12 +122,12 @@ export default function Comments({ vid }) {
           >
             {commentData.length} Comments
           </Text>
-          <Reply
+          <AddCommentTextBox
             placeholder={"Add a comment..."}
             avatar_url={user?.avatarUrl}
-            type="Comment"
             vid={vid}
             initialShowButtons={false}
+            handleNewComment={handleNewComment}
           />
           <Space h="xl" />
           {commentData.map((comment) => (
@@ -134,17 +139,12 @@ export default function Comments({ vid }) {
               >
                 <Comment
                   commentData={comment}
+                  handleNewReply={undefined}
                   vid={vid}
                   insertLikes={insertLikes}
                   insertDislikes={insertDislikes}
                   deleteLikes={deleteLikes}
                   deleteDislikes={deleteDislikes}
-                  sessionAvatarUrl={user?.avatarUrl}
-                />
-                <Replies
-                  key={`${comment.cid} replies`}
-                  vid={vid}
-                  pid={comment.cid}
                   sessionAvatarUrl={user?.avatarUrl}
                 />
               </Flex>

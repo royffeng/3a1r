@@ -2,13 +2,19 @@ import { Button, Collapse, Flex, Space } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useCallback, useEffect, useState } from "react";
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
-import Comment from "./comment";
+import Reply from "./reply";
 
-export default function Replies({ vid, pid, sessionAvatarUrl }) {
+export default function Replies({
+  handleNewReply,
+  replyDataArray,
+  handleReplyData,
+  avatarWait,
+  vid,
+  pid,
+  sessionAvatarUrl,
+}) {
   const supabase = useSupabaseClient();
-  const [commentData, setCommentData] = useState([]);
   const [opened, setOpened] = useState(false);
-  const [avatarWait, setAvatarWait] = useState(true);
 
   const insertLikes = useCallback(async (uid, rid) => {
     let { error } = await supabase
@@ -61,7 +67,7 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
         .select(
           `
             pid,
-            cid,
+            rid,
             content,
             created_at,
             likes,
@@ -79,7 +85,7 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
         return;
       }
       if (error) {
-        console.log("error getting comments: ", error);
+        console.log("error getting replies: ", error);
         return;
       } else {
         for (let i = 0; i < data.length; i++) {
@@ -89,17 +95,15 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
               .from("avatars")
               .download(`${d.profiles.avatar_url}`);
             if (error) {
-              console.log(error);
+              console.log("error getting avatars for replies", error);
             } else {
               const url = URL.createObjectURL(avatar);
               d.profiles.avatar_url = url;
             }
           }
         }
-        setCommentData(data);
+        handleReplyData(data);
       }
-
-      setAvatarWait(false);
     };
 
     if (pid) {
@@ -109,45 +113,48 @@ export default function Replies({ vid, pid, sessionAvatarUrl }) {
 
   return (
     <>
-      {commentData !== undefined && commentData.length !== 0 && !avatarWait && (
-        <Flex
-          direction="column"
-          className="reply"
-          style={{ marginLeft: "3.375rem" }}
-        >
-          <Space h="sm" />
-          <Flex>
-            <Button
-              variant="subtle"
-              size="sm"
-              onClick={() => setOpened((o) => !o)}
-              radius="xl"
-              leftIcon={opened ? <GoChevronUp /> : <GoChevronDown />}
-            >
-              {commentData.length} replies
-            </Button>
-          </Flex>
-          <Collapse in={opened}>
+      {replyDataArray !== undefined &&
+        replyDataArray.length !== 0 &&
+        !avatarWait && (
+          <Flex
+            direction="column"
+            className="reply"
+            style={{ marginLeft: "3.375rem" }}
+          >
             <Space h="sm" />
-            {commentData.map((comment) => (
-              <div
-                key={`reply: ${comment.cid}`}
-                style={{ marginBottom: "0.5rem", width: "100%" }}
+            <Flex>
+              <Button
+                variant="subtle"
+                size="sm"
+                onClick={() => setOpened((o) => !o)}
+                radius="xl"
+                leftIcon={opened ? <GoChevronUp /> : <GoChevronDown />}
               >
-                <Comment
-                  commentData={comment}
-                  vid={vid}
-                  insertLikes={insertLikes}
-                  insertDislikes={insertDislikes}
-                  deleteLikes={deleteLikes}
-                  deleteDislikes={deleteDislikes}
-                  sessionAvatarUrl={sessionAvatarUrl}
-                />
-              </div>
-            ))}
-          </Collapse>
-        </Flex>
-      )}
+                {replyDataArray.length} replies
+              </Button>
+            </Flex>
+            <Collapse in={opened}>
+              <Space h="sm" />
+              {replyDataArray.map((reply) => (
+                <div
+                  key={`reply: ${reply.rid}`}
+                  style={{ marginBottom: "0.5rem", width: "100%" }}
+                >
+                  <Reply
+                    pid={pid}
+                    handleNewReply={handleNewReply}
+                    replyData={reply}
+                    insertLikes={insertLikes}
+                    insertDislikes={insertDislikes}
+                    deleteLikes={deleteLikes}
+                    deleteDislikes={deleteDislikes}
+                    sessionAvatarUrl={sessionAvatarUrl}
+                  />
+                </div>
+              ))}
+            </Collapse>
+          </Flex>
+        )}
     </>
   );
 }

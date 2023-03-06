@@ -7,13 +7,13 @@ import {
   Loader,
   Space,
   Spoiler,
-  Text,
+  Text
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import "plyr/dist/plyr.css";
-import { useCallback, useEffect, useMemo, useState, useContext } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import Comments from "../components/karaoke/comments";
 import Video from "../components/karaoke/video";

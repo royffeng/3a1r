@@ -1,10 +1,12 @@
-import { Avatar, Button, Flex, Space, Text } from "@mantine/core";
+import { Button, Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { rectifyFormat } from "../../utils/formatUTC";
 import { UserContext } from "../../utils/UserContext";
-import Reply from "./reply";
+import AddReplyTextBox from "./AddReplyTextBox";
+import Replies from "./replies";
+import UserAvatar from "./UserAvatar";
 
 export default function Comment({
   commentData,
@@ -16,7 +18,7 @@ export default function Comment({
   sessionAvatarUrl,
 }) {
   const supabase = useSupabaseClient();
-  let { pid, cid, content, created_at } = useMemo(() => {
+  let { cid, content, created_at } = useMemo(() => {
     return commentData;
   }, [commentData]);
   let { username, avatar_url } = useMemo(() => {
@@ -26,79 +28,19 @@ export default function Comment({
   const [dislikes, setDislikes] = useState(commentData.dislikes);
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
-  const [showReply, setShowReply] = useState(false);
+  const [showAddReply, setShowAddReply] = useState(false);
+  const [replyDataArray, setReplyDataArray] = useState([]);
+  const [avatarWait, setAvatarWait] = useState(true);
   const user = useContext(UserContext);
 
-  useEffect(() => {
-    const getInitialRepliedLikedState = async () => {
-      let replyLikedData = await supabase
-        .from("replyLikes")
-        .select()
-        .eq("uid", user.id)
-        .eq("rid", cid);
+  const handleReplyData = useCallback((replyDataArray) => {
+    setReplyDataArray(replyDataArray);
+    setAvatarWait(false);
+  }, []);
 
-      let replyDisLikedData = await supabase
-        .from("replyDislikes")
-        .select()
-        .eq("uid", user.id)
-        .eq("rid", cid);
-
-      if (replyLikedData.error) {
-        console.log(
-          "error getting initial reply liked state: ",
-          replyLikedData.error
-        );
-      }
-
-      if (replyDisLikedData.error) {
-        console.log(
-          "error getting initial reply disliked state: ",
-          replyDisLikedData.error
-        );
-      }
-
-      setLiked(replyLikedData.data.length !== 0);
-      setDisliked(replyDisLikedData.data.length !== 0);
-    };
-
-    const getInitalCommentLikedState = async () => {
-      let commentLikedData = await supabase
-        .from("commentLikes")
-        .select()
-        .eq("uid", user.id)
-        .eq("cid", cid);
-
-      let commentDislikedData = await supabase
-        .from("commentDislikes")
-        .select()
-        .eq("uid", user.id)
-        .eq("cid", cid);
-
-      if (commentLikedData.error) {
-        console.log(
-          "error getting initial comment liked state: ",
-          commentLikedData.error
-        );
-      }
-
-      if (commentDislikedData.error) {
-        console.log(
-          "error getting initial comment disliked state: ",
-          commentLikedData.error
-        );
-      }
-      setLiked(commentLikedData.data.length !== 0);
-      setDisliked(commentDislikedData.data.length !== 0);
-    };
-
-    if (vid && user) {
-      if (pid !== null && pid !== undefined) {
-        getInitialRepliedLikedState();
-      } else {
-        getInitalCommentLikedState();
-      }
-    }
-  }, [user, pid, vid]);
+  const handleNewReply = useCallback((reply) => {
+    setReplyDataArray((prev) => [...prev, reply]);
+  }, []);
 
   const handleLike = useCallback((uid, cid, liked, disliked) => {
     if (disliked) {
@@ -135,19 +77,49 @@ export default function Comment({
   }, []);
 
   const closeReply = useCallback(() => {
-    setShowReply(false);
-  });
+    setShowAddReply(false);
+  }, []);
+
+  useEffect(() => {
+    const getInitalCommentLikedState = async () => {
+      let commentLikedData = await supabase
+        .from("commentLikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("cid", cid);
+
+      let commentDislikedData = await supabase
+        .from("commentDislikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("cid", cid);
+
+      if (commentLikedData.error) {
+        console.log(
+          "error getting initial comment liked state: ",
+          commentLikedData.error
+        );
+      }
+
+      if (commentDislikedData.error) {
+        console.log(
+          "error getting initial comment disliked state: ",
+          commentLikedData.error
+        );
+      }
+      setLiked(commentLikedData.data.length !== 0);
+      setDisliked(commentDislikedData.data.length !== 0);
+    };
+
+    if (vid && user && cid) {
+      getInitalCommentLikedState();
+    }
+  }, [user, vid, cid]);
 
   return (
     <>
       <Flex direction="row" gap="md">
-        <>
-          {avatar_url !== undefined ? (
-            <Avatar src={avatar_url} radius="xl" alt="no image here" />
-          ) : (
-            <Avatar radius="xl" alt="no image here" />
-          )}
-        </>
+        <UserAvatar avatarUrl={avatar_url} />
         <Flex direction="column" sx={{ width: "100%" }}>
           <Flex direction="row" gap="sm">
             <Text fz="sm" fw={500}>
@@ -214,7 +186,7 @@ export default function Comment({
             </Button>
             <Button
               onClick={() => {
-                setShowReply(true);
+                setShowAddReply(true);
               }}
               color="dark"
               compact
@@ -227,21 +199,31 @@ export default function Comment({
           </Flex>
         </Flex>
       </Flex>
-      {showReply && (
+      {showAddReply && (
         <>
           <Space h="sm" />
           <Flex direction="column" sx={{ marginLeft: "3.375rem" }}>
-            <Reply
+            <AddReplyTextBox
               placeholder={"Add a reply..."}
               type="Reply"
-              pid={pid !== undefined ? pid : cid}
+              pid={cid}
               avatar_url={sessionAvatarUrl}
               closeReply={closeReply}
+              handleNewReply={handleNewReply}
             />
             <Space h="xs" />
           </Flex>
         </>
       )}
+      <Replies
+        handleNewReply={handleNewReply}
+        replyDataArray={replyDataArray}
+        handleReplyData={handleReplyData}
+        avatarWait={avatarWait}
+        vid={vid}
+        pid={cid}
+        sessionAvatarUrl={sessionAvatarUrl}
+      />
     </>
   );
 }
