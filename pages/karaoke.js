@@ -280,7 +280,7 @@ export default function Karaoke() {
                 <Flex
                   direction="row"
                   align="center"
-                  className="w-full py-3 hover:cursor-pointer"
+                  className="w-fit py-3 hover:cursor-pointer"
                   gap="sm"
                 >
                   {videoMetaData.profiles.avatar_url !== undefined ? (
