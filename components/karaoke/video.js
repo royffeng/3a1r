@@ -24,8 +24,9 @@ const findIndex = (time, lyricsArr) => {
   return -1;
 };
 
-export default function Video({ videoSource, lyricsArr }) {
+export default function Video({ textColor, videoSource, lyricsArr }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [wasSeeking, setWasSeeking] = useState(false);
   const [lyricsIndex, setLyricsIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0);
   const [timeoutId, setTimeoutId] = useState(0);
@@ -44,6 +45,13 @@ export default function Video({ videoSource, lyricsArr }) {
     document
       .querySelector(".plyr")
       ?.addEventListener("playing", handleVideoPlaying);
+    document
+      .querySelector(".plyr")
+      ?.addEventListener("seeking", handleVideoSeeking);
+  }, []);
+
+  const handleVideoSeeking = useCallback(() => {
+    setWasSeeking(true);
   }, []);
 
   const handleVideoPaused = useCallback(() => {
@@ -72,7 +80,6 @@ export default function Video({ videoSource, lyricsArr }) {
     } else {
       const hls = new Hls();
       hls.loadSource(videoSource);
-      // new Plyr(video)
       new Plyr(video, options);
       hls.attachMedia(video);
       setSelectors();
@@ -90,21 +97,34 @@ export default function Video({ videoSource, lyricsArr }) {
 
   // setTimeout to countdown lyric change
   useEffect(() => {
-    if (isVideoPlaying) {
+    if (wasSeeking) {
+      let index = findIndex(videoRef.current.plyr.currentTime, lyricsArr);
+      if (timeoutId !== 0) {
+        clearTimeout(timeoutId);
+        setTimeoutId(0);
+      }
+      setLyricsIndex(index);
+      setRemainingTime(
+        lyricsIndex < lyricsArr.length && index !== -1
+          ? lyricsArr[index].end - videoRef.current.plyr.currentTime
+          : 10
+      );
+      setWasSeeking(false);
+    } else if (isVideoPlaying) {
       const newTimeoutId = setTimeout(() => {
         if (lyricsIndex < lyricsArr.length - 1) {
           setRemainingTime(
             lyricsIndex < lyricsArr.length && lyricsIndex !== -1
               ? lyricsArr[lyricsIndex + 1].end -
                   lyricsArr[lyricsIndex + 1].start
-              : 10
+              : 10 // error
           );
           setLyricsIndex((prev) => prev + 1);
         }
       }, remainingTime * 1000);
       setTimeoutId(newTimeoutId);
     }
-  }, [remainingTime, isVideoPlaying]);
+  }, [remainingTime, isVideoPlaying, lyricsIndex, wasSeeking]);
 
   // change remainingTime when video pauses
   useEffect(() => {
@@ -153,7 +173,7 @@ export default function Video({ videoSource, lyricsArr }) {
           <Text
             className="lyrics"
             align="center"
-            color="white"
+            color={textColor}
             style={{
               fontSize: "clamp(1rem, 8vw, 20vw)",
               textShadow:

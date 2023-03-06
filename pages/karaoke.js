@@ -2,6 +2,7 @@ import {
   Alert,
   Avatar,
   Button,
+  ColorInput,
   Divider,
   Flex,
   Loader,
@@ -13,7 +14,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import "plyr/dist/plyr.css";
-import { useCallback, useEffect, useMemo, useState, useContext } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import Comments from "../components/karaoke/comments";
 import Video from "../components/karaoke/video";
@@ -32,6 +33,7 @@ export default function Karaoke() {
   const [liked, setLiked] = useState(false); // initial value depends on query
   const [disliked, setDisliked] = useState(false); // initial value depends on query
   const user = useContext(UserContext);
+  const [textColor, setTextColor] = useState("#ffffff");
 
   const insertLikes = useCallback(async (uid, vid) => {
     let { error } = await supabase
@@ -217,7 +219,7 @@ export default function Karaoke() {
   return (
     <div
       style={{
-        padding: "0 2rem",
+        padding: "5rem 2rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -243,6 +245,7 @@ export default function Karaoke() {
       ) : (
         <>
           <Video
+            textColor={textColor}
             videoSource={videoMetaData.videourl}
             lyricsArr={videoMetaData.lyrics}
           />
@@ -256,6 +259,142 @@ export default function Karaoke() {
               alignItems: "start",
             }}
           >
+            <Flex direction="row" className="w-full mb-4">
+              <ColorInput
+                label="Choose your lyrics color"
+                onChange={(c) => setTextColor(c)}
+                format="hex"
+                radius="xl"
+                size="md"
+                variant="filled"
+                swatches={[
+                  "#25262b",
+                  "#868e96",
+                  "#fa5252",
+                  "#e64980",
+                  "#be4bdb",
+                  "#7950f2",
+                  "#4c6ef5",
+                  "#228be6",
+                  "#15aabf",
+                  "#12b886",
+                  "#40c057",
+                  "#82c91e",
+                  "#fab005",
+                  "#fd7e14",
+                ]}
+              />
+              <Flex
+                sx={{ marginLeft: "auto" }}
+                className="video-likes-dislikes pt-0"
+                direction="row"
+                align="center"
+                gap="xs"
+              >
+                {user ? (
+                  <>
+                    <Button
+                      onClick={() => {
+                        if (user !== undefined || user !== null) {
+                          handleLike(
+                            user.id,
+                            videoMetaData.id,
+                            liked,
+                            disliked
+                          );
+                        }
+                      }}
+                      leftIcon={
+                        <AiFillLike
+                          color={liked ? "green" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      color="gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                      disabled
+                    >
+                      <Text color={liked ? "green" : "gray"}>{likes}</Text>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        if (user !== undefined || user !== null) {
+                          handleDislike(
+                            user.id,
+                            videoMetaData.id,
+                            liked,
+                            disliked
+                          );
+                        }
+                      }}
+                      leftIcon={
+                        <AiFillDislike
+                          color={disliked ? "red" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                      disabled
+                    >
+                      <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() =>
+                        handleLike(user.id, videoMetaData.id, liked, disliked)
+                      }
+                      leftIcon={
+                        <AiFillLike
+                          color={liked ? "green" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      color="gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                    >
+                      <Text color={liked ? "green" : "gray"}>{likes}</Text>
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        handleDislike(
+                          user.id,
+                          videoMetaData.id,
+                          liked,
+                          disliked
+                        )
+                      }
+                      leftIcon={
+                        <AiFillDislike
+                          color={disliked ? "red" : "gray"}
+                          size={12}
+                        />
+                      }
+                      className="bg-micdrop-gray"
+                      compact
+                      size="md"
+                      variant="light"
+                      radius="xl"
+                    >
+                      <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
+                    </Button>
+                  </>
+                )}
+              </Flex>
+            </Flex>
             <Text style={{ fontSize: "1.5rem" }}>{videoMetaData?.title}</Text>
             <Flex
               className="video-date-views"
@@ -295,46 +434,6 @@ export default function Karaoke() {
                   <Text>{videoMetaData.profiles.username}</Text>
                 </Flex>
               </Link>
-              <Flex
-                className="video-likes-dislikes pt-0"
-                direction="row"
-                align="center"
-                gap="xs"
-              >
-                <Button
-                  onClick={() =>
-                    handleLike(user.id, videoMetaData.id, liked, disliked)
-                  }
-                  leftIcon={
-                    <AiFillLike color={liked ? "green" : "gray"} size={12} />
-                  }
-                  color="gray"
-                  compact
-                  size="md"
-                  variant="light"
-                  radius="xl"
-                >
-                  <Text>{likes}</Text>
-                </Button>
-                <Button
-                  onClick={() =>
-                    handleDislike(user.id, videoMetaData.id, liked, disliked)
-                  }
-                  leftIcon={
-                    <AiFillDislike
-                      color={disliked ? "red" : "gray"}
-                      size={12}
-                    />
-                  }
-                  color="gray"
-                  compact
-                  size="md"
-                  variant="light"
-                  radius="xl"
-                >
-                  <Text>{dislikes}</Text>
-                </Button>
-              </Flex>
             </Flex>
             <Alert color="gray" style={{ width: "100%" }}>
               <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">

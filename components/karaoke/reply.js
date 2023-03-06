@@ -1,132 +1,211 @@
-import {
-  Avatar,
-  Button,
-  Flex,
-  LoadingOverlay,
-  Space,
-  Textarea,
-} from "@mantine/core";
-import { useContext, useState } from "react";
-
+import { Button, Flex, Space, Text } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { AiFillDislike, AiFillLike } from "react-icons/ai";
+import { rectifyFormat } from "../../utils/formatUTC";
 import { UserContext } from "../../utils/UserContext";
+import AddReplyTextBox from "./AddReplyTextBox";
+import UserAvatar from "./UserAvatar";
 
 export default function Reply({
-  placeholder,
-  type,
-  vid,
   pid,
-  avatar_url,
-  closeReply,
-  initialShowButtons,
+  handleNewReply,
+  replyData,
+  insertLikes,
+  insertDislikes,
+  deleteLikes,
+  deleteDislikes,
+  sessionAvatarUrl,
 }) {
-  const [value, setValue] = useState("");
-  const [showButtons, setShowButtons] = useState(initialShowButtons ?? true);
-  const [loading, setLoading] = useState(false);
   const supabase = useSupabaseClient();
+  let { rid, content, created_at } = useMemo(() => {
+    return replyData;
+  }, [replyData]);
+  let { username, avatar_url } = useMemo(() => {
+    return replyData.profiles;
+  }, [replyData]);
+  const [likes, setLikes] = useState(replyData.likes);
+  const [dislikes, setDislikes] = useState(replyData.dislikes);
+  const [liked, setLiked] = useState(false); // initial value depends on query
+  const [disliked, setDisliked] = useState(false); // initial value depends on query
+  const [showAddReply, setShowAddReply] = useState(false);
   const user = useContext(UserContext);
 
-  const handleCommentSubmit = async (vid, uid, content) => {
-    const { error } = await supabase
-      .from("comments")
-      .insert({ vid: vid, uid: uid, content: content });
-
-    if (error) {
-      console.log(error);
+  const handleLike = useCallback((uid, rid, liked, disliked) => {
+    if (disliked) {
+      setDisliked(false);
+      deleteDislikes(uid, rid);
+      setDislikes((d) => d - 1);
+    }
+    if (liked) {
+      setLiked(false);
+      deleteLikes(uid, rid);
+      setLikes((l) => l - 1);
     } else {
-      setValue("");
+      setLiked(true);
+      insertLikes(uid, rid);
+      setLikes((l) => l + 1);
     }
+  }, []);
 
-    setLoading(false);
-  };
-
-  const handleReplySubmit = async (pid, uid, content) => {
-    const { error } = await supabase
-      .from("replies")
-      .insert({ pid: pid, uid: uid, content: content });
-
-    if (error) {
-      console.log(error);
+  const handleDislike = useCallback((uid, rid, liked, disliked) => {
+    if (liked) {
+      setLiked(false);
+      deleteLikes(uid, rid);
+      setLikes((l) => l - 1);
     }
+    if (disliked) {
+      setDisliked(false);
+      deleteDislikes(uid, rid);
+      setDislikes((d) => d - 1);
+    } else {
+      setDisliked(true);
+      insertDislikes(uid, rid);
+      setDislikes((d) => d + 1);
+    }
+  }, []);
 
-    if (closeReply !== undefined) closeReply();
-    setLoading(false);
-  };
+  const closeReply = useCallback(() => {
+    setShowAddReply(false);
+  }, []);
+
+  useEffect(() => {
+    const getInitialRepliedLikedState = async () => {
+      let replyLikedData = await supabase
+        .from("replyLikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("rid", rid);
+
+      let replyDisLikedData = await supabase
+        .from("replyDislikes")
+        .select()
+        .eq("uid", user.id)
+        .eq("rid", rid);
+
+      if (replyLikedData.error) {
+        console.log(
+          "error getting initial reply liked state: ",
+          replyLikedData.error
+        );
+      }
+
+      if (replyDisLikedData.error) {
+        console.log(
+          "error getting initial reply disliked state: ",
+          replyDisLikedData.error
+        );
+      }
+
+      setLiked(replyLikedData.data.length !== 0);
+      setDisliked(replyDisLikedData.data.length !== 0);
+    };
+
+    if (user && rid) {
+      getInitialRepliedLikedState();
+    }
+  }, [user, rid]);
 
   return (
-    <Flex sx={{ position: "relative" }}>
-      <LoadingOverlay visible={loading} overlayBlur={2} />
-      <Flex direction="row" gap="md" sx={{ width: "100%" }}>
-        <>
-          {avatar_url !== undefined ? (
-            <Avatar src={avatar_url} radius="xl" alt="no image here" />
-          ) : (
-            <Avatar radius="xl" alt="no image here" />
-          )}
-        </>
-        <Flex direction="column" gap="sm" sx={{ width: "100%" }}>
-          <>
-            {user ? (
-              <Textarea
-                onFocus={() => setShowButtons(true)}
-                sx={{ width: "100%" }}
-                value={value}
-                onChange={(e) => setValue(e.currentTarget.value)}
-                placeholder={placeholder}
-                autosize
-                minRows={1}
-              />
-            ) : (
-              <Textarea
-                onFocus={() => setShowButtons(true)}
-                sx={{ width: "100%" }}
-                value={value}
-                onChange={(e) => setValue(e.currentTarget.value)}
-                placeholder={"Sign in to Comment"}
-                autosize
-                minRows={1}
-                disabled
-              />
-            )}
-          </>
-
-          {showButtons && (
-            <Flex justify="flex-end">
-              <Button
-                size="xs"
-                radius="xl"
-                variant="subtle"
-                onClick={() => {
-                  setValue("");
-                  if (closeReply !== undefined) closeReply();
-                  if (initialShowButtons !== undefined) setShowButtons(false);
+    <>
+      <Flex direction="row" gap="md">
+        <UserAvatar avatarUrl={avatar_url} />
+        <Flex direction="column" sx={{ width: "100%" }}>
+          <Flex direction="row" gap="sm">
+            <Text fz="sm" fw={500}>
+              {username}
+            </Text>
+            <Text
+              fz="sm"
+              style={{
+                color: "gray",
+              }}
+            >
+              {rectifyFormat(created_at).toLocaleDateString()}
+            </Text>
+          </Flex>
+          <Text fz="sm" sx={{ marginBottom: "0.25rem" }}>
+            {content}
+          </Text>
+          <Flex
+            direction="row"
+            wrap="wrap"
+            align="center"
+            justify="flex-start"
+            gap="xs"
+          >
+            <Button
+              onClick={() => handleLike(user.id, rid, liked, disliked)}
+              leftIcon={
+                <AiFillLike color={liked ? "green" : "gray"} size={12} />
+              }
+              color="gray"
+              compact
+              size="xs"
+              variant="light"
+              radius="xl"
+            >
+              <Text
+                fz="xs"
+                sx={{
+                  color: liked ? "green" : "gray",
                 }}
               >
-                Cancel
-              </Button>
-              <Space w="xs" />
-              {value === "" ? (
-                <Button size="xs" radius="xl" disabled>
-                  {type}
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setLoading(true);
-                    type === "Comment"
-                      ? handleCommentSubmit(vid, user.id, value)
-                      : handleReplySubmit(pid, user.id, value);
-                  }}
-                  size="xs"
-                  radius="xl"
-                >
-                  {type}
-                </Button>
-              )}
-            </Flex>
-          )}
+                {likes}
+              </Text>
+            </Button>
+            <Button
+              onClick={() => handleDislike(user.id, rid, liked, disliked)}
+              leftIcon={
+                <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
+              }
+              color="gray"
+              compact
+              size="xs"
+              variant="light"
+              radius="xl"
+            >
+              <Text
+                fz="xs"
+                style={{
+                  color: disliked ? "red" : "gray",
+                }}
+              >
+                {dislikes}
+              </Text>
+            </Button>
+            <Button
+              onClick={() => {
+                setShowAddReply(true);
+              }}
+              color="dark"
+              compact
+              size="xs"
+              variant="subtle"
+              radius="xl"
+            >
+              Reply
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
-    </Flex>
+      {showAddReply && (
+        <>
+          <Space h="sm" />
+          <Flex direction="column" sx={{ marginLeft: "3.375rem" }}>
+            <AddReplyTextBox
+              placeholder={"Add a reply..."}
+              ogAuthor={username}
+              type="Reply"
+              pid={pid}
+              avatar_url={sessionAvatarUrl}
+              closeReply={closeReply}
+              handleNewReply={handleNewReply}
+            />
+            <Space h="xs" />
+          </Flex>
+        </>
+      )}
+    </>
   );
 }
