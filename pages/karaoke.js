@@ -7,7 +7,7 @@ import {
   Loader,
   Space,
   Spoiler,
-  Text
+  Text,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Link from "next/link";
