@@ -28,10 +28,12 @@ const Login = () => {
 
   const handlePasswordLogin = async () => {
     setMessage("")
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
+
+    console.log(data)
 
     if (data.user === null) {
       setMessage("*invalid email or password")

@@ -6,15 +6,15 @@ import { UserContext } from "../utils/UserContext";
 import { useRouter } from "next/router";
 
 export default function Home() {
-  const router = useRouter();
+  // const router = useRouter();
 
-  const user = useContext(UserContext);
+  // const user = useContext(UserContext);
 
-  useEffect(() => {
-    if (user === null) {
-      router.push("/auth");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user === null) {
+  //     router.push("/auth");
+  //   }
+  // }, []);
 
   return (
     <div className={styles.container}>
