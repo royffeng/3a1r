@@ -12,10 +12,10 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [view, setView] = useState(false);
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
 
   const handleLogin = async (provider) => {
-    setMessage("")
+    setMessage("");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       redirectTo: "/",
@@ -27,16 +27,16 @@ const Login = () => {
   };
 
   const handlePasswordLogin = async () => {
-    setMessage("")
+    setMessage("");
     const { data } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
-    console.log(data)
+    console.log(data);
 
     if (data.user === null) {
-      setMessage("*invalid email or password")
+      setMessage("*invalid email or password");
     } else {
       router.push("/");
     }
@@ -97,9 +97,8 @@ const Login = () => {
               )}
             </div>
             <p className="text-red-500 font-lexend font-semibold mb-0 mt-2">
-            {message}
+              {message}
             </p>
-            
           </div>
           <div className="w-1/2 flex justify-center items-center">
             <div className="w-1/2 bg-white text-black rounded-full border-2 border-black fnot-lexend flex justify-center items-center px-8 py-2 mt-8 text-xl hover:!bg-black hover:!text-white hover:cursor-pointer">
