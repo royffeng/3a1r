@@ -26,6 +26,7 @@ export default function AddCommentTextBox({
         .select(
           `
         cid, 
+        uid,
           content,
           created_at,
           likes,
