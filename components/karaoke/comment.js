@@ -93,9 +93,9 @@ export default function Comment({
   };
 
   const handleDeleteComment = async () => {
-      await supabase.from("comments").delete().eq("cid", cid);
-      setVisible(false);
-      setConfirmDelete(false)
+    await supabase.from("comments").delete().eq("cid", cid);
+    setVisible(false);
+    setConfirmDelete(false);
   };
 
   useEffect(() => {
@@ -171,14 +171,14 @@ export default function Comment({
                           } hover:text-gray-500 hover:cursor-pointer text-xl mx-3`}
                         />
                       )}
-                      { !edit &&
+                      {!edit && (
                         <FaTimes
                           onClick={() => setConfirmVisible(true)}
                           className={`${
                             hover ? "inline" : "hidden"
                           } hover:text-red-500 text-xl hover:cursor-pointer mx-3`}
                         />
-                      }
+                      )}
                     </>
                   )}
                 </div>
@@ -198,11 +198,11 @@ export default function Comment({
                   disabled={!edit}
                 />
                 {edit && (
-                        <FaCheck
-                          onClick={handleUpdateComment}
-                          className={`hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
-                        />
-                      )}
+                  <FaCheck
+                    onClick={handleUpdateComment}
+                    className={`hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
+                  />
+                )}
               </div>
               <div className="flex justify-between items-center">
                 <div>
@@ -265,7 +265,13 @@ export default function Comment({
                 {uid === user.id && confirmVisible && (
                   <div className="flex justify-center items-center font-lexend">
                     <p className="mb-0">delete comment?</p>
-                    <div className="px-2 hover:!font-bold" onClick = {handleDeleteComment}>yes</div>|
+                    <div
+                      className="px-2 hover:!font-bold"
+                      onClick={handleDeleteComment}
+                    >
+                      yes
+                    </div>
+                    |
                     <div
                       className="px-2 hover:!font-bold"
                       onClick={() => setConfirmVisible(false)}
