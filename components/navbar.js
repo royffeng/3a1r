@@ -88,24 +88,24 @@ export default function Navbar({ searchContext }) {
         <>
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
-              <div className = "flex justify-center items-center hover:cursor-pointer">
-              {userData?.avatarUrl !== undefined ? (
-                <Avatar
-                  sx={{ cursor: "pointer" }}
-                  src={userData?.avatarUrl}
-                  radius="xl"
-                  alt="no image here"
-                />
-              ) : (
-                <Avatar
-                  sx={{ cursor: "pointer" }}
-                  radius="xl"
-                  alt="no image here"
-                />
-              )}
-              <p className = "mb-0 ml-2 font-medium text-lg">
-                
-                {userData?.full_name}</p>
+              <div className="flex justify-center items-center hover:cursor-pointer">
+                {userData?.avatarUrl !== undefined ? (
+                  <Avatar
+                    sx={{ cursor: "pointer" }}
+                    src={userData?.avatarUrl}
+                    radius="xl"
+                    alt="no image here"
+                  />
+                ) : (
+                  <Avatar
+                    sx={{ cursor: "pointer" }}
+                    radius="xl"
+                    alt="no image here"
+                  />
+                )}
+                <p className="mb-0 ml-2 font-medium text-lg">
+                  {userData?.full_name}
+                </p>
               </div>
             </Menu.Target>
 

@@ -7,6 +7,7 @@ import { UserContext } from "../../utils/UserContext";
 import AddReplyTextBox from "./AddReplyTextBox";
 import Replies from "./replies";
 import UserAvatar from "./UserAvatar";
+import { FaPencilAlt, FaCheck, FaTrashAlt } from "react-icons/fa";
 
 export default function Comment({
   commentData,
@@ -18,7 +19,7 @@ export default function Comment({
   sessionAvatarUrl,
 }) {
   const supabase = useSupabaseClient();
-  let { cid, content, created_at } = useMemo(() => {
+  let { cid, uid, content, created_at } = useMemo(() => {
     return commentData;
   }, [commentData]);
   let { username, avatar_url } = useMemo(() => {
@@ -32,6 +33,9 @@ export default function Comment({
   const [replyDataArray, setReplyDataArray] = useState([]);
   const [avatarWait, setAvatarWait] = useState(true);
   const user = useContext(UserContext);
+  const [comment, setComment] = useState(content);
+  const [edit, setEdit] = useState(false);
+  const [visible, setVisible] = useState(true)
 
   const handleReplyData = useCallback((replyDataArray) => {
     setReplyDataArray(replyDataArray);
@@ -80,6 +84,16 @@ export default function Comment({
     setShowAddReply(false);
   }, []);
 
+  const handleUpdateComment = async () => {
+    await supabase.from("comments").update({ content: comment }).eq("cid", cid);
+    setEdit(false);
+  };
+
+  const handleDeleteComment = async () => {
+    await supabase.from("comments").delete().eq("cid", cid);
+    setVisible(false)
+  };
+
   useEffect(() => {
     const getInitalCommentLikedState = async () => {
       let commentLikedData = await supabase
@@ -116,7 +130,7 @@ export default function Comment({
     }
   }, [user, vid, cid]);
 
-  return (
+  return ( visible && 
     <>
       <Flex direction="row" gap="md">
         <UserAvatar avatarUrl={avatar_url} />
@@ -134,9 +148,21 @@ export default function Comment({
               {rectifyFormat(created_at).toLocaleDateString()}
             </Text>
           </Flex>
-          <Text fz="sm" sx={{ marginBottom: "0.25rem" }}>
-            {content}
-          </Text>
+
+          <input
+            className="bg-micdrop-beige"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            disabled={!edit}
+          />
+          {uid === user.id && (
+            <>
+              {!edit && <FaPencilAlt onClick={() => setEdit(true)} />}
+              {edit && <FaCheck onClick={handleUpdateComment} />}
+              {<FaTrashAlt onClick = {handleDeleteComment}/>}
+            </>
+          )}
+
           <Flex
             direction="row"
             wrap="wrap"

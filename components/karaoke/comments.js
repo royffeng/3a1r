@@ -66,6 +66,7 @@ export default function Comments({ vid }) {
         .select(
           `
           cid, 
+          uid,
           content,
           created_at,
           likes,
