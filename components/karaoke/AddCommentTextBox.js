@@ -1,4 +1,4 @@
-import { Button, Flex, LoadingOverlay, Space, Textarea } from "@mantine/core";
+import { Button, Flex, LoadingOverlay, Space } from "@mantine/core";
 import { useCallback, useContext, useState } from "react";
 import UserAvatar from "./UserAvatar";
 
@@ -26,6 +26,7 @@ export default function AddCommentTextBox({
         .select(
           `
         cid, 
+        uid,
           content,
           created_at,
           likes,
@@ -53,14 +54,16 @@ export default function AddCommentTextBox({
   );
 
   return (
-    <Flex sx={{ position: "relative" }}>
+    <div>
       <LoadingOverlay visible={loading} overlayBlur={2} />
-      <Flex direction="row" gap="md" sx={{ width: "100%" }}>
+      <div className="flex justify-center items-center w-full">
         <UserAvatar avatarUrl={avatar_url} />
-        <Flex direction="column" gap="sm" sx={{ width: "100%" }}>
+
+        <div className="w-full flex justify-center items-start flex-col">
           <>
             {user ? (
-              <Textarea
+              <textarea
+                className="rounded-xl px-2 py-2 font-lexend text-md w-full m-2 outline-none focus:ring-1 focus:ring-black"
                 onFocus={() => setShowButtons(true)}
                 sx={{ width: "100%" }}
                 value={value}
@@ -70,7 +73,8 @@ export default function AddCommentTextBox({
                 minRows={1}
               />
             ) : (
-              <Textarea
+              <textarea
+                className="rounded-xl px-2 py-2 font-lexend text-md w-full m-2 outline-none focus:ring-1 focus:ring-black"
                 onFocus={() => setShowButtons(true)}
                 sx={{ width: "100%" }}
                 value={value}
@@ -82,42 +86,43 @@ export default function AddCommentTextBox({
               />
             )}
           </>
-
-          {showButtons && (
-            <Flex justify="flex-end">
+        </div>
+      </div>
+      <div>
+        {showButtons && (
+          <Flex justify="flex-end">
+            <Button
+              size="xs"
+              radius="xl"
+              variant="subtle"
+              onClick={() => {
+                setValue("");
+                if (initialShowButtons !== undefined) setShowButtons(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Space w="xs" />
+            {value === "" ? (
+              <Button size="xs" radius="xl" disabled>
+                Comment
+              </Button>
+            ) : (
               <Button
+                className="bg-micdrop-green"
+                onClick={() => {
+                  setLoading(true);
+                  handleCommentSubmit(vid, user.id, value);
+                }}
                 size="xs"
                 radius="xl"
-                variant="subtle"
-                onClick={() => {
-                  setValue("");
-                  if (initialShowButtons !== undefined) setShowButtons(false);
-                }}
               >
-                Cancel
+                Comment
               </Button>
-              <Space w="xs" />
-              {value === "" ? (
-                <Button size="xs" radius="xl" disabled>
-                  Comment
-                </Button>
-              ) : (
-                <Button
-                  className="bg-micdrop-green"
-                  onClick={() => {
-                    setLoading(true);
-                    handleCommentSubmit(vid, user.id, value);
-                  }}
-                  size="xs"
-                  radius="xl"
-                >
-                  Comment
-                </Button>
-              )}
-            </Flex>
-          )}
-        </Flex>
-      </Flex>
-    </Flex>
+            )}
+          </Flex>
+        )}
+      </div>
+    </div>
   );
 }

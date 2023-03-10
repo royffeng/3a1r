@@ -1,4 +1,4 @@
-import { Avatar, Button, Flex, Group, Menu, Text } from "@mantine/core";
+import { Avatar, Button, Flex, Menu } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,52 +88,31 @@ export default function Navbar({ searchContext }) {
         <>
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
-              {userData?.avatarUrl !== undefined ? (
-                <Avatar
-                  sx={{ cursor: "pointer" }}
-                  src={userData?.avatarUrl}
-                  radius="xl"
-                  alt="no image here"
-                />
-              ) : (
-                <Avatar
-                  sx={{ cursor: "pointer" }}
-                  radius="xl"
-                  alt="no image here"
-                />
-              )}
+              <div className="flex justify-center items-center hover:cursor-pointer">
+                {userData?.avatarUrl !== undefined ? (
+                  <Avatar
+                    sx={{ cursor: "pointer" }}
+                    src={userData?.avatarUrl}
+                    radius="xl"
+                    alt="no image here"
+                  />
+                ) : (
+                  <Avatar
+                    sx={{ cursor: "pointer" }}
+                    radius="xl"
+                    alt="no image here"
+                  />
+                )}
+                <p className="mb-0 ml-2 font-medium text-lg">
+                  {userData?.full_name}
+                </p>
+              </div>
             </Menu.Target>
 
             <Menu.Dropdown
               sx={{ padding: "0.75rem" }}
-              className="border-black border-2 shadow-none rounded-xl"
+              className="border-black border-2 shadow-none rounded-xl w-full"
             >
-              <Group>
-                <div style={{ flex: 1 }}>
-                  <Flex justify={"center"} align="center" gap="sm">
-                    {userData?.avatarUrl !== undefined ? (
-                      <Avatar
-                        sx={{ cursor: "pointer" }}
-                        src={userData?.avatarUrl}
-                        radius="xl"
-                        alt="no image here"
-                      />
-                    ) : (
-                      <Avatar
-                        sx={{ cursor: "pointer" }}
-                        radius="xl"
-                        alt="no image here"
-                      />
-                    )}
-                    <div>
-                      <Text>{userData?.full_name}</Text>
-                      <Text>@{userData?.username}</Text>
-                    </div>
-                  </Flex>
-                </div>
-              </Group>
-              <Menu.Divider color="black" />
-
               <Link href={`/profile?id=${userData?.id}`}>
                 <div className="flex items-center hover:bg-white rounded p-1 hover:cursor-pointer">
                   <MdPerson className="text-lg mr-2" />
