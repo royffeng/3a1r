@@ -145,6 +145,11 @@ export default function Comment({
             <button></button>
           </div>
         )}
+<div className = {`${hover ? "!bg-gray-200" : ""}`}  onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}>
+
+
+
 
         <Flex direction="row" gap="md">
           <UserAvatar avatarUrl={avatar_url} />
@@ -163,8 +168,7 @@ export default function Comment({
               </Text>
             </Flex>
             <div
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}
+             
               className="flex font-lexend"
             >
               <input
@@ -266,6 +270,7 @@ export default function Comment({
             </Flex>
           </Flex>
         </Flex>
+        </div>
         {showAddReply && (
           <>
             <Space h="sm" />
