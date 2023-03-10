@@ -63,7 +63,7 @@ export default function AddCommentTextBox({
           <>
             {user ? (
               <textarea
-                className="rounded-xl px-2 py-2 font-lexend text-lg w-full m-2 outline-none focus:ring-1 focus:ring-black"
+                className="rounded-xl px-2 py-2 font-lexend text-md w-full m-2 outline-none focus:ring-1 focus:ring-black"
                 onFocus={() => setShowButtons(true)}
                 sx={{ width: "100%" }}
                 value={value}
@@ -74,7 +74,7 @@ export default function AddCommentTextBox({
               />
             ) : (
               <textarea
-                className="rounded-xl px-2 py-2 font-lexend text-lg w-full m-2 outline-none focus:ring-1 focus:ring-black"
+                className="rounded-xl px-2 py-2 font-lexend text-md w-full m-2 outline-none focus:ring-1 focus:ring-black"
                 onFocus={() => setShowButtons(true)}
                 sx={{ width: "100%" }}
                 value={value}
