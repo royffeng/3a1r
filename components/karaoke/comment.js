@@ -38,7 +38,7 @@ export default function Comment({
   const [visible, setVisible] = useState(true);
   const [hover, setHover] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const handleReplyData = useCallback((replyDataArray) => {
     setReplyDataArray(replyDataArray);
@@ -93,11 +93,9 @@ export default function Comment({
   };
 
   const handleDeleteComment = async () => {
-    if (confirmDelete) {
       await supabase.from("comments").delete().eq("cid", cid);
-      setModalVisible(false);
       setVisible(false);
-    }
+      setConfirmDelete(false)
   };
 
   useEffect(() => {
@@ -139,16 +137,10 @@ export default function Comment({
   return (
     visible && (
       <>
-        {modalVisible && (
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500 w-full">
-            {comment}
-            <button></button>
-          </div>
-        )}
         <div
           className={`${
             hover ? "!bg-gray-100" : ""
-          } hover:cursor-pointer p-2 rounded-xl`}
+          } hover:cursor-pointer p-2 rounded-xl ${edit ? "bg-gray-100" : ""}`}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >
@@ -179,17 +171,9 @@ export default function Comment({
                           } hover:text-gray-500 hover:cursor-pointer text-xl mx-3`}
                         />
                       )}
-                      {edit && (
-                        <FaCheck
-                          onClick={handleUpdateComment}
-                          className={`${
-                            hover ? "inline" : "hidden"
-                          } hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
-                        />
-                      )}
-                      {
+                      { !edit &&
                         <FaTimes
-                          onClick={() => setModalVisible(true)}
+                          onClick={() => setConfirmVisible(true)}
                           className={`${
                             hover ? "inline" : "hidden"
                           } hover:text-red-500 text-xl hover:cursor-pointer mx-3`}
@@ -200,11 +184,11 @@ export default function Comment({
                 </div>
               </Flex>
 
-              <div className="flex font-lexend">
+              <div className="flex font-lexend items-center">
                 <input
                   className={`w-full hover:cursor-pointer ${
                     edit
-                      ? "text-red-400 bg-gray-100"
+                      ? "text-black bg-gray-100 py-2 px-2 rounded-full"
                       : `text-black ${
                           hover ? "!bg-gray-100" : "bg-micdrop-beige"
                         }`
@@ -213,70 +197,84 @@ export default function Comment({
                   onChange={(e) => setComment(e.target.value)}
                   disabled={!edit}
                 />
+                {edit && (
+                        <FaCheck
+                          onClick={handleUpdateComment}
+                          className={`hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
+                        />
+                      )}
               </div>
-              <Flex
-                direction="row"
-                wrap="wrap"
-                align="center"
-                justify="flex-start"
-                gap="xs"
-              >
-                <Button
-                  onClick={() => handleLike(user.id, cid, liked, disliked)}
-                  leftIcon={
-                    <AiFillLike color={liked ? "green" : "gray"} size={12} />
-                  }
-                  color="gray"
-                  compact
-                  size="xs"
-                  variant="light"
-                  radius="xl"
-                >
-                  <Text
-                    fz="xs"
-                    sx={{
-                      color: liked ? "green" : "gray",
-                    }}
+              <div className="flex justify-between items-center">
+                <div>
+                  <Button
+                    onClick={() => handleLike(user.id, cid, liked, disliked)}
+                    leftIcon={
+                      <AiFillLike color={liked ? "green" : "gray"} size={12} />
+                    }
+                    color="gray"
+                    compact
+                    size="xs"
+                    variant="light"
+                    radius="xl"
                   >
-                    {likes}
-                  </Text>
-                </Button>
-                <Button
-                  onClick={() => handleDislike(user.id, cid, liked, disliked)}
-                  leftIcon={
-                    <AiFillDislike
-                      color={disliked ? "red" : "gray"}
-                      size={12}
-                    />
-                  }
-                  color="gray"
-                  compact
-                  size="xs"
-                  variant="light"
-                  radius="xl"
-                >
-                  <Text
-                    fz="xs"
-                    style={{
-                      color: disliked ? "red" : "gray",
-                    }}
+                    <Text
+                      fz="xs"
+                      sx={{
+                        color: liked ? "green" : "gray",
+                      }}
+                    >
+                      {likes}
+                    </Text>
+                  </Button>
+                  <Button
+                    onClick={() => handleDislike(user.id, cid, liked, disliked)}
+                    leftIcon={
+                      <AiFillDislike
+                        color={disliked ? "red" : "gray"}
+                        size={12}
+                      />
+                    }
+                    color="gray"
+                    compact
+                    size="xs"
+                    variant="light"
+                    radius="xl"
                   >
-                    {dislikes}
-                  </Text>
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowAddReply(true);
-                  }}
-                  color="dark"
-                  compact
-                  size="xs"
-                  variant="subtle"
-                  radius="xl"
-                >
-                  Reply
-                </Button>
-              </Flex>
+                    <Text
+                      fz="xs"
+                      style={{
+                        color: disliked ? "red" : "gray",
+                      }}
+                    >
+                      {dislikes}
+                    </Text>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowAddReply(true);
+                    }}
+                    color="dark"
+                    compact
+                    size="xs"
+                    variant="subtle"
+                    radius="xl"
+                  >
+                    Reply
+                  </Button>
+                </div>
+                {uid === user.id && confirmVisible && (
+                  <div className="flex justify-center items-center font-lexend">
+                    <p className="mb-0">delete comment?</p>
+                    <div className="px-2 hover:!font-bold" onClick = {handleDeleteComment}>yes</div>|
+                    <div
+                      className="px-2 hover:!font-bold"
+                      onClick={() => setConfirmVisible(false)}
+                    >
+                      no
+                    </div>
+                  </div>
+                )}
+              </div>
             </Flex>
           </Flex>
         </div>
