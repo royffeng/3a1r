@@ -7,7 +7,7 @@ import { UserContext } from "../../utils/UserContext";
 import AddReplyTextBox from "./AddReplyTextBox";
 import Replies from "./replies";
 import UserAvatar from "./UserAvatar";
-import { FaPencilAlt, FaCheck, FaTrashAlt } from "react-icons/fa";
+import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
 
 export default function Comment({
   commentData,
@@ -35,7 +35,10 @@ export default function Comment({
   const user = useContext(UserContext);
   const [comment, setComment] = useState(content);
   const [edit, setEdit] = useState(false);
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(true);
+  const [hover, setHover] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleReplyData = useCallback((replyDataArray) => {
     setReplyDataArray(replyDataArray);
@@ -90,8 +93,11 @@ export default function Comment({
   };
 
   const handleDeleteComment = async () => {
-    await supabase.from("comments").delete().eq("cid", cid);
-    setVisible(false)
+    if (confirmDelete) {
+      await supabase.from("comments").delete().eq("cid", cid);
+      setModalVisible(false);
+      setVisible(false);
+    }
   };
 
   useEffect(() => {
@@ -130,126 +136,162 @@ export default function Comment({
     }
   }, [user, vid, cid]);
 
-  return ( visible && 
-    <>
-      <Flex direction="row" gap="md">
-        <UserAvatar avatarUrl={avatar_url} />
-        <Flex direction="column" sx={{ width: "100%" }}>
-          <Flex direction="row" gap="sm">
-            <Text fz="sm" fw={500}>
-              {username}
-            </Text>
-            <Text
-              fz="sm"
-              style={{
-                color: "gray",
-              }}
-            >
-              {rectifyFormat(created_at).toLocaleDateString()}
-            </Text>
-          </Flex>
+  return (
+    visible && (
+      <>
+        {modalVisible && (
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500 w-full">
+            {comment}
+            <button></button>
+          </div>
+        )}
 
-          <input
-            className="bg-micdrop-beige"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            disabled={!edit}
-          />
-          {uid === user.id && (
-            <>
-              {!edit && <FaPencilAlt onClick={() => setEdit(true)} />}
-              {edit && <FaCheck onClick={handleUpdateComment} />}
-              {<FaTrashAlt onClick = {handleDeleteComment}/>}
-            </>
-          )}
-
-          <Flex
-            direction="row"
-            wrap="wrap"
-            align="center"
-            justify="flex-start"
-            gap="xs"
-          >
-            <Button
-              onClick={() => handleLike(user.id, cid, liked, disliked)}
-              leftIcon={
-                <AiFillLike color={liked ? "green" : "gray"} size={12} />
-              }
-              color="gray"
-              compact
-              size="xs"
-              variant="light"
-              radius="xl"
-            >
-              <Text
-                fz="xs"
-                sx={{
-                  color: liked ? "green" : "gray",
-                }}
-              >
-                {likes}
+        <Flex direction="row" gap="md">
+          <UserAvatar avatarUrl={avatar_url} />
+          <Flex direction="column" sx={{ width: "100%" }}>
+            <Flex direction="row" gap="sm">
+              <Text fz="sm" fw={500}>
+                {username}
               </Text>
-            </Button>
-            <Button
-              onClick={() => handleDislike(user.id, cid, liked, disliked)}
-              leftIcon={
-                <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
-              }
-              color="gray"
-              compact
-              size="xs"
-              variant="light"
-              radius="xl"
-            >
               <Text
-                fz="xs"
+                fz="sm"
                 style={{
-                  color: disliked ? "red" : "gray",
+                  color: "gray",
                 }}
               >
-                {dislikes}
+                {rectifyFormat(created_at).toLocaleDateString()}
               </Text>
-            </Button>
-            <Button
-              onClick={() => {
-                setShowAddReply(true);
-              }}
-              color="dark"
-              compact
-              size="xs"
-              variant="subtle"
-              radius="xl"
+            </Flex>
+            <div
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+              className="flex font-lexend"
             >
-              Reply
-            </Button>
+              <input
+                className={`w-full hover:cursor-pointer ${
+                  edit ? "text-red-400 bg-white" : "text-black bg-micdrop-beige"
+                }`}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                disabled={!edit}
+              />
+              {uid === user.id && (
+                <>
+                  {!edit && (
+                    <FaPencilAlt
+                      onClick={() => setEdit(true)}
+                      className={`${
+                        hover ? "inline" : "hidden"
+                      } hover:text-gray-500 hover:cursor-pointer text-xl`}
+                    />
+                  )}
+                  {edit && (
+                    <FaCheck
+                      onClick={handleUpdateComment}
+                      className={`${
+                        hover ? "inline" : "hidden"
+                      } hover:text-green-500 hover:cursor-pointer text-xl`}
+                    />
+                  )}
+                  {
+                    <FaTimes
+                      onClick={() => setModalVisible(true)}
+                      className={`${
+                        hover ? "inline" : "hidden"
+                      } hover:text-red-500 text-xl hover:cursor-pointer`}
+                    />
+                  }
+                </>
+              )}
+            </div>
+            <Flex
+              direction="row"
+              wrap="wrap"
+              align="center"
+              justify="flex-start"
+              gap="xs"
+            >
+              <Button
+                onClick={() => handleLike(user.id, cid, liked, disliked)}
+                leftIcon={
+                  <AiFillLike color={liked ? "green" : "gray"} size={12} />
+                }
+                color="gray"
+                compact
+                size="xs"
+                variant="light"
+                radius="xl"
+              >
+                <Text
+                  fz="xs"
+                  sx={{
+                    color: liked ? "green" : "gray",
+                  }}
+                >
+                  {likes}
+                </Text>
+              </Button>
+              <Button
+                onClick={() => handleDislike(user.id, cid, liked, disliked)}
+                leftIcon={
+                  <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
+                }
+                color="gray"
+                compact
+                size="xs"
+                variant="light"
+                radius="xl"
+              >
+                <Text
+                  fz="xs"
+                  style={{
+                    color: disliked ? "red" : "gray",
+                  }}
+                >
+                  {dislikes}
+                </Text>
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowAddReply(true);
+                }}
+                color="dark"
+                compact
+                size="xs"
+                variant="subtle"
+                radius="xl"
+              >
+                Reply
+              </Button>
+            </Flex>
           </Flex>
         </Flex>
-      </Flex>
-      {showAddReply && (
-        <>
-          <Space h="sm" />
-          <Flex direction="column" sx={{ marginLeft: "3.375rem" }}>
-            <AddReplyTextBox
-              placeholder={"Add a reply..."}
-              type="Reply"
-              pid={cid}
-              avatar_url={sessionAvatarUrl}
-              closeReply={closeReply}
-              handleNewReply={handleNewReply}
-            />
-            <Space h="xs" />
-          </Flex>
-        </>
-      )}
-      <Replies
-        handleNewReply={handleNewReply}
-        replyDataArray={replyDataArray}
-        handleReplyData={handleReplyData}
-        avatarWait={avatarWait}
-        vid={vid}
-        pid={cid}
-        sessionAvatarUrl={sessionAvatarUrl}
-      />
-    </>
+        {showAddReply && (
+          <>
+            <Space h="sm" />
+            <Flex direction="column" sx={{ marginLeft: "3.375rem" }}>
+              <AddReplyTextBox
+                placeholder={"Add a reply..."}
+                type="Reply"
+                pid={cid}
+                avatar_url={sessionAvatarUrl}
+                closeReply={closeReply}
+                handleNewReply={handleNewReply}
+              />
+              <Space h="xs" />
+            </Flex>
+          </>
+        )}
+        <Replies
+          handleNewReply={handleNewReply}
+          replyDataArray={replyDataArray}
+          handleReplyData={handleReplyData}
+          avatarWait={avatarWait}
+          vid={vid}
+          pid={cid}
+          sessionAvatarUrl={sessionAvatarUrl}
+        />
+      </>
+    )
   );
 }
