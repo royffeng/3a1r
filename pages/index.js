@@ -1,8 +1,21 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Landing from "../components/home/landing";
+import { useContext, useEffect } from "react";
+import { UserContext } from "../utils/UserContext";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
+
+  const user = useContext(UserContext);
+
+  useEffect(() => {
+    if (user === null) {
+      router.push("/auth");
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
