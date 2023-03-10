@@ -169,7 +169,7 @@ export default function Comment({
                             onClick={() => setEdit(true)}
                             className={`${
                               hover ? "inline" : "hidden"
-                            } hover:text-gray-500 hover:cursor-pointer text-xl mx-3`}
+                            } hover:text-gray-500 hover:cursor-pointer text-xl mx-2`}
                           />
                         )}
                         {!edit && (
@@ -177,7 +177,7 @@ export default function Comment({
                             onClick={() => setConfirmVisible(true)}
                             className={`${
                               hover ? "inline" : "hidden"
-                            } hover:text-red-500 text-xl hover:cursor-pointer mx-3`}
+                            } hover:text-red-500 text-xl hover:cursor-pointer mx-2`}
                           />
                         )}
                       </>
@@ -187,7 +187,7 @@ export default function Comment({
 
                 <div className="flex font-lexend items-center">
                   <input
-                    className={`w-full hover:cursor-pointer m-1 ${
+                    className={`w-full hover:cursor-pointer m-1 outline-none focus:ring-1 focus:ring-black  ${
                       edit
                         ? "text-black bg-white py-2 px-2 rounded-full"
                         : `text-black ${
