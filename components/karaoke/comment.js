@@ -135,19 +135,19 @@ export default function Comment({
   return (
     visible && (
       <>
-        <div
-          
-          
-        >
+        <div>
           <Flex direction="row" gap="md">
             <UserAvatar avatarUrl={avatar_url} />
             <Flex direction="column" sx={{ width: "100%" }}>
-              <div className={`${
-            hover ? "!bg-micdrop-gray" : ""
-          } hover:cursor-pointer p-2 rounded-xl ${
-            edit || confirmVisible ? "bg-micdrop-gray" : ""
-          } `} onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}>
+              <div
+                className={`${
+                  hover ? "!bg-micdrop-gray" : ""
+                } hover:cursor-pointer p-2 rounded-xl ${
+                  edit || confirmVisible ? "bg-micdrop-gray" : ""
+                } `}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+              >
                 <Flex direction="row" gap="sm">
                   <Text fz="sm" fw={500}>
                     {username}
