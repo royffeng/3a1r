@@ -74,7 +74,7 @@ export default function AddCommentTextBox({
               />
             ) : (
               <textarea
-              className="rounded-3xl px-4 py-3 font-lexend text-xl w-full m-2"
+                className="rounded-3xl px-4 py-3 font-lexend text-xl w-full m-2"
                 onFocus={() => setShowButtons(true)}
                 sx={{ width: "100%" }}
                 value={value}

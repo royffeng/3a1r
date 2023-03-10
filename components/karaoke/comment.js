@@ -145,131 +145,132 @@ export default function Comment({
             <button></button>
           </div>
         )}
-<div className = {`${hover ? "!bg-gray-200" : ""}`}  onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}>
-
-
-
-
-        <Flex direction="row" gap="md">
-          <UserAvatar avatarUrl={avatar_url} />
-          <Flex direction="column" sx={{ width: "100%" }}>
-            <Flex direction="row" gap="sm">
-              <Text fz="sm" fw={500}>
-                {username}
-              </Text>
-              <Text
-                fz="sm"
-                style={{
-                  color: "gray",
-                }}
+        <div
+          className={`${hover ? "!bg-gray-200" : ""}`}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          <Flex direction="row" gap="md">
+            <UserAvatar avatarUrl={avatar_url} />
+            <Flex direction="column" sx={{ width: "100%" }}>
+              <Flex direction="row" gap="sm">
+                <Text fz="sm" fw={500}>
+                  {username}
+                </Text>
+                <Text
+                  fz="sm"
+                  style={{
+                    color: "gray",
+                  }}
+                >
+                  {rectifyFormat(created_at).toLocaleDateString()}
+                </Text>
+              </Flex>
+              <div className="flex font-lexend">
+                <input
+                  className={`w-full hover:cursor-pointer ${
+                    edit
+                      ? "text-red-400 bg-white"
+                      : "text-black bg-micdrop-beige"
+                  }`}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  disabled={!edit}
+                />
+                {uid === user.id && (
+                  <>
+                    {!edit && (
+                      <FaPencilAlt
+                        onClick={() => setEdit(true)}
+                        className={`${
+                          hover ? "inline" : "hidden"
+                        } hover:text-gray-500 hover:cursor-pointer text-xl`}
+                      />
+                    )}
+                    {edit && (
+                      <FaCheck
+                        onClick={handleUpdateComment}
+                        className={`${
+                          hover ? "inline" : "hidden"
+                        } hover:text-green-500 hover:cursor-pointer text-xl`}
+                      />
+                    )}
+                    {
+                      <FaTimes
+                        onClick={() => setModalVisible(true)}
+                        className={`${
+                          hover ? "inline" : "hidden"
+                        } hover:text-red-500 text-xl hover:cursor-pointer`}
+                      />
+                    }
+                  </>
+                )}
+              </div>
+              <Flex
+                direction="row"
+                wrap="wrap"
+                align="center"
+                justify="flex-start"
+                gap="xs"
               >
-                {rectifyFormat(created_at).toLocaleDateString()}
-              </Text>
-            </Flex>
-            <div
-             
-              className="flex font-lexend"
-            >
-              <input
-                className={`w-full hover:cursor-pointer ${
-                  edit ? "text-red-400 bg-white" : "text-black bg-micdrop-beige"
-                }`}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                disabled={!edit}
-              />
-              {uid === user.id && (
-                <>
-                  {!edit && (
-                    <FaPencilAlt
-                      onClick={() => setEdit(true)}
-                      className={`${
-                        hover ? "inline" : "hidden"
-                      } hover:text-gray-500 hover:cursor-pointer text-xl`}
-                    />
-                  )}
-                  {edit && (
-                    <FaCheck
-                      onClick={handleUpdateComment}
-                      className={`${
-                        hover ? "inline" : "hidden"
-                      } hover:text-green-500 hover:cursor-pointer text-xl`}
-                    />
-                  )}
-                  {
-                    <FaTimes
-                      onClick={() => setModalVisible(true)}
-                      className={`${
-                        hover ? "inline" : "hidden"
-                      } hover:text-red-500 text-xl hover:cursor-pointer`}
+                <Button
+                  onClick={() => handleLike(user.id, cid, liked, disliked)}
+                  leftIcon={
+                    <AiFillLike color={liked ? "green" : "gray"} size={12} />
+                  }
+                  color="gray"
+                  compact
+                  size="xs"
+                  variant="light"
+                  radius="xl"
+                >
+                  <Text
+                    fz="xs"
+                    sx={{
+                      color: liked ? "green" : "gray",
+                    }}
+                  >
+                    {likes}
+                  </Text>
+                </Button>
+                <Button
+                  onClick={() => handleDislike(user.id, cid, liked, disliked)}
+                  leftIcon={
+                    <AiFillDislike
+                      color={disliked ? "red" : "gray"}
+                      size={12}
                     />
                   }
-                </>
-              )}
-            </div>
-            <Flex
-              direction="row"
-              wrap="wrap"
-              align="center"
-              justify="flex-start"
-              gap="xs"
-            >
-              <Button
-                onClick={() => handleLike(user.id, cid, liked, disliked)}
-                leftIcon={
-                  <AiFillLike color={liked ? "green" : "gray"} size={12} />
-                }
-                color="gray"
-                compact
-                size="xs"
-                variant="light"
-                radius="xl"
-              >
-                <Text
-                  fz="xs"
-                  sx={{
-                    color: liked ? "green" : "gray",
-                  }}
+                  color="gray"
+                  compact
+                  size="xs"
+                  variant="light"
+                  radius="xl"
                 >
-                  {likes}
-                </Text>
-              </Button>
-              <Button
-                onClick={() => handleDislike(user.id, cid, liked, disliked)}
-                leftIcon={
-                  <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
-                }
-                color="gray"
-                compact
-                size="xs"
-                variant="light"
-                radius="xl"
-              >
-                <Text
-                  fz="xs"
-                  style={{
-                    color: disliked ? "red" : "gray",
+                  <Text
+                    fz="xs"
+                    style={{
+                      color: disliked ? "red" : "gray",
+                    }}
+                  >
+                    {dislikes}
+                  </Text>
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowAddReply(true);
                   }}
+                  color="dark"
+                  compact
+                  size="xs"
+                  variant="subtle"
+                  radius="xl"
                 >
-                  {dislikes}
-                </Text>
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowAddReply(true);
-                }}
-                color="dark"
-                compact
-                size="xs"
-                variant="subtle"
-                radius="xl"
-              >
-                Reply
-              </Button>
+                  Reply
+                </Button>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
         </div>
         {showAddReply && (
           <>
