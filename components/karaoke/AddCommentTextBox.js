@@ -1,4 +1,4 @@
-import { Button, Flex, LoadingOverlay, Space, Textarea } from "@mantine/core";
+import { Button, Flex, LoadingOverlay, Space } from "@mantine/core";
 import { useCallback, useContext, useState } from "react";
 import UserAvatar from "./UserAvatar";
 

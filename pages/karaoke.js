@@ -1,5 +1,4 @@
 import {
-  Alert,
   Avatar,
   Button,
   ColorInput,
@@ -435,7 +434,7 @@ export default function Karaoke() {
                 </Flex>
               </Link>
             </Flex>
-            <div className = "w-full px-3 py-2 rounded-xl bg-micdrop-gray">
+            <div className="w-full px-3 py-2 rounded-xl bg-micdrop-gray">
               <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
                 <Text fz="sm">Description:</Text>
                 {videoMetaData.description.split("\n").map((s, i) => {

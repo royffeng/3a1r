@@ -1,4 +1,4 @@
-import { Avatar, Button, Flex, Group, Menu } from "@mantine/core";
+import { Avatar, Button, Flex, Menu } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
