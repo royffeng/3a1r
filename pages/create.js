@@ -144,6 +144,7 @@ export default function Create() {
   return (
     <Flex
       direction="column"
+      className="pt-20"
       sx={{
         padding: "0 2rem",
       }}
