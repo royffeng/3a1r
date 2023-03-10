@@ -11,7 +11,7 @@ module.exports = {
       },
       colors: {
         micdrop: {
-          gray: "#E5E5E5",
+          gray: "#EEEEEE",
           purple: "#D6B9D7",
           green: "#154633",
           pink: "#FFE4ED",
