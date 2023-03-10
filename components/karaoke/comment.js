@@ -146,7 +146,9 @@ export default function Comment({
           </div>
         )}
         <div
-          className={`${hover ? "!bg-gray-100" : ""} hover:cursor-pointer p-2 rounded-xl`}
+          className={`${
+            hover ? "!bg-gray-100" : ""
+          } hover:cursor-pointer p-2 rounded-xl`}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >
@@ -157,7 +159,7 @@ export default function Comment({
                 <Text fz="sm" fw={500}>
                   {username}
                 </Text>
-                
+
                 <Text
                   fz="sm"
                   style={{
@@ -166,52 +168,51 @@ export default function Comment({
                 >
                   {rectifyFormat(created_at).toLocaleDateString()}
                 </Text>
-                <div className = "w-full flex justify-end">
-              {uid === user.id && (
-                  <>
-                    {!edit && (
-                      <FaPencilAlt
-                        onClick={() => setEdit(true)}
-                        className={`${
-                          hover ? "inline" : "hidden"
-                        } hover:text-gray-500 hover:cursor-pointer text-xl mx-3`}
-                      />
-                    )}
-                    {edit && (
-                      <FaCheck
-                        onClick={handleUpdateComment}
-                        className={`${
-                          hover ? "inline" : "hidden"
-                        } hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
-                      />
-                    )}
-                    {
-                      <FaTimes
-                        onClick={() => setModalVisible(true)}
-                        className={`${
-                          hover ? "inline" : "hidden"
-                        } hover:text-red-500 text-xl hover:cursor-pointer mx-3`}
-                      />
-                    }
-                  </>
-                )}
-
-              </div>
+                <div className="w-full flex justify-end">
+                  {uid === user.id && (
+                    <>
+                      {!edit && (
+                        <FaPencilAlt
+                          onClick={() => setEdit(true)}
+                          className={`${
+                            hover ? "inline" : "hidden"
+                          } hover:text-gray-500 hover:cursor-pointer text-xl mx-3`}
+                        />
+                      )}
+                      {edit && (
+                        <FaCheck
+                          onClick={handleUpdateComment}
+                          className={`${
+                            hover ? "inline" : "hidden"
+                          } hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
+                        />
+                      )}
+                      {
+                        <FaTimes
+                          onClick={() => setModalVisible(true)}
+                          className={`${
+                            hover ? "inline" : "hidden"
+                          } hover:text-red-500 text-xl hover:cursor-pointer mx-3`}
+                        />
+                      }
+                    </>
+                  )}
+                </div>
               </Flex>
-              
-              
+
               <div className="flex font-lexend">
                 <input
                   className={`w-full hover:cursor-pointer ${
                     edit
                       ? "text-red-400 bg-gray-100"
-                      : `text-black ${hover ? "!bg-gray-100" : "bg-micdrop-beige"}`
+                      : `text-black ${
+                          hover ? "!bg-gray-100" : "bg-micdrop-beige"
+                        }`
                   }`}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   disabled={!edit}
                 />
-                
               </div>
               <Flex
                 direction="row"
