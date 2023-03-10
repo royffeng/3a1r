@@ -10,7 +10,7 @@ const ID = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let sid = ""
+      let sid = "";
       if (id) {
         let { data, error } = await supabase
           .from("playlistHas")
@@ -19,16 +19,16 @@ const ID = () => {
             sid
           `
           )
-          .filter("pid", "eq", id).limit(1);
-          sid = data[0].sid;
+          .filter("pid", "eq", id)
+          .limit(1);
+        sid = data[0].sid;
         if (error) {
           console.log("Error getting playlist songs data: ", error);
         } else {
-          
           let { data, error } = await supabase
-        .from("video")
-        .select(
-          `
+            .from("video")
+            .select(
+              `
             id,
             audiourl,
             created_at,
@@ -46,9 +46,9 @@ const ID = () => {
               id
             )
           `
-        )
-        .filter("id", "eq", sid);
-        console.log(data)
+            )
+            .filter("id", "eq", sid);
+          console.log(data);
         }
       }
     };
