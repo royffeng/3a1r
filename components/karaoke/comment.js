@@ -146,7 +146,7 @@ export default function Comment({
           </div>
         )}
         <div
-          className={`${hover ? "!bg-gray-200" : ""}`}
+          className={`${hover ? "!bg-gray-100" : ""} hover:cursor-pointer p-2 rounded-xl`}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >
@@ -157,6 +157,7 @@ export default function Comment({
                 <Text fz="sm" fw={500}>
                   {username}
                 </Text>
+                
                 <Text
                   fz="sm"
                   style={{
@@ -165,26 +166,15 @@ export default function Comment({
                 >
                   {rectifyFormat(created_at).toLocaleDateString()}
                 </Text>
-              </Flex>
-              <div className="flex font-lexend">
-                <input
-                  className={`w-full hover:cursor-pointer ${
-                    edit
-                      ? "text-red-400 bg-white"
-                      : "text-black bg-micdrop-beige"
-                  }`}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  disabled={!edit}
-                />
-                {uid === user.id && (
+                <div className = "w-full flex justify-end">
+              {uid === user.id && (
                   <>
                     {!edit && (
                       <FaPencilAlt
                         onClick={() => setEdit(true)}
                         className={`${
                           hover ? "inline" : "hidden"
-                        } hover:text-gray-500 hover:cursor-pointer text-xl`}
+                        } hover:text-gray-500 hover:cursor-pointer text-xl mx-3`}
                       />
                     )}
                     {edit && (
@@ -192,7 +182,7 @@ export default function Comment({
                         onClick={handleUpdateComment}
                         className={`${
                           hover ? "inline" : "hidden"
-                        } hover:text-green-500 hover:cursor-pointer text-xl`}
+                        } hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
                       />
                     )}
                     {
@@ -200,11 +190,28 @@ export default function Comment({
                         onClick={() => setModalVisible(true)}
                         className={`${
                           hover ? "inline" : "hidden"
-                        } hover:text-red-500 text-xl hover:cursor-pointer`}
+                        } hover:text-red-500 text-xl hover:cursor-pointer mx-3`}
                       />
                     }
                   </>
                 )}
+
+              </div>
+              </Flex>
+              
+              
+              <div className="flex font-lexend">
+                <input
+                  className={`w-full hover:cursor-pointer ${
+                    edit
+                      ? "text-red-400 bg-gray-100"
+                      : `text-black ${hover ? "!bg-gray-100" : "bg-micdrop-beige"}`
+                  }`}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  disabled={!edit}
+                />
+                
               </div>
               <Flex
                 direction="row"
