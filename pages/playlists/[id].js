@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import Thumbnail from "../../components/thumbnail";
 
 const ID = () => {
   const router = useRouter();
   const { id } = router.query;
 
   const supabase = useSupabaseClient();
+  const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,13 +51,34 @@ const ID = () => {
             )
             .filter("id", "eq", sid);
           console.log(data);
+          setVideos(data);
         }
       }
     };
 
     fetchData();
   }, [id]);
-  return <div className="pt-20">playlists</div>;
+
+  return (
+    <div className="pt-20 px-4">
+      {videos.map((video) => (
+        // {
+        //   console.log(video);
+        //   console.log(video.id)
+        // }
+        <Thumbnail
+          id={video.id}
+          username={video.profiles.username}
+          title={video.title}
+          views={video.views}
+          thumbnail={video.video_url}
+          avatar_url={video.profiles.avatar_url}
+          date={video.created_at}
+          userid={video.profiles.id}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default ID;

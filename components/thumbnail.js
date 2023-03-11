@@ -24,6 +24,7 @@ const Thumbnail = ({
       aria-label="video thumbnail"
       className={`${tn_styles.thumbnail} !z-0`}
     >
+      {console.log("POGGERS")}
       <Flex direction="column">
         <Link target="_blank" href={`/karaoke?vid=${id}`}>
           <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail" />
