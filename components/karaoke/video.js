@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Flex, Text } from "@mantine/core";
 import Hls from "hls.js";
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
@@ -164,28 +164,47 @@ export default function Video({ textColor, videoSource, lyricsArr }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            overflow: "hidden",
             left: "5%",
             bottom: "10%",
             right: "5%",
             top: "10%",
           }}
         >
-          <Text
-            className="lyrics"
-            align="center"
-            color={textColor}
-            style={{
-              fontSize: "clamp(1rem, 8vw, 20vw)",
-              textShadow:
-                "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
-            }}
-          >
-            {`${
-              lyricsIndex < lyricsArr.length && lyricsIndex !== -1
-                ? lyricsArr[lyricsIndex].lyrics
-                : ""
-            }`}
-          </Text>
+          <Flex direction="column">
+            <Text
+              className="lyrics"
+              align="center"
+              color={textColor}
+              style={{
+                fontSize: "calc(clamp(1rem, 8vw, 20vw)/1.5)",
+                textShadow:
+                  "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+              }}
+            >
+              {`${
+                lyricsIndex < lyricsArr.length && lyricsIndex !== -1
+                  ? lyricsArr[lyricsIndex].lyrics
+                  : ""
+              }`}
+            </Text>
+            <Text
+              className="lyrics"
+              align="center"
+              color={"rgba(227, 227, 227, 0.5)"}
+              style={{
+                fontSize: "calc(clamp(1rem, 8vw, 20vw)/1.5)",
+              }}
+            >
+              {`${
+                lyricsIndex < lyricsArr.length - 1 &&
+                lyricsIndex !== -1 &&
+                lyricsIndex !== 0
+                  ? lyricsArr[lyricsIndex + 1].lyrics
+                  : ""
+              }`}
+            </Text>
+          </Flex>
         </div>
       )}
     </div>
