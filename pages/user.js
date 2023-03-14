@@ -4,8 +4,9 @@ import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
+import Navbar from "../components/navbar";
 
-const Profile = () => {
+const Profile = ({ searchContext }) => {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const [playlists, setPlaylists] = useState(null);
@@ -99,10 +100,13 @@ const Profile = () => {
   }, [id]);
 
   return (
-    <div className={`${styles.container}`}>
-      {user && <ProfileInfo user={user} genres={genres} />}
-      {playlists && <Playlists playlists={playlists} personal={false} />}
-    </div>
+    <>
+      <Navbar searchContext={searchContext} />
+      <div className={`${styles.container}`}>
+        {user && <ProfileInfo user={user} genres={genres} />}
+        {playlists && <Playlists playlists={playlists} personal={false} />}
+      </div>
+    </>
   );
 };
 
