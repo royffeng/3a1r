@@ -351,9 +351,6 @@ export default function Karaoke({ searchContext }) {
                   ) : (
                     <>
                       <Button
-                        onClick={() =>
-                          handleLike(user.id, videoMetaData.id, liked, disliked)
-                        }
                         leftIcon={
                           <AiFillLike
                             color={liked ? "green" : "gray"}
@@ -371,14 +368,6 @@ export default function Karaoke({ searchContext }) {
                         <Text color={liked ? "green" : "gray"}>{likes}</Text>
                       </Button>
                       <Button
-                        onClick={() =>
-                          handleDislike(
-                            user.id,
-                            videoMetaData.id,
-                            liked,
-                            disliked
-                          )
-                        }
                         leftIcon={
                           <AiFillDislike
                             color={disliked ? "red" : "gray"}

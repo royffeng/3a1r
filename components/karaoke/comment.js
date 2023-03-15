@@ -224,54 +224,101 @@ export default function Comment({
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                    <Button
-                      onClick={() => handleLike(user.id, cid, liked, disliked)}
-                      leftIcon={
-                        <AiFillLike
-                          color={liked ? "green" : "gray"}
-                          size={12}
-                        />
-                      }
-                      color="gray"
-                      compact
-                      size="xs"
-                      variant="light"
-                      radius="xl"
-                    >
-                      <Text
-                        fz="xs"
-                        sx={{
-                          color: liked ? "green" : "gray",
+                    {user ? (
+                      <Button
+                        onClick={() => {
+                          if (user) handleLike(user.id, cid, liked, disliked);
                         }}
+                        leftIcon={
+                          <AiFillLike
+                            color={liked ? "green" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
                       >
-                        {likes}
-                      </Text>
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        handleDislike(user.id, cid, liked, disliked)
-                      }
-                      leftIcon={
-                        <AiFillDislike
-                          color={disliked ? "red" : "gray"}
-                          size={12}
-                        />
-                      }
-                      color="gray"
-                      compact
-                      size="xs"
-                      variant="light"
-                      radius="xl"
-                    >
-                      <Text
-                        fz="xs"
-                        style={{
-                          color: disliked ? "red" : "gray",
+                        <Text
+                          fz="xs"
+                          sx={{
+                            color: liked ? "green" : "gray",
+                          }}
+                        >
+                          {likes}
+                        </Text>
+                      </Button>
+                    ) : (
+                      <Button
+                        leftIcon={
+                          <AiFillLike
+                            color={liked ? "green" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
+                        disabled
+                      >
+                        <Text
+                          fz="xs"
+                          sx={{
+                            color: liked ? "green" : "gray",
+                          }}
+                        >
+                          {likes}
+                        </Text>
+                      </Button>
+                    )}
+                    {user ? (
+                      <Button
+                        onClick={() => {
+                          if (user) {
+                            handleDislike(user.id, cid, liked, disliked);
+                          }
                         }}
+                        leftIcon={
+                          <AiFillDislike
+                            color={disliked ? "red" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
+                      />
+                    ) : (
+                      <Button
+                        leftIcon={
+                          <AiFillDislike
+                            color={disliked ? "red" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
+                        disabled
                       >
-                        {dislikes}
-                      </Text>
-                    </Button>
+                        <Text
+                          fz="xs"
+                          style={{
+                            color: disliked ? "red" : "gray",
+                          }}
+                        >
+                          {dislikes}
+                        </Text>
+                      </Button>
+                    )}
                     <Button
                       onClick={() => {
                         setShowAddReply(true);
