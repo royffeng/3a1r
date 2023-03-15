@@ -14,11 +14,11 @@ const hoverColors = [
 
 const SegmentedControl = ({ value, values, handleValue }) => {
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex flex-wrap">
       {values.map((valueObj, index) => (
         <div
           key={index}
-          className={`px-4 py-2 hover:cursor-pointer ${
+          className={`px-4 py-2 mb-2 hover:cursor-pointer ${
             hoverColors[index % hoverColors.length]
           } ${
             value === valueObj.value
