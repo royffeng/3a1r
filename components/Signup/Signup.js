@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import Input from "./Input";
 import { Row, Col } from "react-bootstrap";
 import Genre from "./Genre";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { GENRE_LIST } from "../../utils/genres";
+import { useRouter } from "next/router";
 
 const Signup = () => {
+  const router = useRouter();
+  const genres = useMemo(() => [...GENRE_LIST], [GENRE_LIST]);
   const supabase = useSupabaseClient();
 
   const [user, setData] = useState({
@@ -15,7 +19,20 @@ const Signup = () => {
     confirmPassword: "",
   });
 
-  const [Genres, setGenres] = useState(new Set([]));
+  const [selectedGenres, setGenres] = useState(new Set([]));
+
+  const updateGenres = useCallback(async (userid, genres) => {
+    const { error } = await supabase.from("genreLikes").insert([
+      ...genres.map((genre) => {
+        return { uid: userid, genre: genre };
+      }),
+    ]);
+    if (error) {
+      console.log("error updating genres", error);
+    } else {
+      router.push("/");
+    }
+  }, []);
 
   const submit = async () => {
     if (user.password !== user.confirmPassword) {
@@ -28,31 +45,30 @@ const Signup = () => {
       return;
     }
 
-    await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: user.email,
       password: user.password,
+      options: {
+        data: {
+          username: user.username,
+          full_name: user.name,
+          avatar_url:
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        },
+      },
     });
+    if (error) {
+      console.log("error when signing up:", error);
+    } else {
+      console.log(data);
+      console.log([
+        ...genres.map((genre) => {
+          return { uid: data.user.id, genre: genre };
+        }),
+      ]);
+      await updateGenres(data.user.id, [...selectedGenres]);
+    }
   };
-
-  const genres = [
-    "pop",
-    "r&b",
-    "hip-hop",
-    "jazz",
-    "anime",
-    "punk",
-    "soul",
-    "gospel",
-    "disney",
-    "tv/movies",
-    "country",
-    "rock",
-    "funk/disco",
-    "k-pop",
-    "global",
-    "indie",
-    "other",
-  ];
 
   return (
     <div className="w-11/12 flex justify-center items-start flex-col">
@@ -118,7 +134,11 @@ const Signup = () => {
                   key={index}
                   className="m-0 p-0 w-fit flex justify-start !max-w-fit items-center"
                 >
-                  <Genre genre={genre} Genres={Genres} setGenres={setGenres} />
+                  <Genre
+                    genre={genre}
+                    Genres={selectedGenres}
+                    setGenres={setGenres}
+                  />
                 </Col>
               ))}
             </Row>
