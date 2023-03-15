@@ -47,7 +47,7 @@ export default function Navbar({ searchContext }) {
               My Playlists
             </p>
           </Link>
-          <Button
+          {/* <Button
             className="bg-micdrop-green"
             size="md"
             leftIcon={<TbVideoPlus />}
@@ -56,7 +56,7 @@ export default function Navbar({ searchContext }) {
             <Link href="/create">
               <p className="m-0">Create</p>
             </Link>
-          </Button>
+          </Button> */}
         </>
       )}
 
