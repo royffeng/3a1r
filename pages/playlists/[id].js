@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../../components/thumbnail";
+import {Row, Col} from "react-bootstrap"
 
 const ID = () => {
   const router = useRouter();
@@ -9,11 +10,9 @@ const ID = () => {
 
   const supabase = useSupabaseClient();
   const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      let sid = "";
       let songs = 0;
       if (id) {
         let { data, error } = await supabase
@@ -25,38 +24,39 @@ const ID = () => {
           )
           .filter("pid", "eq", id);
         songs = data;
-        console.log(songs);
         if (error) {
           console.log("Error getting playlist songs data: ", error);
         } else {
+          const videosArr = [];
           for (let i = 0; i < songs.length; i++) {
-            let { data, error } = await supabase
+            console.log(songs[i].sid)
+            let { data } = await supabase
               .from("video")
               .select(
-                `
-            id,
-            audiourl,
-            created_at,
-            description,
-            dislikes,
-            likes,
-            lyrics,
-            title,
-            videourl,
-            audiourl,
-            views,
-            thumbnail,
-            profiles(
-              username,
-              avatar_url,
-              id
-            )
-          `
+              `
+                id,
+                audiourl,
+                created_at,
+                description,
+                dislikes,
+                likes,
+                lyrics,
+                title,
+                videourl,
+                audiourl,
+                views,
+                thumbnail,
+                profiles(
+                  username,
+                  avatar_url,
+                  id
+                )
+              `
               )
               .filter("id", "eq", songs[i].sid);
-            setVideos([...videos, data]);
+              videosArr.push(data[0])
           }
-          setLoading(false);
+          setVideos(videosArr)
         }
       }
     };
@@ -66,12 +66,13 @@ const ID = () => {
 
   return (
     <div className="pt-20 px-4">
-      {!loading &&
+      <Row>
+      {videos.length > 0 && 
         videos.map((video, index) => (
+          <Col xl = {3} key = {index}>
           <Thumbnail
-            key={index}
             id={video.id}
-            username={"poggers"}
+            username={video.profiles?.username}
             title={video.title}
             views={video.views}
             thumbnail={video.thumbnail}
@@ -80,7 +81,15 @@ const ID = () => {
             noDate={true}
             userid={video.profiles?.id}
           />
+          
+          </Col>
+          
+          
         ))}
+
+
+      </Row>
+      
     </div>
   );
 };
