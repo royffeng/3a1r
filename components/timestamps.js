@@ -13,7 +13,7 @@ export const TimestampInput = ({ lyric, index, handleTimestampChange }) => {
       <Flex direction="column" sx={{ width: "100%" }}>
         <NumberInput
           placeholder="Start Time"
-          label="Enter the start time"
+          label="Enter the start time in seconds"
           value={start}
           precision={5}
           onChange={(e) => {
@@ -26,7 +26,7 @@ export const TimestampInput = ({ lyric, index, handleTimestampChange }) => {
         />
         <NumberInput
           placeholder="End Time"
-          label="Enter the end time"
+          label="Enter the end time in seconds"
           value={end}
           precision={5}
           onChange={(e) => {
