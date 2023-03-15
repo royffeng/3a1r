@@ -46,9 +46,7 @@ const AllVideos = () => {
             }
           }
         }
-
         setVideos(data);
-        // open();
       }
     };
     fetchData();
