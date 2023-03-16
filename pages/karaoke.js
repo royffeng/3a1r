@@ -315,7 +315,6 @@ export default function Karaoke() {
                       size="md"
                       variant="light"
                       radius="xl"
-                      disabled
                     >
                       <Text color={liked ? "green" : "gray"}>{likes}</Text>
                     </Button>
@@ -341,7 +340,6 @@ export default function Karaoke() {
                       size="md"
                       variant="light"
                       radius="xl"
-                      disabled
                     >
                       <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
                     </Button>
@@ -364,6 +362,7 @@ export default function Karaoke() {
                       size="md"
                       variant="light"
                       radius="xl"
+                      disabled
                     >
                       <Text color={liked ? "green" : "gray"}>{likes}</Text>
                     </Button>
@@ -387,6 +386,7 @@ export default function Karaoke() {
                       size="md"
                       variant="light"
                       radius="xl"
+                      disabled
                     >
                       <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
                     </Button>
