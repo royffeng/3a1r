@@ -50,7 +50,7 @@ const ID = () => {
           } else {
             const url = URL.createObjectURL(avatar);
             userData.data[0].avatar_url = url;
-            setProfile({...userData.data[0], avatar_url: url})
+            setProfile({ ...userData.data[0], avatar_url: url });
           }
         }
         let { data, error } = await supabase
@@ -120,8 +120,11 @@ const ID = () => {
                 <div>{videos.length} videos</div>
               </div>
               {profile && (
-                <div className = "flex justify-start items-center">
-                  <img src={profile.avatar_url} className = "rounded-full w-20 aspect-square object-cover mr-2"/>
+                <div className="flex justify-start items-center">
+                  <img
+                    src={profile.avatar_url}
+                    className="rounded-full w-20 aspect-square object-cover mr-2"
+                  />
                   <div>{profile.username}</div>
                 </div>
               )}
