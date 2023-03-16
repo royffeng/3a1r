@@ -5,7 +5,7 @@ import Microphone from "../public/microphone.png";
 const LoginLogo = () => {
   return (
     <div>
-      <Image src={Microphone} />
+      <Image alt={"micdrop logo"} src={Microphone} />
     </div>
   );
 };

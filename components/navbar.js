@@ -10,7 +10,7 @@ import icon from "../public/appicon.png";
 import { UserContext } from "../utils/UserContext";
 import { TbVideoPlus } from "react-icons/tb";
 
-export default function Navbar({ searchContext }) {
+export default function Navbar({ searchContext, isKaraoke = false }) {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const userData = useContext(UserContext);
@@ -26,7 +26,9 @@ export default function Navbar({ searchContext }) {
       direction="row"
       align="center"
       justify="space-between"
-      className="w-full py-3 px-8 fixed bg-micdrop-beige !z-[100000000]"
+      className={`w-full py-3 px-8 ${
+        isKaraoke ? "" : "fixed"
+      } bg-micdrop-beige ${isKaraoke ? "" : "!z-[100000000]"}`}
       gap="xl"
     >
       <Flex direction="row" align="center" justify="center" gap="md">

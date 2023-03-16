@@ -137,7 +137,6 @@ const Genre = () => {
                   handleValue={handleGenreChange}
                   value={genre}
                 />
-                <Space h={4} />
                 <VideoGrid videos={videos} />
               </>
             ) : (

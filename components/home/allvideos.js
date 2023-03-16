@@ -46,7 +46,6 @@ const AllVideos = () => {
             }
           }
         }
-
         setVideos(data);
       }
     };
@@ -54,7 +53,12 @@ const AllVideos = () => {
   }, []);
 
   return (
-    <Flex justify="flex-start" align="flex-start" className={styles.category}>
+    <Flex
+      sx={{ width: "100%", margin: "auto" }}
+      justify="flex-start"
+      align="flex-start"
+      className={styles.category}
+    >
       <Center className={styles.header} sx={{ background: "#E6E1FF" }}>
         <p className="m-0 px-2">All Videos</p>
       </Center>

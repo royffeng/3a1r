@@ -94,27 +94,33 @@ export default function AddReplyTextBox({
                 Cancel
               </Button>
               <Space w="xs" />
-              {value === "" ? (
-                <Button size="xs" radius="xl" disabled>
-                  Reply
-                </Button>
+              {user ? (
+                value === "" ? (
+                  <Button size="xs" radius="xl" disabled>
+                    Reply
+                  </Button>
+                ) : (
+                  <Button
+                    className="bg-micdrop-green"
+                    onClick={() => {
+                      setLoading(true);
+                      handleReplySubmit(
+                        user,
+                        handleNewReply,
+                        pid,
+                        user.id,
+                        value
+                      );
+                    }}
+                    size="xs"
+                    radius="xl"
+                  >
+                    Reply
+                  </Button>
+                )
               ) : (
-                <Button
-                  className="bg-micdrop-green"
-                  onClick={() => {
-                    setLoading(true);
-                    handleReplySubmit(
-                      user,
-                      handleNewReply,
-                      pid,
-                      user.id,
-                      value
-                    );
-                  }}
-                  size="xs"
-                  radius="xl"
-                >
-                  Reply
+                <Button size="xs" radius="xl" disabled>
+                  Sign in to Reply
                 </Button>
               )}
             </Flex>
