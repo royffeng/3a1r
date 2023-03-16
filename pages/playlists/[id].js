@@ -117,7 +117,7 @@ const ID = () => {
                 <div className="font-semibold text-3xl my-4">
                   public playlist
                 </div>
-                <div>{videos.length} videos</div>
+                <div className = "my-2">{videos.length} videos</div>
               </div>
               {profile && (
                 <div className="flex justify-start items-center">
