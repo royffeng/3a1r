@@ -14,6 +14,7 @@ const Thumbnail = ({
   avatar_url,
   date,
   userid,
+  noDate = false,
 }) => {
   if (username === null || username === undefined) {
     return <></>;
@@ -65,20 +66,22 @@ const Thumbnail = ({
                     fz="xs"
                   >{`${views} view${views == 1 ? "" : "s"}`}</p>
                   <GoPrimitiveDot className="text-[.5rem] mx-1" />
-                  <p
-                    className="m-0 text-xs text-gray-900"
-                    aria-label="date of video"
-                    fz="xs"
-                  >
-                    Posted{" "}
-                    {`${Math.trunc(
-                      Math.round(
-                        new Date().getTime() - rectifyFormat(date).getTime()
-                      ) /
-                        (1000 * 3600 * 24)
-                    )}`}{" "}
-                    days ago
-                  </p>
+                  {!noDate && (
+                    <p
+                      className="m-0 text-xs text-gray-900"
+                      aria-label="date of video"
+                      fz="xs"
+                    >
+                      Posted{" "}
+                      {`${Math.trunc(
+                        Math.round(
+                          new Date().getTime() - rectifyFormat(date).getTime()
+                        ) /
+                          (1000 * 3600 * 24)
+                      )}`}{" "}
+                      days ago
+                    </p>
+                  )}
                 </div>
               </div>
             </Flex>
