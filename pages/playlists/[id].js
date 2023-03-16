@@ -123,7 +123,7 @@ const ID = () => {
                 <div className="flex justify-start items-center">
                   <img
                     src={profile.avatar_url}
-                    className="rounded-full w-20 aspect-square object-cover mr-2"
+                    className="rounded-full w-10 aspect-square object-cover mr-2"
                   />
                   <div>{profile.username}</div>
                 </div>
