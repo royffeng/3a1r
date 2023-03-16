@@ -8,7 +8,6 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { MdOutlineLogout, MdPerson } from "react-icons/md";
 import icon from "../public/appicon.png";
 import { UserContext } from "../utils/UserContext";
-import { TbVideoPlus } from "react-icons/tb";
 
 export default function Navbar({ searchContext }) {
   const router = useRouter();
