@@ -44,7 +44,7 @@ const ProfileInfo = ({ user, genres }) => {
               <p className="text-5xl font-bold">{user.full_name}</p>
               <p className="text-3xl font-medium">@{user.username}</p>
               <>
-                <Flex direction="row" gap={4}>
+                <Flex direction="row" gap={4} wrap="wrap">
                   {genres &&
                     genres.map((g, index) => (
                       <div

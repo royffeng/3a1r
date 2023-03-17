@@ -19,8 +19,9 @@ import Comments from "../components/karaoke/comments";
 import Video from "../components/karaoke/video";
 import { rectifyFormat } from "../utils/formatUTC";
 import { UserContext } from "../utils/UserContext";
+import Navbar from "../components/navbar";
 
-export default function Karaoke() {
+export default function Karaoke({ searchContext }) {
   const supabase = useSupabaseClient();
   const router = useRouter();
   const vid = useMemo(() => {
@@ -216,246 +217,241 @@ export default function Karaoke() {
   }, [videoMetaData]);
 
   return (
-    <div
-      style={{
-        padding: "5rem 2rem",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      className="pt-20"
-    >
-      {videoMetaData == null || videoMetaData == undefined ? (
-        <div
-          style={{
-            width: "clamp(100%, 95vw, 100%)",
-            height: "360px",
-            position: "relative",
-            background:
-              "linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Loader />
-        </div>
-      ) : (
-        <>
-          <Video
-            textColor={textColor}
-            videoSource={videoMetaData.videourl}
-            lyricsArr={videoMetaData.lyrics}
-          />
+    <>
+      <Navbar searchContext={searchContext} isKaraoke={true} />
+      <div
+        style={{
+          padding: "2rem",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {videoMetaData == null || videoMetaData == undefined ? (
           <div
-            className="below-player-wrapper mt-2"
             style={{
-              display: "flex",
               width: "clamp(100%, 95vw, 100%)",
-              flexDirection: "column",
-              justifyContent: "start",
-              alignItems: "start",
+              height: "360px",
+              position: "relative",
+              background:
+                "linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <Flex direction="row" className="w-full mb-4">
-              <ColorInput
-                label="Choose your lyrics color"
-                onChange={(c) => setTextColor(c)}
-                format="hex"
-                radius="xl"
-                size="md"
-                variant="filled"
-                swatches={[
-                  "#25262b",
-                  "#868e96",
-                  "#fa5252",
-                  "#e64980",
-                  "#be4bdb",
-                  "#7950f2",
-                  "#4c6ef5",
-                  "#228be6",
-                  "#15aabf",
-                  "#12b886",
-                  "#40c057",
-                  "#82c91e",
-                  "#fab005",
-                  "#fd7e14",
-                ]}
-              />
-              <Flex
-                sx={{ marginLeft: "auto" }}
-                className="video-likes-dislikes pt-0"
-                direction="row"
-                align="center"
-                gap="xs"
-              >
-                {user ? (
-                  <>
-                    <Button
-                      onClick={() => {
-                        if (user !== undefined || user !== null) {
-                          handleLike(
-                            user.id,
-                            videoMetaData.id,
-                            liked,
-                            disliked
-                          );
-                        }
-                      }}
-                      leftIcon={
-                        <AiFillLike
-                          color={liked ? "green" : "gray"}
-                          size={12}
-                        />
-                      }
-                      className="bg-micdrop-gray"
-                      color="gray"
-                      compact
-                      size="md"
-                      variant="light"
-                      radius="xl"
-                      disabled
-                    >
-                      <Text color={liked ? "green" : "gray"}>{likes}</Text>
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        if (user !== undefined || user !== null) {
-                          handleDislike(
-                            user.id,
-                            videoMetaData.id,
-                            liked,
-                            disliked
-                          );
-                        }
-                      }}
-                      leftIcon={
-                        <AiFillDislike
-                          color={disliked ? "red" : "gray"}
-                          size={12}
-                        />
-                      }
-                      className="bg-micdrop-gray"
-                      compact
-                      size="md"
-                      variant="light"
-                      radius="xl"
-                      disabled
-                    >
-                      <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      onClick={() =>
-                        handleLike(user.id, videoMetaData.id, liked, disliked)
-                      }
-                      leftIcon={
-                        <AiFillLike
-                          color={liked ? "green" : "gray"}
-                          size={12}
-                        />
-                      }
-                      className="bg-micdrop-gray"
-                      color="gray"
-                      compact
-                      size="md"
-                      variant="light"
-                      radius="xl"
-                    >
-                      <Text color={liked ? "green" : "gray"}>{likes}</Text>
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        handleDislike(
-                          user.id,
-                          videoMetaData.id,
-                          liked,
-                          disliked
-                        )
-                      }
-                      leftIcon={
-                        <AiFillDislike
-                          color={disliked ? "red" : "gray"}
-                          size={12}
-                        />
-                      }
-                      className="bg-micdrop-gray"
-                      compact
-                      size="md"
-                      variant="light"
-                      radius="xl"
-                    >
-                      <Text color={disliked ? "red" : "gray"}>{dislikes}</Text>
-                    </Button>
-                  </>
-                )}
-              </Flex>
-            </Flex>
-            <Text style={{ fontSize: "1.5rem" }}>{videoMetaData?.title}</Text>
-            <Flex
-              className="video-date-views"
-              direction="row"
-              justify="start"
-              align="center"
-              gap="sm"
-            >
-              <Text fz="md">{dateString}</Text>
-              <Text fz="md">{videoViews} views</Text>
-            </Flex>
-            <Flex
-              className="video-user"
-              direction="row"
-              justify="space-between"
-              align="center"
+            <Loader />
+          </div>
+        ) : (
+          <>
+            <Video
+              textColor={textColor}
+              videoSource={videoMetaData.videourl}
+              lyricsArr={videoMetaData.lyrics}
+            />
+            <div
+              className="below-player-wrapper mt-2"
               style={{
-                width: "100%",
+                display: "flex",
+                width: "clamp(100%, 95vw, 100%)",
+                flexDirection: "column",
+                justifyContent: "start",
+                alignItems: "start",
               }}
             >
-              <Link href={`/user?id=${videoMetaData.profiles.id}`}>
+              <Flex direction="row" className="w-full mb-4">
+                <ColorInput
+                  label="Choose your lyrics color"
+                  onChange={(c) => setTextColor(c)}
+                  format="hex"
+                  radius="xl"
+                  size="md"
+                  variant="filled"
+                  swatches={[
+                    "#25262b",
+                    "#868e96",
+                    "#fa5252",
+                    "#e64980",
+                    "#be4bdb",
+                    "#7950f2",
+                    "#4c6ef5",
+                    "#228be6",
+                    "#15aabf",
+                    "#12b886",
+                    "#40c057",
+                    "#82c91e",
+                    "#fab005",
+                    "#fd7e14",
+                  ]}
+                />
                 <Flex
+                  sx={{ marginLeft: "auto" }}
+                  className="video-likes-dislikes pt-0"
                   direction="row"
                   align="center"
-                  className="w-fit py-3 hover:cursor-pointer"
-                  gap="sm"
+                  gap="xs"
                 >
-                  {videoMetaData.profiles.avatar_url !== undefined ? (
-                    <Avatar
-                      src={videoMetaData.profiles.avatar_url}
-                      radius="xl"
-                      alt="no image here"
-                    />
+                  {user ? (
+                    <>
+                      <Button
+                        onClick={() => {
+                          if (user !== undefined || user !== null) {
+                            handleLike(
+                              user.id,
+                              videoMetaData.id,
+                              liked,
+                              disliked
+                            );
+                          }
+                        }}
+                        leftIcon={
+                          <AiFillLike
+                            color={liked ? "green" : "gray"}
+                            size={12}
+                          />
+                        }
+                        className="bg-micdrop-gray"
+                        color="gray"
+                        compact
+                        size="md"
+                        variant="light"
+                        radius="xl"
+                      >
+                        <Text color={liked ? "green" : "gray"}>{likes}</Text>
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (user !== undefined || user !== null) {
+                            handleDislike(
+                              user.id,
+                              videoMetaData.id,
+                              liked,
+                              disliked
+                            );
+                          }
+                        }}
+                        leftIcon={
+                          <AiFillDislike
+                            color={disliked ? "red" : "gray"}
+                            size={12}
+                          />
+                        }
+                        className="bg-micdrop-gray"
+                        compact
+                        size="md"
+                        variant="light"
+                        radius="xl"
+                      >
+                        <Text color={disliked ? "red" : "gray"}>
+                          {dislikes}
+                        </Text>
+                      </Button>
+                    </>
                   ) : (
-                    <Avatar radius="xl" alt="no image here" />
+                    <>
+                      <Button
+                        leftIcon={
+                          <AiFillLike
+                            color={liked ? "green" : "gray"}
+                            size={12}
+                          />
+                        }
+                        className="bg-micdrop-gray"
+                        color="gray"
+                        compact
+                        size="md"
+                        variant="light"
+                        radius="xl"
+                        disabled
+                      >
+                        <Text color={liked ? "green" : "gray"}>{likes}</Text>
+                      </Button>
+                      <Button
+                        leftIcon={
+                          <AiFillDislike
+                            color={disliked ? "red" : "gray"}
+                            size={12}
+                          />
+                        }
+                        className="bg-micdrop-gray"
+                        compact
+                        size="md"
+                        variant="light"
+                        radius="xl"
+                        disabled
+                      >
+                        <Text color={disliked ? "red" : "gray"}>
+                          {dislikes}
+                        </Text>
+                      </Button>
+                    </>
                   )}
-                  <Text>{videoMetaData.profiles.username}</Text>
                 </Flex>
-              </Link>
-            </Flex>
-            <div className="w-full px-3 py-2 rounded-xl bg-micdrop-gray">
-              <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
-                <Text fz="sm">Description:</Text>
-                {videoMetaData.description.split("\n").map((s, i) => {
-                  if (s == "") {
-                    return <br key={i} />;
-                  }
-                  return (
-                    <Text fz="sm" key={`description ${s}`}>
-                      {s}
-                    </Text>
-                  );
-                })}
-              </Spoiler>
+              </Flex>
+              <Text style={{ fontSize: "1.5rem" }}>{videoMetaData?.title}</Text>
+              <Flex
+                className="video-date-views"
+                direction="row"
+                justify="start"
+                align="center"
+                gap="sm"
+              >
+                <Text fz="md">{dateString}</Text>
+                <Text fz="md">{videoViews} views</Text>
+              </Flex>
+              <Flex
+                className="video-user"
+                direction="row"
+                justify="space-between"
+                align="center"
+                style={{
+                  width: "100%",
+                }}
+              >
+                <Link href={`/user?id=${videoMetaData.profiles.id}`}>
+                  <Flex
+                    direction="row"
+                    align="center"
+                    className="w-fit py-3 hover:cursor-pointer"
+                    gap="sm"
+                  >
+                    {videoMetaData.profiles.avatar_url !== undefined ? (
+                      <Avatar
+                        src={videoMetaData.profiles.avatar_url}
+                        radius="xl"
+                        alt="no image here"
+                      />
+                    ) : (
+                      <Avatar radius="xl" alt="no image here" />
+                    )}
+                    <Text>{videoMetaData.profiles.username}</Text>
+                  </Flex>
+                </Link>
+              </Flex>
+              <div className="w-full px-3 py-2 rounded-xl bg-micdrop-gray">
+                <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
+                  <Text fz="sm">Description:</Text>
+                  {videoMetaData.description.split("\n").map((s, i) => {
+                    if (s == "") {
+                      return <br key={i} />;
+                    }
+                    return (
+                      <Text fz="sm" key={`description ${s}`}>
+                        {s}
+                      </Text>
+                    );
+                  })}
+                </Spoiler>
+              </div>
+              <Space h="xl" />
+              <Divider style={{ width: "100%" }} size="sm" />
+              <Comments vid={videoMetaData.id} />
+              <Space h="xl" />
             </div>
-            <Space h="xl" />
-            <Divider style={{ width: "100%" }} size="sm" />
-            <Comments vid={videoMetaData.id} />
-            <Space h="xl" />
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }

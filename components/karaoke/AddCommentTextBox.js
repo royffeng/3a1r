@@ -78,7 +78,6 @@ export default function AddCommentTextBox({
                 onFocus={() => setShowButtons(true)}
                 sx={{ width: "100%" }}
                 value={value}
-                onChange={(e) => setValue(e.currentTarget.value)}
                 placeholder={"Sign in to Comment"}
                 autosize
                 minRows={1}
@@ -103,21 +102,27 @@ export default function AddCommentTextBox({
               Cancel
             </Button>
             <Space w="xs" />
-            {value === "" ? (
-              <Button size="xs" radius="xl" disabled>
-                Comment
-              </Button>
+            {user ? (
+              value === "" ? (
+                <Button size="xs" radius="xl" disabled>
+                  Comment
+                </Button>
+              ) : (
+                <Button
+                  className="bg-micdrop-green"
+                  onClick={() => {
+                    setLoading(true);
+                    handleCommentSubmit(vid, user.id, value);
+                  }}
+                  size="xs"
+                  radius="xl"
+                >
+                  Comment
+                </Button>
+              )
             ) : (
-              <Button
-                className="bg-micdrop-green"
-                onClick={() => {
-                  setLoading(true);
-                  handleCommentSubmit(vid, user.id, value);
-                }}
-                size="xs"
-                radius="xl"
-              >
-                Comment
+              <Button size="xs" radius="xl" disabled>
+                Sign in to comment
               </Button>
             )}
           </Flex>

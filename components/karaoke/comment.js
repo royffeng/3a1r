@@ -140,13 +140,19 @@ export default function Comment({
             <UserAvatar avatarUrl={avatar_url} />
             <Flex direction="column" sx={{ width: "100%" }}>
               <div
-                className={`${
-                  hover ? "!bg-micdrop-gray" : ""
-                } hover:cursor-pointer p-2 rounded-xl ${
+                className={`${hover ? "!bg-micdrop-gray" : ""} ${
+                  user?.id === uid ? "hover:cursor-pointer" : ""
+                } p-2 rounded-xl ${
                   edit || confirmVisible ? "bg-micdrop-gray" : ""
                 } `}
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)}
+                onMouseEnter={() => {
+                  if (uid === user?.id) {
+                    setHover(true);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (uid === user?.id) setHover(false);
+                }}
               >
                 <Flex direction="row" gap="sm">
                   <Text fz="sm" fw={500}>
@@ -162,14 +168,16 @@ export default function Comment({
                     {rectifyFormat(created_at).toLocaleDateString()}
                   </Text>
                   <div className="w-full flex justify-end">
-                    {uid === user.id && (
+                    {uid === user?.id && (
                       <>
                         {!edit && (
                           <FaPencilAlt
                             onClick={() => setEdit(true)}
                             className={`${
                               hover ? "inline" : "hidden"
-                            } hover:text-gray-500 hover:cursor-pointer text-xl mx-2`}
+                            } hover:text-gray-500 ${
+                              user?.id === uid ? "hover:cursor-pointer" : ""
+                            } text-xl mx-2`}
                           />
                         )}
                         {!edit && (
@@ -177,7 +185,9 @@ export default function Comment({
                             onClick={() => setConfirmVisible(true)}
                             className={`${
                               hover ? "inline" : "hidden"
-                            } hover:text-red-500 text-xl hover:cursor-pointer mx-2`}
+                            } hover:text-red-500 text-xl ${
+                              user?.id === uid ? "hover:cursor-pointer" : ""
+                            } mx-2`}
                           />
                         )}
                       </>
@@ -187,7 +197,10 @@ export default function Comment({
 
                 <div className="flex font-lexend items-center">
                   <input
-                    className={`w-full hover:cursor-pointer m-1 outline-none focus:ring-1 focus:ring-black  ${
+                    style={{ fontFamily: "Lexend", fontSize: "14px" }}
+                    className={`w-full ${
+                      user?.id === uid ? "hover:cursor-pointer" : ""
+                    } m-1 outline-none focus:ring-1 focus:ring-black  ${
                       edit
                         ? "text-black bg-white py-2 px-2 rounded-full"
                         : `text-black ${
@@ -203,60 +216,109 @@ export default function Comment({
                   {edit && (
                     <FaCheck
                       onClick={handleUpdateComment}
-                      className={`hover:text-green-500 hover:cursor-pointer text-xl mx-3`}
+                      className={`hover:text-green-500 ${
+                        user?.id === uid ? "hover:cursor-pointer" : ""
+                      } text-xl mx-3`}
                     />
                   )}
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                    <Button
-                      onClick={() => handleLike(user.id, cid, liked, disliked)}
-                      leftIcon={
-                        <AiFillLike
-                          color={liked ? "green" : "gray"}
-                          size={12}
-                        />
-                      }
-                      color="gray"
-                      compact
-                      size="xs"
-                      variant="light"
-                      radius="xl"
-                    >
-                      <Text
-                        fz="xs"
-                        sx={{
-                          color: liked ? "green" : "gray",
+                    {user ? (
+                      <Button
+                        onClick={() => {
+                          if (user) handleLike(user.id, cid, liked, disliked);
                         }}
+                        leftIcon={
+                          <AiFillLike
+                            color={liked ? "green" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
                       >
-                        {likes}
-                      </Text>
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        handleDislike(user.id, cid, liked, disliked)
-                      }
-                      leftIcon={
-                        <AiFillDislike
-                          color={disliked ? "red" : "gray"}
-                          size={12}
-                        />
-                      }
-                      color="gray"
-                      compact
-                      size="xs"
-                      variant="light"
-                      radius="xl"
-                    >
-                      <Text
-                        fz="xs"
-                        style={{
-                          color: disliked ? "red" : "gray",
+                        <Text
+                          fz="xs"
+                          sx={{
+                            color: liked ? "green" : "gray",
+                          }}
+                        >
+                          {likes}
+                        </Text>
+                      </Button>
+                    ) : (
+                      <Button
+                        leftIcon={
+                          <AiFillLike
+                            color={liked ? "green" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
+                        disabled
+                      >
+                        <Text
+                          fz="xs"
+                          sx={{
+                            color: liked ? "green" : "gray",
+                          }}
+                        >
+                          {likes}
+                        </Text>
+                      </Button>
+                    )}
+                    {user ? (
+                      <Button
+                        onClick={() => {
+                          if (user) {
+                            handleDislike(user.id, cid, liked, disliked);
+                          }
                         }}
+                        leftIcon={
+                          <AiFillDislike
+                            color={disliked ? "red" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
+                      />
+                    ) : (
+                      <Button
+                        leftIcon={
+                          <AiFillDislike
+                            color={disliked ? "red" : "gray"}
+                            size={12}
+                          />
+                        }
+                        color="gray"
+                        compact
+                        size="xs"
+                        variant="light"
+                        radius="xl"
+                        disabled
                       >
-                        {dislikes}
-                      </Text>
-                    </Button>
+                        <Text
+                          fz="xs"
+                          style={{
+                            color: disliked ? "red" : "gray",
+                          }}
+                        >
+                          {dislikes}
+                        </Text>
+                      </Button>
+                    )}
                     <Button
                       onClick={() => {
                         setShowAddReply(true);
@@ -270,7 +332,7 @@ export default function Comment({
                       Reply
                     </Button>
                   </div>
-                  {uid === user.id && confirmVisible && (
+                  {uid === user?.id && confirmVisible && (
                     <div className="flex justify-center items-center font-lexend">
                       <p className="mb-0">delete comment?</p>
                       <div

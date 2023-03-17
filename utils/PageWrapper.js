@@ -22,8 +22,10 @@ export default function PageWrapper({ loading, children }) {
 
       if (error) {
         console.log(error);
+      } else if (data.length == 0) {
+        console.log("error, user does not exist");
       } else {
-        let avatarUrl = null;
+        let avatarUrl = data[0].avatar_url;
         let genresArray = null;
         if (!data[0].avatar_url.includes("https")) {
           let { data: avatar, error: error } = await supabase.storage
@@ -46,7 +48,6 @@ export default function PageWrapper({ loading, children }) {
         } else {
           genresArray = genres.map((g) => g.genre);
         }
-
         setUserData({
           username: data[0].username,
           full_name: data[0].full_name,
@@ -54,7 +55,7 @@ export default function PageWrapper({ loading, children }) {
           genres: genresArray,
         });
       }
-
+      console.log(data.avatarUrl);
       loading();
     };
     if (user) {

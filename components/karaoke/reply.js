@@ -134,46 +134,100 @@ export default function Reply({
             justify="flex-start"
             gap="xs"
           >
-            <Button
-              onClick={() => handleLike(user.id, rid, liked, disliked)}
-              leftIcon={
-                <AiFillLike color={liked ? "green" : "gray"} size={12} />
-              }
-              color="gray"
-              compact
-              size="xs"
-              variant="light"
-              radius="xl"
-            >
-              <Text
-                fz="xs"
-                sx={{
-                  color: liked ? "green" : "gray",
-                }}
-              >
-                {likes}
-              </Text>
-            </Button>
-            <Button
-              onClick={() => handleDislike(user.id, rid, liked, disliked)}
-              leftIcon={
-                <AiFillDislike color={disliked ? "red" : "gray"} size={12} />
-              }
-              color="gray"
-              compact
-              size="xs"
-              variant="light"
-              radius="xl"
-            >
-              <Text
-                fz="xs"
-                style={{
-                  color: disliked ? "red" : "gray",
-                }}
-              >
-                {dislikes}
-              </Text>
-            </Button>
+            {user ? (
+              <>
+                <Button
+                  onClick={() => handleLike(user.id, rid, liked, disliked)}
+                  leftIcon={
+                    <AiFillLike color={liked ? "green" : "gray"} size={12} />
+                  }
+                  color="gray"
+                  compact
+                  size="xs"
+                  variant="light"
+                  radius="xl"
+                >
+                  <Text
+                    fz="xs"
+                    sx={{
+                      color: liked ? "green" : "gray",
+                    }}
+                  >
+                    {likes}
+                  </Text>
+                </Button>
+                <Button
+                  onClick={() => handleDislike(user.id, rid, liked, disliked)}
+                  leftIcon={
+                    <AiFillDislike
+                      color={disliked ? "red" : "gray"}
+                      size={12}
+                    />
+                  }
+                  color="gray"
+                  compact
+                  size="xs"
+                  variant="light"
+                  radius="xl"
+                >
+                  <Text
+                    fz="xs"
+                    style={{
+                      color: disliked ? "red" : "gray",
+                    }}
+                  >
+                    {dislikes}
+                  </Text>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  leftIcon={
+                    <AiFillLike color={liked ? "green" : "gray"} size={12} />
+                  }
+                  color="gray"
+                  compact
+                  size="xs"
+                  variant="light"
+                  radius="xl"
+                  disabled
+                >
+                  <Text
+                    fz="xs"
+                    sx={{
+                      color: liked ? "green" : "gray",
+                    }}
+                  >
+                    {likes}
+                  </Text>
+                </Button>
+                <Button
+                  leftIcon={
+                    <AiFillDislike
+                      color={disliked ? "red" : "gray"}
+                      size={12}
+                    />
+                  }
+                  color="gray"
+                  compact
+                  size="xs"
+                  variant="light"
+                  radius="xl"
+                  disabled
+                >
+                  <Text
+                    fz="xs"
+                    style={{
+                      color: disliked ? "red" : "gray",
+                    }}
+                  >
+                    {dislikes}
+                  </Text>
+                </Button>
+              </>
+            )}
+
             <Button
               onClick={() => {
                 setShowAddReply(true);
