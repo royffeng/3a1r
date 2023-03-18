@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../../components/thumbnail";
 import { Row, Col } from "react-bootstrap";
+import { AiFillHeart } from "react-icons/ai";
 
 const ID = () => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const ID = () => {
           .filter("id", "eq", response.data[0].uid)
           .limit(1);
         setPlaylist(response.data[0]);
-        // setProfile(userData.data[0]);
+        setProfile(userData.data[0]);
         if (!userData.data[0].avatar_url.includes("https")) {
           let { data: avatar, error: error } = await supabase.storage
             .from("avatars")
@@ -123,9 +124,11 @@ const ID = () => {
                 <div className="flex justify-start items-center">
                   <img
                     src={profile.avatar_url}
-                    className="rounded-full w-20 aspect-square object-cover mr-2"
+                    className="rounded-full w-10 aspect-square object-cover mr-2"
                   />
                   <div>{profile.username}</div>
+                  <p className="text-2xl m-0 mx-1">{playlist.likes}</p>
+                  <AiFillHeart className="text-2xl" />
                 </div>
               )}
             </Col>
