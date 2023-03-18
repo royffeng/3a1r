@@ -4,8 +4,9 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../../components/thumbnail";
 import { Row, Col } from "react-bootstrap";
 import { AiFillHeart } from "react-icons/ai";
+import Navbar from "../../components/navbar";
 
-const ID = () => {
+const ID = ({ searchContext }) => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -104,6 +105,8 @@ const ID = () => {
   }, [id]);
 
   return (
+    <>
+    <Navbar searchContext={searchContext}/>
     <div className="pt-20 px-4">
       <Row className="flex justify-center items-center">
         {playlist && (
@@ -118,7 +121,7 @@ const ID = () => {
                 <div className="font-semibold text-3xl my-4">
                   public playlist
                 </div>
-                <div>{videos.length} videos</div>
+                <div className="my-2">{videos.length} videos</div>
               </div>
               {profile && (
                 <div className="flex justify-between items-center">
@@ -159,6 +162,7 @@ const ID = () => {
           ))}
       </Row>
     </div>
+    </>
   );
 };
 
