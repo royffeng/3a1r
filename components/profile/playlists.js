@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Space, Grid } from "@mantine/core";
+import { FaPlus } from "react-icons/fa";
 import SegmentedControl from "./SegmentedControl";
 import Playlist from "./playlist";
 
@@ -16,7 +17,13 @@ const Playlists = ({ playlists, personal = true }) => {
       <SegmentedControl setDisplay={setDisplay} playlists={playlists} />
       <Space h={32} />
       {display && (
+
         <Grid gutter="md">
+           <Grid.Col xs={4} sm={4} md={4} lg={3} key={-1}>
+              <div className="border-2 border-black p-4 bg-white rounded-3xl w-full h-full">
+                <FaPlus className="text-9xl rounded-2xl aspect-square object-cover"/>
+              </div>
+            </Grid.Col>
           {display?.map((video, index) => (
             <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
               <Playlist playlistData={video} />
