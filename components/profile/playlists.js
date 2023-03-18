@@ -22,7 +22,7 @@ const Playlists = ({ playlists, personal = true }) => {
           {
             personal && <Grid.Col xs={4} sm={4} md={4} lg={3} key={-1}>
             <div className="border-2 border-black p-4 bg-white rounded-3xl w-full h-full cursor-pointer flex justify-center items-center">
-              <Link href="https://www.youtube.com/watch?v=4vbDFu0PUew">
+              <Link href="/createplaylist">
                 <div className = "w-full h-full">
                   <div className="flex justify-center items-center flex-col bg-micdrop-beige rounded-2xl w-full h-5/6 border-black border-2">
                     <FaPlus className="text-9xl flex content-center" />
