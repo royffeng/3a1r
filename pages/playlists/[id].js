@@ -121,14 +121,18 @@ const ID = () => {
                 <div>{videos.length} videos</div>
               </div>
               {profile && (
-                <div className="flex justify-start items-center">
-                  <img
-                    src={profile.avatar_url}
-                    className="rounded-full w-10 aspect-square object-cover mr-2"
-                  />
-                  <div>{profile.username}</div>
-                  <p className="text-2xl m-0 mx-1">{playlist.likes}</p>
-                  <AiFillHeart className="text-2xl" />
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <img
+                      src={profile.avatar_url}
+                      className="rounded-full w-10 aspect-square object-cover mr-2"
+                    />
+                    <p className= "mb-0">{profile.username}</p>
+                  </div>
+                  <div className = "flex items-center">
+                    <p className="text-2xl mb-0 mx-1">{playlist.likes}</p>
+                    <AiFillHeart className="text-2xl" />
+                  </div>
                 </div>
               )}
             </Col>
