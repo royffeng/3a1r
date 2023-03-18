@@ -3,7 +3,7 @@ import { AiFillHeart } from "react-icons/ai";
 
 const Playlist = ({ playlistData }) => {
   return (
-    <div className="border-2 border-black p-4 bg-white rounded-3xl w-full h-full">
+    <div className="border-2 border-black p-4 bg-white rounded-3xl w-full h-full cursor-pointer">
       <Link href={`/playlists/${playlistData.id}`}>
         <div>
           <img
