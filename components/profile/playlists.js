@@ -19,7 +19,8 @@ const Playlists = ({ playlists, personal = true }) => {
       <Space h={32} />
       {display && (
         <Grid gutter="md">
-          <Grid.Col xs={4} sm={4} md={4} lg={3} key={-1}>
+          {
+            personal && <Grid.Col xs={4} sm={4} md={4} lg={3} key={-1}>
             <div className="border-2 border-black p-4 bg-white rounded-3xl w-full h-full cursor-pointer flex justify-center items-center">
               <Link href="https://www.youtube.com/watch?v=4vbDFu0PUew">
                 <div className = "w-full h-full">
@@ -33,6 +34,8 @@ const Playlists = ({ playlists, personal = true }) => {
               </Link>
             </div>
           </Grid.Col>
+          }
+          
           {display?.map((video, index) => (
             <Grid.Col xs={4} sm={4} md={4} lg={3} key={index}>
               <Playlist playlistData={video} />

@@ -132,7 +132,7 @@ const ID = ({ searchContext }) => {
                       />
                       <p className="mb-0">{profile.username}</p>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center mr-3">
                       <p className="text-2xl mb-0 mx-1">{playlist.likes}</p>
                       <AiFillHeart className="text-2xl" />
                     </div>
