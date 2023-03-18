@@ -121,7 +121,7 @@ const ID = ({ searchContext }) => {
                 <div className="font-semibold text-3xl my-4">
                   public playlist
                 </div>
-                <div className="my-2">{videos.length} videos</div>
+                <div className="mb-2">{videos.length} videos</div>
               </div>
               {profile && (
                 <div className="flex justify-between items-center">
