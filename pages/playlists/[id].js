@@ -135,7 +135,8 @@ const ID = ({ searchContext }) => {
 
                     <div>
                       <div className="flex justify-center items-center">
-                        <AiOutlineHeart className="text-4xl hover:text-red-500 hover:cursor-pointer" />
+                        <div className = "font-lexend text-2xl">{playlist.likes}</div>
+                        <AiOutlineHeart className="text-4xl mx-2 hover:text-red-500 hover:cursor-pointer" />
                       </div>
                     </div>
                   </div>
