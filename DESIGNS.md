@@ -68,7 +68,7 @@ by Ashley Kim
 
 #### Video Play
 
-![image](https://user-images.githubusercontent.com/60406344/226250862-2b151fb8-ff06-4e17-91b8-a0bf53d1bc75.png) 
+![image](https://user-images.githubusercontent.com/60406344/226250862-2b151fb8-ff06-4e17-91b8-a0bf53d1bc75.png)
 
 #### Video Comments
 
@@ -114,10 +114,3 @@ by Ashley Kim
 #### Creating Prototype User Flows
 
 ![image](https://user-images.githubusercontent.com/60406344/226253246-fb86e1f4-3ad6-4bac-8a0b-41cc9da84338.png)
-
-
-
-
-
-
-
