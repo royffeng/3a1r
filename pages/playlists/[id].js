@@ -4,6 +4,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../../components/thumbnail";
 import { Row, Col } from "react-bootstrap";
 import Navbar from "../../components/navbar";
+import {AiOutlineHeart, AiFillHeart} from "react-icons/ai"
 
 const ID = ({ searchContext }) => {
   const router = useRouter();
@@ -123,12 +124,19 @@ const ID = ({ searchContext }) => {
                   <div>{videos.length} videos</div>
                 </div>
                 {profile && (
-                  <div className="flex justify-start items-center">
+                  <div className="flex justify-between items-center w-full">
+                    <div className = "flex items-center justify-center">
                     <img
                       src={profile.avatar_url}
-                      className="rounded-full w-20 aspect-square object-cover mr-2"
+                      className="rounded-full w-10 aspect-square object-cover mr-2"
                     />
                     <div>{profile.username}</div>
+
+                    </div>
+                    
+                    <div>
+                    <div className = "flex justify-center items-center"><AiOutlineHeart className = "text-4xl hover:text-red-500 hover:cursor-pointer"/></div>
+                    </div>
                   </div>
                 )}
               </Col>
