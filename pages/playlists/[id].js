@@ -20,13 +20,15 @@ const ID = () => {
           .select(`
             playlists(
               id,
+              name,
               profiles(
                 id,
                 username,
                 full_name,
                 avatar_url
               ),
-              thumbnail_url
+              thumbnail_url,
+              likes
             ),
             video(
               id,
@@ -87,95 +89,15 @@ const ID = () => {
     }
   }, [id])
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     let songs = 0;
-  //     if (id) {
-  //       let response = await supabase
-  //         .from("playlists")
-  //         .select(
-  //           `
-  //         name,
-  //         likes,
-  //         thumbnail_url,
-  //         uid
-  //         `
-  //         )
-  //         .filter("id", "eq", id)
-  //         .limit(1);
-  //       let userData = await supabase
-  //         .from("profiles")
-  //         .select(
-  //           `
-  //         username,
-  //         avatar_url
-  //         `
-  //         )
-  //         .filter("id", "eq", response.data[0].uid)
-  //         .limit(1);
-  //       setPlaylist(response.data[0]);
-  //       // setProfile(userData.data[0]);
-  //       if (!userData.data[0].avatar_url.includes("https")) {
-  //         let { data: avatar, error: error } = await supabase.storage
-  //           .from("avatars")
-  //           .download(`${userData.data[0].avatar_url}`);
-  //         if (error) {
-  //           console.log(error);
-  //         } else {
-  //           const url = URL.createObjectURL(avatar);
-  //           userData.data[0].avatar_url = url;
-  //           setProfile({ ...userData.data[0], avatar_url: url });
-  //         }
-  //       }
-  //       let { data, error } = await supabase
-  //         .from("playlistHas")
-  //         .select(
-  //           `
-  //           sid
-  //         `
-  //         )
-  //         .filter("pid", "eq", id);
-  //       songs = data;
-  //       if (error) {
-  //         console.log("Error getting playlist songs data: ", error);
-  //       } else {
-  //         const videosArr = [];
-  //         for (let i = 0; i < songs.length; i++) {
-  //           console.log(songs[i].sid);
-  //           let { data } = await supabase
-  //             .from("video")
-  //             .select(
-  //               `
-  //               id,
-  //               audiourl,
-  //               created_at,
-  //               description,
-  //               dislikes,
-  //               likes,
-  //               lyrics,
-  //               title,
-  //               videourl,
-  //               audiourl,
-  //               views,
-  //               thumbnail,
-  //               profiles(
-  //                 username,
-  //                 avatar_url,
-  //                 id
-  //               )
-  //             `
-  //             )
-  //             .filter("id", "eq", songs[i].sid);
-  //           videosArr.push(data[0]);
-  //         }
-  //         setVideos(videosArr);
-  //         console.log(videosArr)
-  //       }
-  //     }
-  //   };
+  /*
+  for liking a playlist
+  1. add the pid, uid to the playlistlikes table
+  2. increment the likes column in the playlists table
+  3. update the state of the playlist frontend
 
-  //   fetchData();
-  // }, [id]);
+  The above query already fetches the likes of a playlist
+
+  */
 
   return (
     <div className="pt-20 px-4">
