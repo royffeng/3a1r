@@ -3,8 +3,9 @@ import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../../components/thumbnail";
 import { Row, Col } from "react-bootstrap";
+import Navbar from "../../components/navbar";
 
-const ID = () => {
+const ID = ({ searchContext }) => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -103,54 +104,57 @@ const ID = () => {
   }, [id]);
 
   return (
-    <div className="pt-20 px-4">
-      <Row className="flex justify-center items-center">
-        {playlist && (
-          <>
-            {" "}
-            <Col xl={2} className="flex justify-center items-center">
-              <img src={playlist.thumbnail_url} className="rounded-xl" />
-            </Col>
-            <Col xl={10}>
-              <div className="flex flex-col justify-center items-start">
-                <div className="font-bold text-6xl my-2">{playlist.name}</div>
-                <div className="font-semibold text-3xl my-4">
-                  public playlist
+    <div className="">
+      <Navbar searchContext={searchContext} />
+      <div className="pt-20 px-4">
+        <Row className="flex justify-center items-center">
+          {playlist && (
+            <>
+              {" "}
+              <Col xl={2} className="flex justify-center items-center">
+                <img src={playlist.thumbnail_url} className="rounded-xl" />
+              </Col>
+              <Col xl={10}>
+                <div className="flex flex-col justify-center items-start">
+                  <div className="font-bold text-6xl my-2">{playlist.name}</div>
+                  <div className="font-semibold text-3xl my-4">
+                    public playlist
+                  </div>
+                  <div>{videos.length} videos</div>
                 </div>
-                <div>{videos.length} videos</div>
-              </div>
-              {profile && (
-                <div className="flex justify-start items-center">
-                  <img
-                    src={profile.avatar_url}
-                    className="rounded-full w-20 aspect-square object-cover mr-2"
-                  />
-                  <div>{profile.username}</div>
-                </div>
-              )}
-            </Col>
-          </>
-        )}
-      </Row>
-      <div className="w-full h-1 bg-black my-4" />
-      <Row>
-        {videos.length > 0 &&
-          videos.map((video, index) => (
-            <Col xl={3} key={index}>
-              <Thumbnail
-                id={video.id}
-                username={video.profiles?.username}
-                title={video.title}
-                views={video.views}
-                thumbnail={video.thumbnail}
-                avatar_url={video.profiles?.avatar_url}
-                date={video.created_at}
-                noDate={true}
-                userid={video.profiles?.id}
-              />
-            </Col>
-          ))}
-      </Row>
+                {profile && (
+                  <div className="flex justify-start items-center">
+                    <img
+                      src={profile.avatar_url}
+                      className="rounded-full w-20 aspect-square object-cover mr-2"
+                    />
+                    <div>{profile.username}</div>
+                  </div>
+                )}
+              </Col>
+            </>
+          )}
+        </Row>
+        <div className="w-full h-1 bg-black my-4" />
+        <Row>
+          {videos.length > 0 &&
+            videos.map((video, index) => (
+              <Col xl={3} key={index}>
+                <Thumbnail
+                  id={video.id}
+                  username={video.profiles?.username}
+                  title={video.title}
+                  views={video.views}
+                  thumbnail={video.thumbnail}
+                  avatar_url={video.profiles?.avatar_url}
+                  date={video.created_at}
+                  noDate={true}
+                  userid={video.profiles?.id}
+                />
+              </Col>
+            ))}
+        </Row>
+      </div>
     </div>
   );
 };
