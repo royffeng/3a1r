@@ -9,7 +9,7 @@ import { UserContext } from "../../utils/UserContext";
 
 const ID = ({ searchContext }) => {
   const user = useContext(UserContext);
-  
+
   const router = useRouter();
   const { id } = useMemo(() => {
     return router.query;
@@ -112,7 +112,7 @@ const ID = ({ searchContext }) => {
   */
 
   const handlePlaylistLike = () => {
-    console.log("ID AND USER SHOULD BE VALID VALUES WHERE AM I", id, user)
+    console.log("ID AND USER SHOULD BE VALID VALUES WHERE AM I", id, user);
     // supabase.from("playlistLikes").insert({ id: 90, pid: id, uid: user.id });
 
     // supabase
@@ -130,7 +130,7 @@ const ID = ({ searchContext }) => {
 
     setLiked(false);
     setOffset(0);
-  }
+  };
 
   return (
     <div className="">
@@ -165,10 +165,15 @@ const ID = ({ searchContext }) => {
                       {!liked && (
                         <AiOutlineHeart
                           className="text-3xl mx-2 hover:text-red-500 hover:cursor-pointer"
-                        onClick = {handlePlaylistLike}
+                          onClick={handlePlaylistLike}
                         />
                       )}
-                      {liked && <AiFillHeart className="text-3xl mx-2 " onClick = {handlePlaylistDislike}/>}
+                      {liked && (
+                        <AiFillHeart
+                          className="text-3xl mx-2 "
+                          onClick={handlePlaylistDislike}
+                        />
+                      )}
                     </div>
                   </div>
                 )}
