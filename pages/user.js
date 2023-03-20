@@ -152,7 +152,9 @@ const Profile = ({ searchContext }) => {
         {playlists && <Playlists playlists={playlists} personal={false} />}
         {!videosLoading && (
           <>
-            <p className="text-3xl font-lexend font-semibold m-0">Their Videos</p>
+            <p className="text-3xl font-lexend font-semibold m-0">
+              Their Videos
+            </p>
             <VideoGrid videos={videos} />
           </>
         )}

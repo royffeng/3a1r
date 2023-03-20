@@ -50,14 +50,14 @@ export default function Navbar({ searchContext, isKaraoke = false }) {
             </p>
           </Link>
           <Button
-             className="bg-micdrop-green"
-             size="md"
-             leftIcon={<TbVideoPlus />}
+            className="bg-micdrop-green"
+            size="md"
+            leftIcon={<TbVideoPlus />}
           >
-             <Link href="/create">
-               <p className="m-0">Create</p>
-             </Link>
-           </Button>
+            <Link href="/create">
+              <p className="m-0">Create</p>
+            </Link>
+          </Button>
         </>
       )}
 
