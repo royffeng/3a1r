@@ -121,12 +121,17 @@ const ID = ({ searchContext }) => {
                 </div>
                 <div className="my-2">{videos.length} videos</div>
               {profile && (
-                <div className="flex justify-start items-center">
+                <div className="flex justify-between items-center">
+                  <div className = "flex justify-center items-center">
                   <img
                     src={profile.avatar_url}
                     className="rounded-full w-10 aspect-square object-cover mr-2"
                   />
                   <div>{profile.username}</div>
+
+                  </div>
+                  <div className = "flex justify-center items-center">hello</div>
+                  
                 </div>
               )}
             </Col>
