@@ -137,8 +137,8 @@ const ID = ({ searchContext }) => {
                       <div>{profile.username}</div>
                     </div>
                     <div className="flex justify-center items-center">
-                      <p className = "text-xl mb-0">{playlist.likes}</p>
-                      <AiOutlineHeart className = "text-3xl mx-2 hover:text-red-500 hover:cursor-pointer"/>
+                      <p className="text-xl mb-0">{playlist.likes}</p>
+                      <AiOutlineHeart className="text-3xl mx-2 hover:text-red-500 hover:cursor-pointer" />
                     </div>
                   </div>
                 )}
