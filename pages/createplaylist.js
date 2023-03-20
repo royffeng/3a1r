@@ -6,7 +6,105 @@ import { Row, Col } from "react-bootstrap";
 import { AiFillHeart } from "react-icons/ai";
 import Navbar from "../components/navbar";
 
+
 const createplaylist = ({ searchContext }) => {
+    const router = useRouter();
+  const { id } = router.query;
+
+  const supabase = useSupabaseClient();
+  const [videos, setVideos] = useState([]);
+  const [playlist, setPlaylist] = useState();
+  const [profile, setProfile] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let songs = 0;
+      if (id) {
+        let response = await supabase
+          .from("playlists")
+          .select(
+            `
+          name,
+          likes,
+          thumbnail_url,
+          uid
+          `
+          )
+          .filter("id", "eq", id)
+          .limit(1);
+        let userData = await supabase
+          .from("profiles")
+          .select(
+            `
+          username,
+          avatar_url
+          `
+          )
+          .filter("id", "eq", response.data[0].uid)
+          .limit(1);
+        setPlaylist(response.data[0]);
+        setProfile(userData.data[0]);
+        if (!userData.data[0].avatar_url.includes("https")) {
+          let { data: avatar, error: error } = await supabase.storage
+            .from("avatars")
+            .download(`${userData.data[0].avatar_url}`);
+          if (error) {
+            console.log(error);
+          } else {
+            const url = URL.createObjectURL(avatar);
+            userData.data[0].avatar_url = url;
+            setProfile({ ...userData.data[0], avatar_url: url });
+          }
+        }
+        let { data, error } = await supabase
+          .from("playlistHas")
+          .select(
+            `
+            sid
+          `
+          )
+          .filter("pid", "eq", id);
+        songs = data;
+        if (error) {
+          console.log("Error getting playlist songs data: ", error);
+        } else {
+          const videosArr = [];
+          for (let i = 0; i < songs.length; i++) {
+            console.log(songs[i].sid);
+            let { data } = await supabase
+              .from("video")
+              .select(
+                `
+                id,
+                audiourl,
+                created_at,
+                description,
+                dislikes,
+                likes,
+                lyrics,
+                title,
+                videourl,
+                audiourl,
+                views,
+                thumbnail,
+                profiles(
+                  username,
+                  avatar_url,
+                  id
+                )
+              `
+              )
+              .filter("id", "eq", songs[i].sid);
+            videosArr.push(data[0]);
+          }
+          setVideos(videosArr);
+        }
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
   return (
     <div>
       <Navbar searchContext={searchContext} />
