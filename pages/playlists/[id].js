@@ -1,12 +1,15 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../../components/thumbnail";
 import { Row, Col } from "react-bootstrap";
 import Navbar from "../../components/navbar";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { UserContext } from "../../utils/UserContext";
 
 const ID = ({ searchContext }) => {
+  const user = useContext(UserContext);
+  
   const router = useRouter();
   const { id } = useMemo(() => {
     return router.query;
@@ -16,6 +19,8 @@ const ID = ({ searchContext }) => {
   const [videos, setVideos] = useState([]);
   const [playlist, setPlaylist] = useState();
   const [profile, setProfile] = useState();
+  const [liked, setLiked] = useState(false);
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     const fetchPlaylistSongs = async () => {
@@ -91,9 +96,7 @@ const ID = ({ searchContext }) => {
         setVideos(videos);
       }
     };
-
     if (id) {
-      console.log("here", id);
       fetchPlaylistSongs();
     }
   }, [id]);
@@ -107,6 +110,27 @@ const ID = ({ searchContext }) => {
   The above query already fetches the likes of a playlist
 
   */
+
+  const handlePlaylistLike = () => {
+    console.log("ID AND USER SHOULD BE VALID VALUES WHERE AM I", id, user)
+    // supabase.from("playlistLikes").insert({ id: 90, pid: id, uid: user.id });
+
+    // supabase
+    //   .from("playlists")
+    //   .update({ likes: playlist.likes + 1 })
+    //   .eq("pid", id);
+
+    setLiked(true);
+    setOffset(1);
+  };
+
+  const handlePlaylistDislike = () => {
+    // supabase.from("playlistLikes").delete().eq('pid', id).eq('uid', user.id);
+    // supabase.from("playlists").update({ likes: playlist.likes - 1 });
+
+    setLiked(false);
+    setOffset(0);
+  }
 
   return (
     <div className="">
@@ -137,8 +161,14 @@ const ID = ({ searchContext }) => {
                       <div>{profile.username}</div>
                     </div>
                     <div className="flex justify-center items-center">
-                      <p className="text-xl mb-0">{playlist.likes}</p>
-                      <AiOutlineHeart className="text-3xl mx-2 hover:text-red-500 hover:cursor-pointer" />
+                      <p className="text-xl mb-0">{playlist.likes + offset}</p>
+                      {!liked && (
+                        <AiOutlineHeart
+                          className="text-3xl mx-2 hover:text-red-500 hover:cursor-pointer"
+                        onClick = {handlePlaylistLike}
+                        />
+                      )}
+                      {liked && <AiFillHeart className="text-3xl mx-2 " onClick = {handlePlaylistDislike}/>}
                     </div>
                   </div>
                 )}
