@@ -8,6 +8,8 @@ import {
   Space,
   Spoiler,
   Text,
+  Modal,
+  Checkbox,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Link from "next/link";
@@ -20,7 +22,9 @@ import Video from "../components/karaoke/video";
 import { rectifyFormat } from "../utils/formatUTC";
 import { UserContext } from "../utils/UserContext";
 import Navbar from "../components/navbar";
+import { TbPlus } from "react-icons/tb";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function Karaoke({ searchContext }) {
   const supabase = useSupabaseClient();
@@ -35,6 +39,10 @@ export default function Karaoke({ searchContext }) {
   const [disliked, setDisliked] = useState(false); // initial value depends on query
   const user = useContext(UserContext);
   const [textColor, setTextColor] = useState("#ffffff");
+  const [opened, { open, close }] = useDisclosure(false);
+  const [value, setValue] = useState([]);
+  const [initialValues, setInitialValues] = useState(new Set([]));
+  const [playlists, setPlaylists] = useState(playlists);
 
   const insertLikes = useCallback(async (uid, vid) => {
     let { error } = await supabase
@@ -217,6 +225,67 @@ export default function Karaoke({ searchContext }) {
     return "0";
   }, [videoMetaData]);
 
+  const handleOpen = async (uid, vid) => {
+    let playlists = await getPlaylists(uid, vid);
+    setPlaylists(playlists);
+    open();
+  };
+
+  const getPlaylists = async (uid, vid) => {
+    let { data: playlists, error } = await supabase
+      .from("playlists")
+      .select("*")
+      .eq("uid", uid);
+    if (error) {
+      console.log("error getting playlists", error);
+    } else {
+      let currValue = [];
+      for (let i = 0; i < playlists.length; i++) {
+        let { data: exists, error } = await supabase
+          .from("playlistHas")
+          .select("*")
+          .eq("pid", playlists[i].id)
+          .eq("sid", vid);
+        if (error) {
+          console.log("error getting pid", error);
+        } else {
+          console.log("vid", vid, exists);
+          playlists[i].exists = exists.length > 0;
+          if (playlists[i].exists) currValue.push(`${playlists[i].id}`);
+        }
+      }
+      console.log(currValue);
+      setValue(currValue);
+      setInitialValues(new Set([...currValue]));
+      return playlists;
+    }
+  };
+
+  const handleSaveToPlaylist = async (sid, pids, initialValues) => {
+    console.log(
+      pids
+        .filter((p) => {
+          return initialValues.has(p);
+        })
+        .map((pid) => ({ pid: Number(pid), sid: sid }))
+    );
+
+    let { data: playlists, error } = await supabase
+      .from("playlistHas")
+      .insert(
+        pids
+          .filter((p) => {
+            return initialValues.has(p);
+          })
+          .map((pid) => ({ pid: Number(pid), sid: sid }))
+      )
+      .select("*");
+    if (error) {
+      console.log("error inserting playlist", playlists);
+    }
+    close();
+  };
+
   return (
     <>
       <Navbar searchContext={searchContext} isKaraoke={true} />
@@ -229,6 +298,39 @@ export default function Karaoke({ searchContext }) {
           justifyContent: "center",
         }}
       >
+        <Modal
+          centered
+          opened={opened}
+          onClose={close}
+          title={"...Add to a playlist"}
+          color="black"
+        >
+          <Checkbox.Group value={value} onChange={setValue}>
+            <Flex direction={"column"} gap="md">
+              {playlists ? (
+                <>
+                  {" "}
+                  {playlists.map((p) => {
+                    return (
+                      <Checkbox key={p.id} value={`${p.id}`} label={p.name} />
+                    );
+                  })}
+                </>
+              ) : (
+                <Text>No playlists to add to</Text>
+              )}
+              <Button
+                radius="md"
+                className="bg-micdrop-green"
+                onClick={() => {
+                  handleSaveToPlaylist(vid, value, initialValues);
+                }}
+              >
+                Save to Playlists
+              </Button>
+            </Flex>
+          </Checkbox.Group>
+        </Modal>
         {videoMetaData == null || videoMetaData == undefined ? (
           <div
             style={{
@@ -347,6 +449,18 @@ export default function Karaoke({ searchContext }) {
                         <Text color={disliked ? "red" : "gray"}>
                           {dislikes}
                         </Text>
+                      </Button>
+                      <Button
+                        compact
+                        sx={{ height: "50%" }}
+                        className="bg-micdrop-lightpurple"
+                        onClick={() => {
+                          handleOpen(user.id, vid);
+                        }}
+                        color="black"
+                      >
+                        <TbPlus color="black" />
+                        <Text color="black">Add to Playlist</Text>
                       </Button>
                     </>
                   ) : (
