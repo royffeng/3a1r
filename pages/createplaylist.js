@@ -54,12 +54,11 @@ const createplaylist = ({ searchContext }) => {
         <Row className="flex justify-start items-stretch">
           <Col xl={2} className="flex justify-center items-center">
             <div className="w-full h-full flex">
-              
-              {image && <div className = "aspect-sqaure w-full">
-               <img src={image} className = "rounded-xl"/>
-
-              </div>
-              }
+              {image && (
+                <div className="aspect-sqaure w-full">
+                  <img src={image} className="rounded-xl" />
+                </div>
+              )}
               {image === "" && (
                 <div
                   className="flex justify-center items-center flex-col bg-white rounded-2xl w-full aspect-square hover:cursor-pointer"
