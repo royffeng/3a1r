@@ -98,6 +98,16 @@ const ProfileInfo = ({
                         {g}
                       </div>
                     ))}
+                    <Row className="w-full m-0 p-0">
+                    {genres.map((genre, index) => (
+                      <Col
+                        key={index}
+                        className="m-0 p-0 w-fit flex justify-start !max-w-fit items-center"
+                      >
+                        <Genre genre={genre} Genres={Genres} setGenres={setGenres} />
+                      </Col>
+                    ))}
+                  </Row>
                 </Flex>
               </>
             </Flex>
