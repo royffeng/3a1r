@@ -15,7 +15,7 @@ const Thumbnail = ({
   date,
   userid,
   noDate = false,
-  redirect = true
+  redirect = true,
 }) => {
   if (username === null || username === undefined) {
     return <></>;

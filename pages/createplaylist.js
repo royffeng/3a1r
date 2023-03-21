@@ -12,7 +12,7 @@ import { IdentityStore } from "aws-sdk";
 const createplaylist = ({ searchContext }) => {
   const [title, setTitle] = useState("");
   const [videos, setVideos] = useState([]);
-  const [playlistVideos, setPlaylistVideos] = useState([])
+  const [playlistVideos, setPlaylistVideos] = useState([]);
   const [count, setCount] = useState(0);
   const [view, setView] = useState(false);
   const [image, setImage] = useState("");
@@ -70,12 +70,15 @@ const createplaylist = ({ searchContext }) => {
   };
 
   const handleSelectVideo = (id) => {
-    setPlaylistVideos([...playlistVideos, videos.filter((element) => element.id === id)[0]])
-  }
+    setPlaylistVideos([
+      ...playlistVideos,
+      videos.filter((element) => element.id === id)[0],
+    ]);
+  };
 
   const handleDeselectVideo = (id) => {
-    setPlaylistVideos(playlistVideos.filter((element) => element.id !== id ))
-  }
+    setPlaylistVideos(playlistVideos.filter((element) => element.id !== id));
+  };
 
   return (
     <>
@@ -176,22 +179,26 @@ const createplaylist = ({ searchContext }) => {
         {!dataLoading && (
           <div className="my-2">
             <Row>
-            {videos?.map((video, index) => (
-              <Col key={index} xl = {3} onClick = {() => handleSelectVideo(video.id)}>
-                <Thumbnail
-                  redirect = {false}
-                  id={video.id}
-                  thumbnail={video.thumbnail}
-                  title={video.title}
-                  username={video.profiles?.username}
-                  views={video.views}
-                  avatar_url={video.profiles?.avatar_url}
-                  date={video.created_at}
-                  userid={video.profiles?.id}
-                />
-              </Col>
-            ))}
-          </Row>
+              {videos?.map((video, index) => (
+                <Col
+                  key={index}
+                  xl={3}
+                  onClick={() => handleSelectVideo(video.id)}
+                >
+                  <Thumbnail
+                    redirect={false}
+                    id={video.id}
+                    thumbnail={video.thumbnail}
+                    title={video.title}
+                    username={video.profiles?.username}
+                    views={video.views}
+                    avatar_url={video.profiles?.avatar_url}
+                    date={video.created_at}
+                    userid={video.profiles?.id}
+                  />
+                </Col>
+              ))}
+            </Row>
           </div>
         )}
         <div className="w-full h-1 bg-black my-4" />
@@ -199,9 +206,13 @@ const createplaylist = ({ searchContext }) => {
           <p className="font-lexend text-2xl">Videos in Playlist</p>
           <Row>
             {playlistVideos?.map((video, index) => (
-              <Col key={index} xl = {3} onClick = {() => handleDeselectVideo(video.id)}>
+              <Col
+                key={index}
+                xl={3}
+                onClick={() => handleDeselectVideo(video.id)}
+              >
                 <Thumbnail
-                redirect = {false}
+                  redirect={false}
                   id={video.id}
                   thumbnail={video.thumbnail}
                   title={video.title}
