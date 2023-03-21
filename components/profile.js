@@ -1,135 +1,123 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import Avatar from "../components/pfp";
 
-import Playlists from "../components/profile/playlists";
-import ProfileInfo from "../components/profile/profileInfo";
-import styles from "../styles/Home.module.css";
-import { UserContext } from "../utils/UserContext";
-import Navbar from "../components/navbar";
-
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-
-const Profile = ({ searchContext }) => {
+export default function Account({ session }) {
   const supabase = useSupabaseClient();
-  const user = useContext(UserContext);
-  const [playlists, setPlaylists] = useState(null);
-  const [playlistLoading, setPlaylistLoading] = useState(true);
-  const [genres, setGenres] = useState(user.genres);
-
-  const updateGenres = useCallback(
-    async (genres) => {
-      console.log([
-        ...[...genres].map((genre) => {
-          return { uid: user.id, genre: genre };
-        }),
-      ]);
-
-      const { data: currGenres } = await supabase
-        .from("genreLikes")
-        .select(`genre`)
-        .eq("uid", user.id);
-      console.log(
-        "GENRES",
-        currGenres.map((c) => c.genre)
-      );
-      let currGenresSet = new Set(currGenres.map((c) => c.genre));
-      console.log("set", currGenresSet);
-      console.log(
-        "yo",
-        [...genres].filter((g) => !currGenresSet.has(g))
-      );
-
-      const { error } = await supabase.from("genreLikes").insert(
-        [...genres]
-          .filter((g) => !currGenresSet.has(g))
-          .map((genre) => {
-            return { uid: user.id, genre: genre };
-          })
-      );
-      if (error) {
-        console.log("error updating genres", error);
-      } else {
-        setGenres([...genres]);
-      }
-    },
-    [user]
-  );
+  const user = useUser();
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState(null);
+  const [website, setWebsite] = useState(null);
+  const [avatar_url, setAvatarUrl] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      let { data, error } = await supabase
-        .from("playlists")
-        .select(
-          `
-          id, 
-          created_at,
-          profiles(
-            username,
-            avatar_url
-          ),
-          public,
-          name,
-          likes,
-          thumbnail_url
-        `
-        )
-        .filter("uid", "eq", user.id);
-      if (error) {
-        console.log("error getting playlists: ", error);
-        return;
-      } else {
-        setPlaylistLoading(false);
-        setPlaylists(data);
+    getProfile();
+  }, [session]);
+
+  async function getProfile() {
+    try {
+      setLoading(true);
+
+      let { data, error, status } = await supabase
+        .from("profiles")
+        .select(`username, website, avatar_url`)
+        .eq("id", user.id)
+        .single();
+
+      if (error && status !== 406) {
+        throw error;
       }
-    };
-    if (user) {
-      fetchData();
+
+      if (data) {
+        setUsername(data.username);
+        setWebsite(data.website);
+        setAvatarUrl(data.avatar_url);
+      }
+    } catch (error) {
+      alert("Error loading user data!");
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-  }, [user]);
+  }
+
+  async function updateProfile({ username, website, avatar_url }) {
+    try {
+      setLoading(true);
+
+      const updates = {
+        id: user.id,
+        username,
+        website,
+        avatar_url,
+        updated_at: new Date().toISOString(),
+      };
+
+      let { error } = await supabase.from("profiles").upsert(updates);
+      if (error) throw error;
+      alert("Profile updated!");
+    } catch (error) {
+      alert("Error updating the data!");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <>
-      <Navbar searchContext={searchContext} />
-      <div className={`${styles.container}`}>
-        <>
-          {user && (
-            <>
-              <ProfileInfo
-                user={user}
-                genres={genres}
-                updateGenres={updateGenres}
-              />
-              {!playlistLoading && <Playlists playlists={playlists} />}
-            </>
-          )}
-        </>
+    <div className="form-widget">
+      <div>
+        <label htmlFor="email">Email</label>
+        <input id="email" type="text" value={session.user.email} disabled />
       </div>
-    </>
+      <div>
+        <label htmlFor="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          value={username || ""}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="website">Website</label>
+        <input
+          id="website"
+          type="website"
+          value={website || ""}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
+      <div className="form-widget">
+        <Avatar
+          uid={user.id}
+          url={avatar_url}
+          size={150}
+          onUpload={(url) => {
+            setAvatarUrl(url);
+            updateProfile({ username, website, avatar_url: url });
+          }}
+        />
+      </div>
+
+      <div>
+        <button
+          className="button primary block"
+          onClick={() => updateProfile({ username, website, avatar_url })}
+          disabled={loading}
+        >
+          {loading ? "Loading ..." : "Update"}
+        </button>
+      </div>
+
+      <div>
+        <button
+          className="button block"
+          onClick={() => supabase.auth.signOut()}
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
   );
-};
-
-export const getServerSideProps = async (ctx) => {
-  // Create authenticated Supabase Client
-  const supabase = createServerSupabaseClient(ctx);
-  // Check if we have a session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session)
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-
-  return {
-    props: {
-      initialSession: session,
-      user: session.user,
-    },
-  };
-};
-
-export default Profile;
+}
