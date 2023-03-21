@@ -7,7 +7,7 @@ import Toggle from "../components/Toggle";
 import Navbar from "../components/navbar";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-export default function Search({ searchConext, search, ...props }) {
+export default function Search({ searchContext, search, ...props }) {
   // const router = useRouter();
   const [display, setDisplay] = useState("videos");
   const [playlists, setPlaylists] = useState(null);
