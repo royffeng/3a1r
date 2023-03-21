@@ -3,13 +3,11 @@ import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../components/thumbnail";
 import { Row, Col } from "react-bootstrap";
-import { FaCamera } from "react-icons/fa"
+import { FaCamera } from "react-icons/fa";
 import Navbar from "../components/navbar";
 
-
 const createplaylist = ({ searchContext }) => {
-    
-    const router = useRouter();
+  const router = useRouter();
   const { id } = router.query;
 
   const supabase = useSupabaseClient();
@@ -111,14 +109,13 @@ const createplaylist = ({ searchContext }) => {
       <Navbar searchContext={searchContext} />
       <div className="pt-20 px-4">
         <Row className="flex justify-center items-center">
-            <Col xl={2} className="flex justify-center items-center">
+          <Col xl={2} className="flex justify-center items-center">
             <div className="w-full h-full">
-                    <div className="flex justify-center items-center flex-col bg-micdrop-beige rounded-2xl w-full h-5/6 border-black border-2">
+              <div className="flex justify-center items-center flex-col bg-micdrop-beige rounded-2xl w-full h-5/6 border-black border-2">
                 <FaCamera className="text-8xl flex content-center" />
-                </div>
+              </div>
             </div>
-            </Col>
-
+          </Col>
         </Row>
       </div>
     </>
