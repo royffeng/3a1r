@@ -299,38 +299,45 @@ export default function Karaoke({ searchContext }) {
         }}
       >
         <Modal
-          centered
-          opened={opened}
-          onClose={close}
-          title={"...Add to a playlist"}
-          color="black"
-        >
-          <Checkbox.Group value={value} onChange={setValue}>
-            <Flex direction={"column"} gap="md">
-              {playlists ? (
-                <>
-                  {" "}
-                  {playlists.map((p) => {
-                    return (
-                      <Checkbox key={p.id} value={`${p.id}`} label={p.name} />
-                    );
-                  })}
-                </>
-              ) : (
-                <Text>No playlists to add to</Text>
-              )}
-              <Button
-                radius="md"
-                className="bg-micdrop-green"
-                onClick={() => {
-                  handleSaveToPlaylist(vid, value, initialValues);
-                }}
-              >
-                Save to Playlists
-              </Button>
-            </Flex>
-          </Checkbox.Group>
-        </Modal>
+        centered
+        opened={opened}
+        onClose={close}
+        title={"Add to a Playlist"}
+        color="black"
+      >
+        <Checkbox.Group value={value} onChange={setValue}>
+          <Flex direction={"column"} gap="md">
+            {playlists ? (
+              <>
+                {playlists.map((p) => {
+                  return (
+                    <div className="flex justify-start items-center">
+                      <input
+                        type="checkbox"
+                        key={p.id}
+                        value={`${p.id}`}
+                        className="accent-black text-black mx-2"
+                      />
+                      <label>{p.name}</label>
+                    </div>
+                  );
+                })}
+              </>
+            ) : (
+              <Text>No playlists to add to</Text>
+            )}
+            <button
+              
+              className="bg-micdrop-green text-white rounded px-3 py-2 font-lexend font-semibold hover:!bg-black"
+              onClick={() => {
+                handleSaveToPlaylist(vid, value, initialValues);
+              }}
+            >
+              Save to Playlists
+            </button>
+          </Flex>
+        </Checkbox.Group>
+      </Modal>
         {videoMetaData == null || videoMetaData == undefined ? (
           <div
             style={{
@@ -450,18 +457,15 @@ export default function Karaoke({ searchContext }) {
                           {dislikes}
                         </Text>
                       </Button>
-                      <Button
-                        compact
-                        sx={{ height: "50%" }}
-                        className="bg-micdrop-lightpurple"
+                      <button
+                        className="flex justify-center bg-transparent p-1 rounded hover:!border-black border-transparent border-2 items-center bg-micdrop-lightpurple"
                         onClick={() => {
                           handleOpen(user.id, vid);
                         }}
-                        color="black"
+                        
                       >
-                        <TbPlus color="black" />
-                        <Text color="black">Add to Playlist</Text>
-                      </Button>
+                        <TbPlus className = "text-lg"/>
+                      </button>
                     </>
                   ) : (
                     <>
