@@ -1,4 +1,5 @@
-import { Avatar, Flex, Grid } from "@mantine/core";
+import { Avatar, Flex, Grid, Button } from "@mantine/core";
+import { useState } from "react";
 import React from "react";
 
 const colors = [
@@ -8,7 +9,9 @@ const colors = [
   "bg-micdrop-purple",
 ];
 
-const ProfileInfo = ({ user, genres }) => {
+const ProfileInfo = ({ user, genres, self=true, friends=false, handleAddFriend}) => {
+  const [isFriends, setIsFriends] = useState(friends)
+
   return (
     <div className="">
       {user ? (
@@ -76,6 +79,18 @@ const ProfileInfo = ({ user, genres }) => {
                       </div>
                     ))}
                 </Flex>
+              </>
+              <>
+              {!self && (
+                <div marg>
+                  <Button className="bg-micdrop-green mt-2" radius="md" sx={{maxWidth: "100%"}}
+                  onClick={() => {
+                    handleAddFriend(isFriends, setIsFriends)
+                  }}>
+                  {isFriends ? "following" : "follow"}
+                </Button>
+                </div>
+              )}
               </>
             </Flex>
           </Grid.Col>
