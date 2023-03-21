@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-const Genre = ({ genre, Genres, setGenres }) => {
-  const [state, setState] = useState(false);
+const Genre = ({ genre, isSelected, setGenres }) => {
+  const [state, setState] = useState(isSelected);
 
-  const handleToggle = () => {
+  const handleToggle = (state) => {
     setState(!state);
-    if (!state === true) {
-      setGenres((prev) => new Set(prev.add(genre)));
+    if (!state) {
+      setGenres((prev) => new Set([...prev, genre]));
     } else {
       setGenres(
         (prev) =>
@@ -17,7 +17,7 @@ const Genre = ({ genre, Genres, setGenres }) => {
 
   return (
     <div
-      onClick={() => handleToggle()}
+      onClick={() => handleToggle(state)}
       className={`${
         state ? "bg-micdrop-pink" : "bg-white"
       } m-0 w-fit hover:!bg-micdrop-pink hover:cursor-pointer whitespace-nowrap rounded-full border-2 border-black font-lexend px-4 py-2`}

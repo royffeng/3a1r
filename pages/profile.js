@@ -1,12 +1,12 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 
 import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
 import { UserContext } from "../utils/UserContext";
 import Navbar from "../components/navbar";
-import { VideoGrid } from "../components/home/videoGrid";
+
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const Profile = ({ searchContext }) => {
@@ -14,10 +14,53 @@ const Profile = ({ searchContext }) => {
   const user = useContext(UserContext);
   const [playlists, setPlaylists] = useState(null);
   const [playlistLoading, setPlaylistLoading] = useState(true);
-  const [videos, setVideos] = useState(null);
-  const [videosLoading, setVideosLoading] = useState(true);
+  const [genres, setGenres] = useState(user.genres);
+
+  const updateGenres = useCallback(
+    async (genres) => {
+      console.log([
+        ...[...genres].map((genre) => {
+          return { uid: user.id, genre: genre };
+        }),
+      ]);
+
+      const { data: currGenres } = await supabase
+        .from("genreLikes")
+        .select(`genre`)
+        .eq("uid", user.id);
+      let currGenresSet = new Set(currGenres.map((c) => c.genre));
+      let pickedGenresSet = new Set([...genres]);
+
+      const { error } = await supabase.from("genreLikes").insert(
+        [...genres]
+          .filter((g) => !currGenresSet.has(g))
+          .map((genre) => {
+            return { uid: user.id, genre: genre };
+          })
+      );
+      if (error) {
+        console.log("error updating genres", error);
+      } else {
+        const { error } = await supabase
+          .from("genreLikes")
+          .delete()
+          .in("uid", [user.id])
+          .in(
+            "genre",
+            [...currGenresSet].filter((g) => !pickedGenresSet.has(g))
+          );
+
+        if (error) {
+          console.log("error removing genres", error);
+        }
+        setGenres([...genres]);
+      }
+    },
+    [user]
+  );
+
   useEffect(() => {
-    const fetchPlaylistData = async () => {
+    const fetchData = async () => {
       let { data, error } = await supabase
         .from("playlists")
         .select(
@@ -43,49 +86,8 @@ const Profile = ({ searchContext }) => {
         setPlaylists(data);
       }
     };
-    const fetchVideoData = async () => {
-      let { data, error } = await supabase
-        .from("video")
-        .select(
-          `
-          id,
-          title,
-          thumbnail, 
-          views,
-          created_at,
-          profiles(
-            id,
-            username,
-            avatar_url
-          )
-          `
-        )
-        .filter("uid", "eq", user.id);
-      if (error) {
-        console.log("error getting videos: ", error);
-        return;
-      } else {
-        for (let i = 0; i < data.length; i++) {
-          let d = data[i];
-          if (!d.profiles.avatar_url.includes("https")) {
-            let { data: avatar, error: error } = await supabase.storage
-              .from("avatars")
-              .download(`${d.profiles.avatar_url}`);
-            if (error) {
-              console.log(error);
-            } else {
-              const url = URL.createObjectURL(avatar);
-              d.profiles.avatar_url = url;
-            }
-          }
-        }
-        setVideos(data);
-        setVideosLoading(false);
-      }
-    };
     if (user) {
-      fetchPlaylistData();
-      fetchVideoData();
+      fetchData();
     }
   }, [user]);
 
@@ -96,16 +98,12 @@ const Profile = ({ searchContext }) => {
         <>
           {user && (
             <>
-              <ProfileInfo user={user} />
+              <ProfileInfo
+                user={user}
+                genres={genres}
+                updateGenres={updateGenres}
+              />
               {!playlistLoading && <Playlists playlists={playlists} />}
-              {!videosLoading && (
-                <>
-                  <p className="text-3xl font-lexend font-semibold m-0">
-                    My Videos
-                  </p>
-                  <VideoGrid videos={videos} />
-                </>
-              )}
             </>
           )}
         </>
