@@ -5,6 +5,7 @@ import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 import { UserContext } from "../utils/UserContext";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const Profile = () => {
   const userData = useContext(UserContext);
@@ -12,32 +13,34 @@ const Profile = () => {
   const supabase = useSupabaseClient();
   const [playlists, setPlaylists] = useState(null);
   const [userOfPlaylist, setUserOfPlaylist] = useState(null);
-  const [isFollowing, setIsFollowing] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false);
   const [genres, setGenres] = useState(null);
 
   const id = router.query.id;
-  const handleFollow = useCallback(async (currentState) => {
-    if(currentState) {
-      // remove
-      let {data,error} = await supabase
-        .from("friends")
-        .delete()
-        .eq("uid1", userData.id)
-        .eq("uid2", id)
-      
-    } else {
-      // add
-      let {data,error} = await supabase
-        .from("friends")
-        .insert({uid1: userData.id, uid2: id})
-        .select("*")
+  const handleFollow = useCallback(
+    async (currentState) => {
+      if (currentState) {
+        // remove
+        let { data, error } = await supabase
+          .from("friends")
+          .delete()
+          .eq("uid1", userData.id)
+          .eq("uid2", id);
+      } else {
+        // add
+        let { data, error } = await supabase
+          .from("friends")
+          .insert({ uid1: userData.id, uid2: id })
+          .select("*");
 
-      if(error) {
-        console.log("error inserting friends", error)
+        if (error) {
+          console.log("error inserting friends", error);
+        }
       }
-    }
-    setIsFollowing(!currentState);
-  }, [userData, id]);
+      setIsFollowing(!currentState);
+    },
+    [userData, id]
+  );
 
   useEffect(() => {
     const fetchPlaylist = async () => {
@@ -116,25 +119,25 @@ const Profile = () => {
     };
 
     const fetchFriends = async () => {
-      let{data, error} = await supabase
+      let { data, error } = await supabase
         .from("friends")
         .select("*")
         .eq("uid1", userData.id)
         .eq("uid2", id);
 
-      if(error) {
-        console.log("error getting friends", error)
+      if (error) {
+        console.log("error getting friends", error);
       } else {
-        console.log("friends data", data)
-        setIsFollowing(data.length > 0)
+        console.log("friends data", data);
+        setIsFollowing(data.length > 0);
       }
-    }
+    };
 
     if (id) {
       fetchPlaylist();
       fetchUser();
       fetchGenres();
-      if(userData) {
+      if (userData) {
         fetchFriends();
       }
     }
@@ -142,10 +145,43 @@ const Profile = () => {
 
   return (
     <div className={`${styles.container}`}>
-      {userOfPlaylist && <ProfileInfo user={userOfPlaylist} genres={genres} self={false} isFollowing={isFollowing} setIsFollowing={setIsFollowing} handleFollow={handleFollow}/>}
+      {userOfPlaylist && (
+        <ProfileInfo
+          user={userOfPlaylist}
+          genres={genres}
+          self={false}
+          isFollowing={isFollowing}
+          setIsFollowing={setIsFollowing}
+          handleFollow={handleFollow}
+        />
+      )}
       {playlists && <Playlists playlists={playlists} personal={false} />}
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx);
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
 };
 
 export default Profile;

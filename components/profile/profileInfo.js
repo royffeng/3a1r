@@ -1,5 +1,5 @@
 import { Avatar, Flex, Grid, Button } from "@mantine/core";
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 const colors = [
   "bg-micdrop-green",
@@ -8,7 +8,14 @@ const colors = [
   "bg-micdrop-purple",
 ];
 
-const ProfileInfo = ({ user, genres, self = true, isFollowing=false, setIsFollowing, handleFollow}) => {
+const ProfileInfo = ({
+  user,
+  genres,
+  self = true,
+  isFollowing = false,
+  setIsFollowing,
+  handleFollow,
+}) => {
   return (
     <div className="">
       {user ? (
@@ -22,7 +29,7 @@ const ProfileInfo = ({ user, genres, self = true, isFollowing=false, setIsFollow
           <Grid.Col sx={{ aspectRatio: "1 / 1" }} span={1}>
             {user.avatarUrl !== undefined || user.avatar_url ? (
               <Avatar
-                src={user.avatarUrl || user.avatar_url }
+                src={user.avatarUrl || user.avatar_url}
                 alt="no image here"
                 sx={{ width: "100%", height: "100%", borderRadius: "100%" }}
               />
@@ -46,12 +53,15 @@ const ProfileInfo = ({ user, genres, self = true, isFollowing=false, setIsFollow
               <>
                 {!self && (
                   <div className="max-w-full">
-                    <Button className="bg-micdrop-green" radius="md"
-                    onClick={() => {
-                      handleFollow(isFollowing);
-                      setIsFollowing(!isFollowing)
-                    }}>
-                    {isFollowing ? "following" : "follow"}
+                    <Button
+                      className="bg-micdrop-green"
+                      radius="md"
+                      onClick={() => {
+                        handleFollow(isFollowing);
+                        setIsFollowing(!isFollowing);
+                      }}
+                    >
+                      {isFollowing ? "following" : "follow"}
                     </Button>
                   </div>
                 )}
@@ -90,7 +100,6 @@ const ProfileInfo = ({ user, genres, self = true, isFollowing=false, setIsFollow
                     ))}
                 </Flex>
               </>
-              
             </Flex>
           </Grid.Col>
         </Grid>

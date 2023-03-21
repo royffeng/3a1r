@@ -5,6 +5,7 @@ import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
 import { UserContext } from "../utils/UserContext";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const Profile = () => {
   const supabase = useSupabaseClient();
@@ -56,6 +57,30 @@ const Profile = () => {
       </>
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx);
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
 };
 
 export default Profile;

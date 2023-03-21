@@ -20,6 +20,7 @@ import Comments from "../components/karaoke/comments";
 import Video from "../components/karaoke/video";
 import { rectifyFormat } from "../utils/formatUTC";
 import { UserContext } from "../utils/UserContext";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Karaoke() {
   const supabase = useSupabaseClient();
@@ -460,3 +461,27 @@ export default function Karaoke() {
     </div>
   );
 }
+
+export const getServerSideProps = async (ctx) => {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx);
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
+};
