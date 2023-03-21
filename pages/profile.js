@@ -1,5 +1,5 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState,useCallback } from "react";
 
 import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
@@ -12,6 +12,22 @@ const Profile = () => {
   const user = useContext(UserContext);
   const [playlists, setPlaylists] = useState(null);
   const [playlistLoading, setPlaylistLoading] = useState(true);
+  const [genres, setGenres] = useState(user.genres)
+
+  const updateGenres = useCallback(async (genres) => {
+    console.log([...[...genres].map(genre => {
+      return {uid: user.id, genre: genre}
+    })])
+    
+    const { error } = await supabase.from("genreLikes").insert([...genres].map(genre => {
+      return {uid: user.id, genre: genre}
+    }));
+    if (error) {
+      console.log("error updating genres", error);
+    } else {
+      setGenres([...genres])
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +66,7 @@ const Profile = () => {
       <>
         {user && (
           <>
-            <ProfileInfo user={user} />
+            <ProfileInfo user={user} genres={genres} updateGenres={updateGenres}/>
             {!playlistLoading && <Playlists playlists={playlists} />}
           </>
         )}

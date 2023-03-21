@@ -1,5 +1,11 @@
 import { Avatar, Flex, Grid, Button } from "@mantine/core";
-import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
+import React, { useState, useMemo, useEffect } from "react";
+import {GENRE_LIST} from "../../utils/genres"
+import Genre from "../Signup/Genre"
+import {RxUpdate} from "react-icons/rx"
+import { AiOutlinePlusCircle } from "react-icons/ai";
+
 
 const colors = [
   "bg-micdrop-green",
@@ -15,7 +21,11 @@ const ProfileInfo = ({
   isFollowing = false,
   setIsFollowing,
   handleFollow,
+  updateGenres,
 }) => {
+  const [showGenreList, setShowGenreList] = useState(false);
+  const genreList = useMemo(() => [...GENRE_LIST], [GENRE_LIST]);
+  const [selectedGenres, setGenres] = useState(new Set([...user.genres]));
   return (
     <div className="">
       {user ? (
@@ -26,7 +36,7 @@ const ProfileInfo = ({
           align="center"
           className="pt-20"
         >
-          <Grid.Col sx={{ aspectRatio: "1 / 1" }} span={1}>
+          <Grid.Col sx={{ aspectRatio: "1 / 1" }} span={2}>
             {user.avatarUrl !== undefined || user.avatar_url ? (
               <Avatar
                 src={user.avatarUrl || user.avatar_url}
@@ -67,7 +77,7 @@ const ProfileInfo = ({
                 )}
               </>
               <>
-                <Flex className="mt-3" direction="row" gap={4}>
+                <Flex className="mt-3 max-w-full" wrap="wrap" direction="row" gap={4}>
                   {genres &&
                     genres.map((g, index) => (
                       <div
@@ -83,32 +93,29 @@ const ProfileInfo = ({
                         {g}
                       </div>
                     ))}
-                  {user.genres &&
-                    user.genres.map((g, index) => (
-                      <div
-                        key={index}
-                        className={`border-2 border-black px-4 py-2 font-semibold rounded-full ${
-                          colors[index % colors.length]
-                        } ${
-                          colors[index % colors.length] === "bg-micdrop-green"
-                            ? "!text-white"
-                            : "text-black"
-                        }`}
-                      >
-                        {g}
-                      </div>
-                    ))}
-                    <Row className="w-full m-0 p-0">
-                    {genres.map((genre, index) => (
-                      <Col
-                        key={index}
-                        className="m-0 p-0 w-fit flex justify-start !max-w-fit items-center"
-                      >
-                        <Genre genre={genre} Genres={Genres} setGenres={setGenres} />
-                      </Col>
-                    ))}
-                  </Row>
+                    <Flex justify={"center"} align="center" className="mx-0 max-w-f">
+                      <Button leftIcon={<AiOutlinePlusCircle style={{color: "white"}}/>} onClick={() => setShowGenreList(true)} radius="md" className="bg-micdrop-green" color="white">Add Genres</Button>
+                    </Flex>
                 </Flex>
+                {
+                  (showGenreList && (
+                    <Row className="w-full m-0 p-0">
+                    <>
+                      {genreList.map((genre, index) => (
+                        <Col
+                          key={index}
+                          className="m-0 p-0 w-fit flex justify-start !max-w-fit items-center"
+                        >
+                          <Genre genre={genre} isSelected={selectedGenres.has(genre)} setGenres={setGenres} />
+                        </Col>
+                      ))}
+                      <div className="mx-0 max-w-f mt-2">
+                        <Button onClick={() => {setShowGenreList(false); updateGenres(selectedGenres)}} leftIcon={<RxUpdate style={{color: "white"}}/>} radius="md" className="bg-micdrop-green" color="white">Update Genres</Button>
+                      </div>
+                    </>
+                </Row>
+                  ))
+                }
               </>
             </Flex>
           </Grid.Col>
