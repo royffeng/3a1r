@@ -1,5 +1,5 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import React, { useContext, useEffect, useState,useCallback } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 
 import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
@@ -14,28 +14,45 @@ const Profile = ({ searchContext }) => {
   const user = useContext(UserContext);
   const [playlists, setPlaylists] = useState(null);
   const [playlistLoading, setPlaylistLoading] = useState(true);
-  const [genres, setGenres] = useState(user.genres)
+  const [genres, setGenres] = useState(user.genres);
 
-  useEffect(() => {console.log(user.genres)}, [genres])
+  useEffect(() => {
+    console.log(user.genres);
+  }, [genres]);
 
-  const updateGenres = useCallback(async (genres) => {
-    console.log([...[...genres].map(genre => {
-      return {uid: user.id, genre: genre}
-    })])
+  const updateGenres = useCallback(
+    async (genres) => {
+      console.log([
+        ...[...genres].map((genre) => {
+          return { uid: user.id, genre: genre };
+        }),
+      ]);
 
-    const {data: currGenres} = await supabase.from("genreLikes").select(`genre`).eq("uid", user.id)
-    let currGenresSet = new Set([...currGenres]);
-    console.log("yo", [...genres].filter(g => (!currGenresSet.has(g))))
-    
-    const { error } = await supabase.from("genreLikes").insert([...genres].filter(g => (!currGenresSet.has(g))).map(genre => {
-      return {uid: user.id, genre: genre}
-    }));
-    if (error) {
-      console.log("error updating genres", error);
-    } else {
-      setGenres([...genres])
-    }
-  }, [user]);
+      const { data: currGenres } = await supabase
+        .from("genreLikes")
+        .select(`genre`)
+        .eq("uid", user.id);
+      let currGenresSet = new Set([...currGenres]);
+      console.log(
+        "yo",
+        [...genres].filter((g) => !currGenresSet.has(g))
+      );
+
+      const { error } = await supabase.from("genreLikes").insert(
+        [...genres]
+          .filter((g) => !currGenresSet.has(g))
+          .map((genre) => {
+            return { uid: user.id, genre: genre };
+          })
+      );
+      if (error) {
+        console.log("error updating genres", error);
+      } else {
+        setGenres([...genres]);
+      }
+    },
+    [user]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,15 +90,19 @@ const Profile = ({ searchContext }) => {
     <>
       <Navbar searchContext={searchContext} />
       <div className={`${styles.container}`}>
-      <>
-        {user && (
-          <>
-            <ProfileInfo user={user} genres={genres} updateGenres={updateGenres}/>
-            {!playlistLoading && <Playlists playlists={playlists} />}
-          </>
-        )}
-      </>
-    </div>
+        <>
+          {user && (
+            <>
+              <ProfileInfo
+                user={user}
+                genres={genres}
+                updateGenres={updateGenres}
+              />
+              {!playlistLoading && <Playlists playlists={playlists} />}
+            </>
+          )}
+        </>
+      </div>
     </>
   );
 };

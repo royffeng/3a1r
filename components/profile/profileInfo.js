@@ -1,11 +1,10 @@
 import { Avatar, Flex, Grid, Button } from "@mantine/core";
 import { Row, Col } from "react-bootstrap";
 import React, { useState, useMemo, useEffect } from "react";
-import {GENRE_LIST} from "../../utils/genres"
-import Genre from "../Signup/Genre"
-import {RxUpdate} from "react-icons/rx"
+import { GENRE_LIST } from "../../utils/genres";
+import Genre from "../Signup/Genre";
+import { RxUpdate } from "react-icons/rx";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-
 
 const colors = [
   "bg-micdrop-green",
@@ -77,7 +76,12 @@ const ProfileInfo = ({
                 )}
               </>
               <>
-                <Flex className="mt-3 max-w-full" wrap="wrap" direction="row" gap={4}>
+                <Flex
+                  className="mt-3 max-w-full"
+                  wrap="wrap"
+                  direction="row"
+                  gap={4}
+                >
                   {genres &&
                     genres.map((g, index) => (
                       <div
@@ -93,29 +97,56 @@ const ProfileInfo = ({
                         {g}
                       </div>
                     ))}
-                    <Flex justify={"center"} align="center" className="mx-0 max-w-f">
-                      <Button leftIcon={<AiOutlinePlusCircle style={{color: "white"}}/>} onClick={() => setShowGenreList(true)} radius="md" className="bg-micdrop-green" color="white">Add Genres</Button>
-                    </Flex>
+                  <Flex
+                    justify={"center"}
+                    align="center"
+                    className="mx-0 max-w-f"
+                  >
+                    <Button
+                      leftIcon={
+                        <AiOutlinePlusCircle style={{ color: "white" }} />
+                      }
+                      onClick={() => setShowGenreList(true)}
+                      radius="md"
+                      className="bg-micdrop-green"
+                      color="white"
+                    >
+                      Add Genres
+                    </Button>
+                  </Flex>
                 </Flex>
-                {
-                  (showGenreList && (
-                    <Row className="w-full m-0 p-0">
+                {showGenreList && (
+                  <Row className="w-full m-0 p-0">
                     <>
                       {genreList.map((genre, index) => (
                         <Col
                           key={index}
                           className="m-0 p-0 w-fit flex justify-start !max-w-fit items-center"
                         >
-                          <Genre genre={genre} isSelected={selectedGenres.has(genre)} setGenres={setGenres} />
+                          <Genre
+                            genre={genre}
+                            isSelected={selectedGenres.has(genre)}
+                            setGenres={setGenres}
+                          />
                         </Col>
                       ))}
                       <div className="mx-0 max-w-f mt-2">
-                        <Button onClick={() => {setShowGenreList(false); updateGenres(selectedGenres)}} leftIcon={<RxUpdate style={{color: "white"}}/>} radius="md" className="bg-micdrop-green" color="white">Update Genres</Button>
+                        <Button
+                          onClick={() => {
+                            setShowGenreList(false);
+                            updateGenres(selectedGenres);
+                          }}
+                          leftIcon={<RxUpdate style={{ color: "white" }} />}
+                          radius="md"
+                          className="bg-micdrop-green"
+                          color="white"
+                        >
+                          Update Genres
+                        </Button>
                       </div>
                     </>
-                </Row>
-                  ))
-                }
+                  </Row>
+                )}
               </>
             </Flex>
           </Grid.Col>
