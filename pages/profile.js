@@ -32,11 +32,8 @@ const Profile = ({ searchContext }) => {
         .from("genreLikes")
         .select(`genre`)
         .eq("uid", user.id);
-      let currGenresSet = new Set([...currGenres]);
-      console.log(
-        "yo",
-        [...genres].filter((g) => !currGenresSet.has(g))
-      );
+      let currGenresSet = new Set(currGenres.map((c) => c.genre));
+      let pickedGenresSet = new Set([...genres]);
 
       const { error } = await supabase.from("genreLikes").insert(
         [...genres]
@@ -48,6 +45,18 @@ const Profile = ({ searchContext }) => {
       if (error) {
         console.log("error updating genres", error);
       } else {
+        const { error } = await supabase
+          .from("genreLikes")
+          .delete()
+          .in("uid", [user.id])
+          .in(
+            "genre",
+            [...currGenresSet].filter((g) => !pickedGenresSet.has(g))
+          );
+
+        if (error) {
+          console.log("error removing genres", error);
+        }
         setGenres([...genres]);
       }
     },

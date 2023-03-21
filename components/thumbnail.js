@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import tn_styles from "../styles/thumbnail.module.css";
 import Link from "next/link";
-import { Avatar, Text, Flex, Space, Image, Modal } from "@mantine/core";
+import { Avatar, Text, Flex, Space, Image, Modal, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { TbPlus } from "react-icons/tb";
 import { rectifyFormat } from "../utils/formatUTC";
@@ -20,13 +20,12 @@ const Thumbnail = ({
   date,
   userid,
   noDate = false,
-  redirect = true,
 }) => {
   const supabase = useSupabaseClient();
   const user = useContext(UserContext);
   const [value, setValue] = useState([]);
   const [initialValues, setInitialValues] = useState(new Set([]));
-  const [playlists, setPlaylists] = useState(playlists);
+  const [playlists, setPlaylists] = useState();
   const [opened, { open, close }] = useDisclosure(false);
   if (username === null || username === undefined) {
     return <></>;
@@ -57,7 +56,7 @@ const Thumbnail = ({
           console.log("error getting pid", error);
         } else {
           playlists[i].exists = exists.length > 0;
-          if (!playlists[i].exists) currValue.push(`${playlists[i].id}`);
+          if (playlists[i].exists) currValue.push(`${playlists[i].id}`);
         }
       }
       setValue(currValue);
@@ -70,7 +69,7 @@ const Thumbnail = ({
     console.log(
       pids
         .filter((p) => {
-          return initialValues.has(p);
+          return !initialValues.has(p);
         })
         .map((pid) => ({ pid: Number(pid), sid: sid }))
     );
@@ -80,13 +79,15 @@ const Thumbnail = ({
       .insert(
         pids
           .filter((p) => {
-            return initialValues.has(p);
+            return !initialValues.has(p);
           })
           .map((pid) => ({ pid: Number(pid), sid: sid }))
       )
       .select("*");
     if (error) {
-      console.log("error inserting playlist", playlists);
+      console.log("error inserting playlist", error);
+    } else {
+      console.log(playlists);
     }
     close();
   };
@@ -100,51 +101,42 @@ const Thumbnail = ({
         centered
         opened={opened}
         onClose={close}
-        title={"Add to a Playlist"}
+        title={"...Add to a playlist"}
         color="black"
       >
         <Checkbox.Group value={value} onChange={setValue}>
           <Flex direction={"column"} gap="md">
             {playlists ? (
               <>
-                {playlists.map((p, index) => {
+                {" "}
+                {playlists.map((p) => {
                   return (
-                    <div
-                      key={index}
-                      className="flex justify-start items-center"
-                    >
-                      <input
-                        type="checkbox"
-                        key={p.id}
-                        value={`${p.id}`}
-                        className="accent-black text-black mx-2"
-                      />
-                      <label>{p.name}</label>
-                    </div>
+                    <Checkbox key={p.id} value={`${p.id}`} label={p.name} />
                   );
                 })}
               </>
             ) : (
               <Text>No playlists to add to</Text>
             )}
-            <button
-              className="bg-micdrop-green text-white rounded px-3 py-2 font-lexend font-semibold hover:!bg-black"
+            <Button
+              radius="md"
+              className="bg-micdrop-green"
               onClick={() => {
                 handleSaveToPlaylist(id, value, initialValues);
               }}
             >
               Save to Playlists
-            </button>
+            </Button>
           </Flex>
         </Checkbox.Group>
       </Modal>
       <Flex direction="column">
-        <Link target="_blank" href={redirect ? `/karaoke?vid=${id}` : ""}>
+        <Link target="_blank" href={`/karaoke?vid=${id}`}>
           <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail" />
         </Link>
         <Space h={8} />
         <Flex sx={{ paddingRight: "0.5rem" }} direction="row">
-          <Link href={redirect ? `/user?id=${userid}` : ""}>
+          <Link href={`/user?id=${userid}`}>
             {avatar_url !== undefined ? (
               <Avatar
                 aria-label="avatar of user who created this video"
@@ -163,7 +155,7 @@ const Thumbnail = ({
             )}
           </Link>
           <Space w={8} />
-          <Link href={redirect ? `/karaoke?vid=${id}` : ""}>
+          <Link href={`/karaoke?vid=${id}`}>
             <Flex direction="column" className="w-full">
               <Text fz="sm" fw={600}>
                 {title}
@@ -200,12 +192,16 @@ const Thumbnail = ({
             </Flex>
           </Link>
           <Flex>
-            <TbPlus
-              className="hover:bg-white rounded p-1 text-2xl"
+            <Button
+              compact
+              sx={{ height: "100%" }}
+              className="bg-micdrop-lightpurple"
               onClick={() => {
                 handleOpen(user.id);
               }}
-            />
+            >
+              <TbPlus color="black" />
+            </Button>
           </Flex>
         </Flex>
       </Flex>

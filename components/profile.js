@@ -16,10 +16,6 @@ const Profile = ({ searchContext }) => {
   const [playlistLoading, setPlaylistLoading] = useState(true);
   const [genres, setGenres] = useState(user.genres);
 
-  useEffect(() => {
-    console.log(user.genres);
-  }, [genres]);
-
   const updateGenres = useCallback(
     async (genres) => {
       console.log([
