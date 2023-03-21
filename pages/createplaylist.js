@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import Thumbnail from "../components/thumbnail";
+import React from "react"; // , { useEffect, useState }
+// import { useRouter } from "next/router";
+// import { useSupabaseClient } from "@supabase/auth-helpers-react";
+// import Thumbnail from "../components/thumbnail";
 import { Row, Col } from "react-bootstrap";
 import { FaCamera } from "react-icons/fa";
 import Navbar from "../components/navbar";
 
 const createplaylist = ({ searchContext }) => {
-  const router = useRouter();
-  const { id } = router.query;
+  /*  const router = useRouter();
+//  const { id } = router.query;
 
   const supabase = useSupabaseClient();
-  const [videos, setVideos] = useState([]);
-  const [playlist, setPlaylist] = useState();
-  const [profile, setProfile] = useState();
+//  const [videos, setVideos] = useState([]);
+//  const [playlist, setPlaylist] = useState();
+//  const [profile, setProfile] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,7 +102,7 @@ const createplaylist = ({ searchContext }) => {
     };
 
     fetchData();
-  }, [id]);
+  }, [id]); */
 
   return (
     <>
