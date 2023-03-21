@@ -160,11 +160,8 @@ const ID = ({ searchContext }) => {
   };
 
   return (
-<<<<<<< HEAD
     <>
-=======
     <div className="">
->>>>>>> b19e32e9cb036cd1f416ece7fef8adaf6bd16f79
       <Navbar searchContext={searchContext} />
       <div className="pt-20 px-4">
         <Row className="flex justify-center items-center">
@@ -237,7 +234,9 @@ const ID = ({ searchContext }) => {
         </Row>
       </div>
     </div>
+    </>
   );
+}
 
 export const getServerSideProps = async (ctx) => {
   // Create authenticated Supabase Client
@@ -263,4 +262,4 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default ID;
+export default Profile;
