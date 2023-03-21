@@ -32,8 +32,11 @@ const Profile = ({ searchContext }) => {
         .from("genreLikes")
         .select(`genre`)
         .eq("uid", user.id);
-      console.log("GENRES", currGenres.map(c => (c.genre)))
-      let currGenresSet = new Set(currGenres.map(c => (c.genre)));
+      console.log(
+        "GENRES",
+        currGenres.map((c) => c.genre)
+      );
+      let currGenresSet = new Set(currGenres.map((c) => c.genre));
       console.log("set", currGenresSet);
       console.log(
         "yo",
