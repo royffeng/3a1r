@@ -20,7 +20,7 @@ const Thumbnail = ({
   date,
   userid,
   noDate = false,
-  redirect = true
+  redirect = true,
 }) => {
   const supabase = useSupabaseClient();
   const user = useContext(UserContext);
@@ -135,7 +135,7 @@ const Thumbnail = ({
         </Link>
         <Space h={8} />
         <Flex sx={{ paddingRight: "0.5rem" }} direction="row">
-          <Link href={redirect ? `/user?id=${userid}`: ""}>
+          <Link href={redirect ? `/user?id=${userid}` : ""}>
             {avatar_url !== undefined ? (
               <Avatar
                 aria-label="avatar of user who created this video"
