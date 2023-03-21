@@ -5,11 +5,9 @@ import Navbar from "../components/navbar";
 import { UserContext } from "../utils/UserContext";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { VideoGrid } from "../components/home/videoGrid";
 import Thumbnail from "../components/thumbnail";
-import { IdentityStore } from "aws-sdk";
 
-const createplaylist = ({ searchContext }) => {
+const CreatePlaylist = ({ searchContext }) => {
   const [title, setTitle] = useState("");
   const [videos, setVideos] = useState([]);
   const [playlistVideos, setPlaylistVideos] = useState([]);
@@ -311,4 +309,4 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default createplaylist;
+export default CreatePlaylist;
