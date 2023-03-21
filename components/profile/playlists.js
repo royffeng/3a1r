@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Space, Grid } from "@mantine/core";
-import { FaPlus } from "react-icons/fa";
+import { FiPlus } from "react-icons/fi";
 import Link from "next/link";
 import SegmentedControl from "./SegmentedControl";
 import Playlist from "./playlist";
@@ -31,7 +31,7 @@ const Playlists = ({ playlists, personal = true }) => {
                 <Link href="/createplaylist">
                   <div className="w-full h-full">
                     <div className="flex justify-center items-center flex-col bg-micdrop-beige rounded-2xl w-full h-5/6 border-black border-2">
-                      <FaPlus className="text-9xl flex content-center" />
+                      <FiPlus className="text-9xl flex content-center" />
                     </div>
                     <div className="flex justify-between items-center p-2 w-full">
                       <p className="text-2xl mb-0 text-center w-full">
