@@ -6,8 +6,10 @@ import { Row, Col } from "react-bootstrap";
 import Navbar from "../../components/navbar";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { UserContext } from "../../utils/UserContext";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const ID = ({ searchContext }) => {
+  // const user = useUser();
   const user = useContext(UserContext);
 
   const router = useRouter();
@@ -20,7 +22,7 @@ const ID = ({ searchContext }) => {
   const [playlist, setPlaylist] = useState();
   const [profile, setProfile] = useState();
   const [liked, setLiked] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [playlistLikes, setLikes] = useState();
 
   useEffect(() => {
     const fetchPlaylistSongs = async () => {
@@ -78,6 +80,7 @@ const ID = ({ searchContext }) => {
         );
         console.log("this is the video", data[0].video);
         setPlaylist(data[0].playlists);
+        setLikes(data[0].playlists.likes);
         // console.log([...data.map((item) => item.video)]);
         let videos = [...data.map((item) => item.video)];
         for (let video of [...data.map((item) => item.video)]) {
@@ -96,7 +99,20 @@ const ID = ({ searchContext }) => {
         setVideos(videos);
       }
     };
+
+    const fetchLiked = async () => {
+      let { data, error } = await supabase
+        .from("playlistLikes")
+        .select("*")
+        .eq("uid", user.id);
+      if (data.length > 0) {
+        setLiked(true);
+      }
+    };
     if (id) {
+      if (user) {
+        fetchLiked();
+      }
       fetchPlaylistSongs();
     }
   }, [id]);
@@ -111,25 +127,36 @@ const ID = ({ searchContext }) => {
 
   */
 
-  const handlePlaylistLike = () => {
-    console.log("ID AND USER SHOULD BE VALID VALUES WHERE AM I", id, user);
-    // supabase.from("playlistLikes").insert({ id: 90, pid: id, uid: user.id });
+  const handlePlaylistLike = async (likes, pid, uid) => {
+    let { data, error } = await supabase
+      .from("playlistLikes")
+      .insert([{ pid: pid, uid: uid }])
+      .select("*");
 
-    // supabase
-    //   .from("playlists")
-    //   .update({ likes: playlist.likes + 1 })
-    //   .eq("pid", id);
+    if (error) {
+      console.log("error liking playlist", error);
+    } else {
+      console.log("liked playlist", data);
+    }
+
+    await supabase
+      .from("playlists")
+      .update({ likes: likes + 1 })
+      .eq("id", pid);
 
     setLiked(true);
-    setOffset(1);
+    setLikes(likes + 1);
   };
 
-  const handlePlaylistDislike = () => {
-    // supabase.from("playlistLikes").delete().eq('pid', id).eq('uid', user.id);
-    // supabase.from("playlists").update({ likes: playlist.likes - 1 });
+  const handlePlaylistDislike = async (likes, pid, uid) => {
+    await supabase.from("playlistLikes").delete().eq("pid", pid).eq("uid", uid);
+    await supabase
+      .from("playlists")
+      .update({ likes: likes - 1 })
+      .eq("id", pid);
 
     setLiked(false);
-    setOffset(0);
+    setLikes(likes - 1);
   };
 
   return (
@@ -161,17 +188,21 @@ const ID = ({ searchContext }) => {
                       <div>{profile.username}</div>
                     </div>
                     <div className="flex justify-center items-center">
-                      <p className="text-xl mb-0">{playlist.likes + offset}</p>
+                      <p className="text-xl mb-0">{playlistLikes}</p>
                       {!liked && (
                         <AiOutlineHeart
                           className="text-3xl mx-2 hover:text-red-500 hover:cursor-pointer"
-                          onClick={handlePlaylistLike}
+                          onClick={() =>
+                            handlePlaylistLike(playlistLikes, id, user.id)
+                          }
                         />
                       )}
                       {liked && (
                         <AiFillHeart
                           className="text-3xl mx-2 "
-                          onClick={handlePlaylistDislike}
+                          onClick={() =>
+                            handlePlaylistDislike(playlistLikes, id, user.id)
+                          }
                         />
                       )}
                     </div>
@@ -203,6 +234,30 @@ const ID = ({ searchContext }) => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx);
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
 };
 
 export default ID;

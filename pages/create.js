@@ -33,6 +33,7 @@ import { TimestampInput } from "../components/timestamps";
 import { UserContext } from "../utils/UserContext";
 import { GENRE_LIST } from "../utils/genres";
 import Navbar from "../components/navbar";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -318,3 +319,27 @@ export default function Create({ searchContext }) {
     </>
   );
 }
+
+export const getServerSideProps = async (ctx) => {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx);
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
+};
