@@ -1,6 +1,6 @@
 import { Avatar, Flex, Grid, Button } from "@mantine/core";
 import { Row, Col } from "react-bootstrap";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { GENRE_LIST } from "../../utils/genres";
 import Genre from "../Signup/Genre";
 import { RxUpdate } from "react-icons/rx";
