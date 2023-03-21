@@ -6,8 +6,10 @@ import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 import { UserContext } from "../utils/UserContext";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import Navbar from "../components/navbar";
 
-const Profile = () => {
+
+const Profile = ({searchContext}) => {
   const userData = useContext(UserContext);
   const router = useRouter();
   const supabase = useSupabaseClient();
@@ -144,6 +146,8 @@ const Profile = () => {
   }, [id, userData]);
 
   return (
+    <>
+    <Navbar searchContext={searchContext} />
     <div className={`${styles.container}`}>
       {userOfPlaylist && (
         <ProfileInfo
@@ -157,6 +161,7 @@ const Profile = () => {
       )}
       {playlists && <Playlists playlists={playlists} personal={false} />}
     </div>
+    </>
   );
 };
 

@@ -5,8 +5,10 @@ import { VideoGrid } from "../components/home/videoGrid";
 import Playlist from "../components/profile/playlist";
 import Toggle from "../components/Toggle";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import Navbar from "../components/navbar";
 
-export default function Search({ search, ...props }) {
+
+export default function Search({ searchContext, search, ...props }) {
   // const router = useRouter();
   const [display, setDisplay] = useState("videos");
   const [playlists, setPlaylists] = useState(null);
@@ -98,6 +100,8 @@ export default function Search({ search, ...props }) {
   }, [display, search]);
 
   return (
+    <>
+    <Navbar searchContext={searchContext} />
     <div className="flex justify-center items-start flex-col px-4 pt-20">
       <Toggle handleValue={setDisplay} value={display} />
       <Space h={32} />
@@ -115,6 +119,7 @@ export default function Search({ search, ...props }) {
 
       <Space h={48} />
     </div>
+    </>
   );
 }
 

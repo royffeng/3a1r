@@ -5,9 +5,11 @@ import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
 import { UserContext } from "../utils/UserContext";
+import Navbar from "../components/navbar";
+
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-const Profile = () => {
+const Profile = ({ searchContext }) => {
   const supabase = useSupabaseClient();
   const user = useContext(UserContext);
   const [playlists, setPlaylists] = useState(null);
@@ -68,7 +70,9 @@ const Profile = () => {
   }, [user]);
 
   return (
-    <div className={`${styles.container}`}>
+    <>
+      <Navbar searchContext={searchContext} />
+      <div className={`${styles.container}`}>
       <>
         {user && (
           <>
@@ -78,6 +82,7 @@ const Profile = () => {
         )}
       </>
     </div>
+    </>
   );
 };
 

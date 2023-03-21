@@ -11,7 +11,6 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { FilePond, registerPlugin } from "react-filepond";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 // Import FilePond styles
 import {
@@ -33,6 +32,8 @@ import { v4 as uuidv4 } from "uuid";
 import { TimestampInput } from "../components/timestamps";
 import { UserContext } from "../utils/UserContext";
 import { GENRE_LIST } from "../utils/genres";
+import Navbar from "../components/navbar";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -47,7 +48,7 @@ const s3 = new S3({
   signatureVersion: "v4",
 });
 
-export default function Create() {
+export default function Create({ searchContext }) {
   const user = useContext(UserContext);
   const supabase = useSupabaseClient();
   const [files, setFiles] = useState([]);
@@ -143,176 +144,179 @@ export default function Create() {
   }
 
   return (
-    <Flex
-      direction="column"
-      className="pt-20"
-      sx={{
-        padding: "0 2rem",
-      }}
-      gap="xl"
-    >
-      <FilePond
-        files={files}
-        onupdatefiles={setFiles}
-        allowMultiple={false}
-        allowFileTypeValidation
-        labelFileTypeNotAllowed
-        acceptedFileTypes={["video/*", "image/*"]}
-        maxFiles={1}
-        server={{
-          process: (
-            fieldName,
-            file,
-            metadata,
-            load,
-            error,
-            progress,
-            abort
-          ) => {
-            const controller = new AbortController();
-            try {
-              const ext =
-                file.name.substring(
-                  file.name.lastIndexOf(".") + 1,
-                  file.name.length
-                ) || file.name;
-              let newFileName = `${uuid}.${ext}`;
-              const fileParams = {
-                Bucket: process.env.NEXT_PUBLIC_BUCKET,
-                Key: newFileName,
-                Expires: 600,
-                ContentType: file.type,
+    <>
+      <Navbar searchContext={searchContext} />
+      <Flex
+        direction="column"
+        className="pt-20"
+        sx={{
+          padding: "0 2rem",
+        }}
+        gap="xl"
+      >
+        <FilePond
+          files={files}
+          onupdatefiles={setFiles}
+          allowMultiple={false}
+          allowFileTypeValidation
+          labelFileTypeNotAllowed
+          acceptedFileTypes={["video/*", "image/*"]}
+          maxFiles={1}
+          server={{
+            process: (
+              fieldName,
+              file,
+              metadata,
+              load,
+              error,
+              progress,
+              abort
+            ) => {
+              const controller = new AbortController();
+              try {
+                const ext =
+                  file.name.substring(
+                    file.name.lastIndexOf(".") + 1,
+                    file.name.length
+                  ) || file.name;
+                let newFileName = `${uuid}.${ext}`;
+                const fileParams = {
+                  Bucket: process.env.NEXT_PUBLIC_BUCKET,
+                  Key: newFileName,
+                  Expires: 600,
+                  ContentType: file.type,
+                };
+                (async () => {
+                  const url = await s3.getSignedUrlPromise(
+                    "putObject",
+                    fileParams
+                  );
+                  await axios.put(url, file, {
+                    headers: {
+                      "Content-type": String(file.type),
+                    },
+                    onUploadProgress: (e) => {
+                      progress(e.event.lengthComputable, e.loaded, e.total);
+                    },
+                  });
+                })();
+              } catch (err) {
+                error(err);
+              }
+              return {
+                abort: () => {
+                  controller.abort();
+                  abort();
+                },
               };
-              (async () => {
-                const url = await s3.getSignedUrlPromise(
-                  "putObject",
-                  fileParams
-                );
-                await axios.put(url, file, {
-                  headers: {
-                    "Content-type": String(file.type),
-                  },
-                  onUploadProgress: (e) => {
-                    progress(e.event.lengthComputable, e.loaded, e.total);
-                  },
-                });
-              })();
-            } catch (err) {
-              error(err);
-            }
-            return {
-              abort: () => {
-                controller.abort();
-                abort();
-              },
-            };
-          },
-        }}
-        name="files"
-        labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-      />
-      <Textarea
-        placeholder="Title"
-        label="Add a title that describes your video"
-        value={title}
-        onChange={(e) => setTitle(e.currentTarget.value)}
-        size="xl"
-        withAsterisk
-        error={title == "" ? "Title is required" : null}
-      />
-      <Textarea
-        placeholder="Description"
-        label="Describe your video"
-        value={description}
-        onChange={(e) => setDescription(e.currentTarget.value)}
-        size="xl"
-      />
-      <MultiSelect
-        data={GENRE_LIST}
-        placeholder="Genre(s)"
-        label="Choose all that apply"
-        searchable
-        searchValue={searchValue}
-        onSearchChange={onSearchChange}
-        onChange={setGenres}
-        error={genres.length === 0 ? "genre is required" : null}
-      />
-      <Textarea
-        placeholder="Lyrics"
-        label="Enter your lyrics"
-        value={lyrics}
-        onChange={(e) => {
-          setLyrics(
-            e.currentTarget.value.replace(/(\r\n\r\n|\n\n|\r\r)/gm, "\n")
-          );
-          setTimestamps([...Array(e.currentTarget.value.split("\n").length)]);
-        }}
-        size="xl"
-        withAsterisk
-        error={lyrics == "" ? "lyrics are required" : null}
-      />
-      <SegmentedControl
-        data={[
-          { label: "Default Timestamp Input", value: "default" },
-          { label: "Json Timestamp Input", value: "json" },
-        ]}
-        color="green"
-        onChange={(e) => setInputStyle(e)}
-      />
-      {inputStyle === "default" ? (
-        lyrics
-          .split("\n")
-          .map((l, i) => (
-            <TimestampInput
-              key={`${l} ${i}`}
-              index={i}
-              lyric={l}
-              handleTimestampChange={handleTimestampChange}
-            />
-          ))
-      ) : (
-        <JsonInput
-          label="Your Timestamps in json"
-          placeholder="Input your timestamps as json[], each object will look like this: {start: [your start here], end: [your end here]}"
-          validationError="Invalid json"
-          value={jsonTimestamps}
-          onChange={setJsonTimeStamps}
-          formatOnBlur
-          autosize
-          minRows={4}
+            },
+          }}
+          name="files"
+          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
         />
-      )}
-      {success ? (
-        <Notification
-          icon={<AiFillCheckCircle size={20} />}
-          sx={{ backgroundColor: "white" }}
-          radius="md"
-          color="teal"
-          title="Upload Complete"
-        >
-          You can return to the home page
-        </Notification>
-      ) : (
-        <Button
+        <Textarea
+          placeholder="Title"
+          label="Add a title that describes your video"
+          value={title}
+          onChange={(e) => setTitle(e.currentTarget.value)}
           size="xl"
-          disabled={
-            title !== "" &&
-            lyrics !== "" &&
-            timestamps.length !== 0 &&
-            genres.length !== 0
-              ? null
-              : true
-          }
+          withAsterisk
+          error={title == "" ? "Title is required" : null}
+        />
+        <Textarea
+          placeholder="Description"
+          label="Describe your video"
+          value={description}
+          onChange={(e) => setDescription(e.currentTarget.value)}
+          size="xl"
+        />
+        <MultiSelect
+          data={GENRE_LIST}
+          placeholder="Genre(s)"
+          label="Choose all that apply"
+          searchable
+          searchValue={searchValue}
+          onSearchChange={onSearchChange}
+          onChange={setGenres}
+          error={genres.length === 0 ? "genre is required" : null}
+        />
+        <Textarea
+          placeholder="Lyrics"
+          label="Enter your lyrics"
+          value={lyrics}
+          onChange={(e) => {
+            setLyrics(
+              e.currentTarget.value.replace(/(\r\n\r\n|\n\n|\r\r)/gm, "\n")
+            );
+            setTimestamps([...Array(e.currentTarget.value.split("\n").length)]);
+          }}
+          size="xl"
+          withAsterisk
+          error={lyrics == "" ? "lyrics are required" : null}
+        />
+        <SegmentedControl
+          data={[
+            { label: "Default Timestamp Input", value: "default" },
+            { label: "Json Timestamp Input", value: "json" },
+          ]}
           color="green"
-          onClick={() =>
-            insertVideo(user, title, description, uuid, lyrics, timestamps)
-          }
-        >
-          Upload Video
-        </Button>
-      )}
-      <Space h={32} />
-    </Flex>
+          onChange={(e) => setInputStyle(e)}
+        />
+        {inputStyle === "default" ? (
+          lyrics
+            .split("\n")
+            .map((l, i) => (
+              <TimestampInput
+                key={`${l} ${i}`}
+                index={i}
+                lyric={l}
+                handleTimestampChange={handleTimestampChange}
+              />
+            ))
+        ) : (
+          <JsonInput
+            label="Your Timestamps in json"
+            placeholder="Input your timestamps as json[], each object will look like this: {start: [your start here], end: [your end here]}"
+            validationError="Invalid json"
+            value={jsonTimestamps}
+            onChange={setJsonTimeStamps}
+            formatOnBlur
+            autosize
+            minRows={4}
+          />
+        )}
+        {success ? (
+          <Notification
+            icon={<AiFillCheckCircle size={20} />}
+            sx={{ backgroundColor: "white" }}
+            radius="md"
+            color="teal"
+            title="Upload Complete"
+          >
+            You can return to the home page
+          </Notification>
+        ) : (
+          <Button
+            size="xl"
+            disabled={
+              title !== "" &&
+              lyrics !== "" &&
+              timestamps.length !== 0 &&
+              genres.length !== 0
+                ? null
+                : true
+            }
+            color="green"
+            onClick={() =>
+              insertVideo(user, title, description, uuid, lyrics, timestamps)
+            }
+          >
+            Upload Video
+          </Button>
+        )}
+        <Space h={32} />
+      </Flex>
+    </>
   );
 }
 
