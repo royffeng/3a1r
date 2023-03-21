@@ -125,7 +125,6 @@ const Thumbnail = ({
               <Text>No playlists to add to</Text>
             )}
             <button
-              
               className="bg-micdrop-green text-white rounded px-3 py-2 font-lexend font-semibold hover:!bg-black"
               onClick={() => {
                 handleSaveToPlaylist(id, value, initialValues);
@@ -198,9 +197,12 @@ const Thumbnail = ({
             </Flex>
           </Link>
           <Flex>
-              <TbPlus className = "hover:bg-white rounded p-1 text-2xl" onClick={() => {
+            <TbPlus
+              className="hover:bg-white rounded p-1 text-2xl"
+              onClick={() => {
                 handleOpen(user.id);
-              }}/>
+              }}
+            />
           </Flex>
         </Flex>
       </Flex>
