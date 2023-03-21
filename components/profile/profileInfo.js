@@ -9,8 +9,14 @@ const colors = [
   "bg-micdrop-purple",
 ];
 
-const ProfileInfo = ({ user, genres, self=true, friends=false, handleAddFriend}) => {
-  const [isFriends, setIsFriends] = useState(friends)
+const ProfileInfo = ({
+  user,
+  genres,
+  self = true,
+  friends = false,
+  handleAddFriend,
+}) => {
+  const [isFriends, setIsFriends] = useState(friends);
 
   return (
     <div className="">
@@ -81,16 +87,20 @@ const ProfileInfo = ({ user, genres, self=true, friends=false, handleAddFriend})
                 </Flex>
               </>
               <>
-              {!self && (
-                <div marg>
-                  <Button className="bg-micdrop-green mt-2" radius="md" sx={{maxWidth: "100%"}}
-                  onClick={() => {
-                    handleAddFriend(isFriends, setIsFriends)
-                  }}>
-                  {isFriends ? "following" : "follow"}
-                </Button>
-                </div>
-              )}
+                {!self && (
+                  <div marg>
+                    <Button
+                      className="bg-micdrop-green mt-2"
+                      radius="md"
+                      sx={{ maxWidth: "100%" }}
+                      onClick={() => {
+                        handleAddFriend(isFriends, setIsFriends);
+                      }}
+                    >
+                      {isFriends ? "following" : "follow"}
+                    </Button>
+                  </div>
+                )}
               </>
             </Flex>
           </Grid.Col>

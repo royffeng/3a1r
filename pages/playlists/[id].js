@@ -101,7 +101,7 @@ const ID = ({ searchContext }) => {
     };
 
     const fetchLiked = async () => {
-      let { data, error } = await supabase
+      let { data } = await supabase
         .from("playlistLikes")
         .select("*")
         .eq("uid", user.id);

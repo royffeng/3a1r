@@ -139,54 +139,76 @@ const Profile = ({ searchContext }) => {
       }
     };
     const fetchFriends = async () => {
-      let {data, error} = await supabase.from("friends").select("*").eq('uid1', viewingUser.id).eq('uid2', id);
-      if(error) {
+      let { data, error } = await supabase
+        .from("friends")
+        .select("*")
+        .eq("uid1", viewingUser.id)
+        .eq("uid2", id);
+      if (error) {
         console.log("error getting friends: ", error);
       } else {
         setInitialFriends(data.length > 0);
       }
-    }
+    };
 
     if (id) {
       fetchPlaylists();
       fetchUser();
       fetchGenres();
       fetchVideoData();
-      if(user) {
+      if (user) {
         fetchFriends();
       }
-      
     }
   }, [id, viewingUser]);
 
-  const handleAddFriend = useCallback(async (oldFriendState, setIsFriends) => {
-    if(id) {
-      if(oldFriendState) {
-        // remove friend
-        let {data, error} = await supabase.from("friends").delete().eq('uid1', viewingUser.id).eq('uid2', id).select("*");
+  const handleAddFriend = useCallback(
+    async (oldFriendState, setIsFriends) => {
+      if (id) {
+        if (oldFriendState) {
+          // remove friend
+          let { error } = await supabase
+            .from("friends")
+            .delete()
+            .eq("uid1", viewingUser.id)
+            .eq("uid2", id)
+            .select("*");
 
-        if(error) {
-          console.log("error removing friend: ", error);
+          if (error) {
+            console.log("error removing friend: ", error);
+          } else {
+            setIsFriends(false);
+          }
         } else {
-          setIsFriends(false);
-        }
-      } else {
-        // add friend
-        let {data, error} = await supabase.from("friends").insert({uid1: viewingUser.id, uid2: id}).select("*")
-        if(error) {
-          console.log("error adding friend: ", error);
-        } else {
-          setIsFriends(true);
+          // add friend
+          let { error } = await supabase
+            .from("friends")
+            .insert({ uid1: viewingUser.id, uid2: id })
+            .select("*");
+          if (error) {
+            console.log("error adding friend: ", error);
+          } else {
+            setIsFriends(true);
+          }
         }
       }
-    }
-  }, [viewingUser, id])
+    },
+    [viewingUser, id]
+  );
 
   return (
     <>
       <Navbar searchContext={searchContext} />
       <div className={`${styles.container}`}>
-        {user && genres && <ProfileInfo user={user} genres={genres} self={false} friends={initalFriends} handleAddFriend={handleAddFriend}/>}
+        {user && genres && (
+          <ProfileInfo
+            user={user}
+            genres={genres}
+            self={false}
+            friends={initalFriends}
+            handleAddFriend={handleAddFriend}
+          />
+        )}
         {playlists && <Playlists playlists={playlists} personal={false} />}
         {!videosLoading && (
           <>
