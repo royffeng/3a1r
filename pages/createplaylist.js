@@ -81,8 +81,8 @@ const createplaylist = ({ searchContext }) => {
   };
 
   const handleCreatePlaylist = async () => {
-    const uid = user.id
-    const { error } = await supabase
+    const uid = user.id;
+    const { data, error } = await supabase
       .from("playlists")
       .insert({
         uid: uid,
@@ -90,11 +90,24 @@ const createplaylist = ({ searchContext }) => {
         name: title,
         likes: 0,
         thumbnail_url: image,
-      });
+      })
+      .select();
 
-      if(error) {
-        console.log(error)
-      }
+    if (error) {
+      console.log(error);
+    }
+    const pid = data[0].id;
+
+    playlistVideos.forEach((video) => {
+      const sid = video.id;
+      supabase
+        .from("playlistHas")
+        .insert({
+          pid: pid,
+          sid: sid,
+        })
+        .then((response) => console.log(response));
+    });
   };
 
   return (
@@ -196,7 +209,10 @@ const createplaylist = ({ searchContext }) => {
                 <img src={user.avatarUrl} className="rounded-full w-10 mx-2" />
                 <p className="mb-0 text-xl">{user.username}</p>
               </div>
-              <button onClick = {handleCreatePlaylist} className="hover:!text-micdrop-green hover:bg-micdrop-beige rounded-full px-4 py-2 font-lexend font-semibold text-2xl border-4 border-micdrop-green bg-micdrop-green text-white">
+              <button
+                onClick={handleCreatePlaylist}
+                className="hover:!text-micdrop-green hover:bg-micdrop-beige rounded-full px-4 py-2 font-lexend font-semibold text-2xl border-4 border-micdrop-green bg-micdrop-green text-white"
+              >
                 save
               </button>
             </div>
