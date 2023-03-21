@@ -309,9 +309,9 @@ export default function Karaoke({ searchContext }) {
             <Flex direction={"column"} gap="md">
               {playlists ? (
                 <>
-                  {playlists.map((p) => {
+                  {playlists.map((p, index) => {
                     return (
-                      <div className="flex justify-start items-center">
+                      <div key = {index}className="flex justify-start items-center">
                         <input
                           type="checkbox"
                           key={p.id}

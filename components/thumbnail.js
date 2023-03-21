@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import tn_styles from "../styles/thumbnail.module.css";
 import Link from "next/link";
-import { Avatar, Text, Flex, Space, Image, Modal, Button } from "@mantine/core";
+import { Avatar, Text, Flex, Space, Image, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { TbPlus } from "react-icons/tb";
 import { rectifyFormat } from "../utils/formatUTC";
@@ -107,9 +107,9 @@ const Thumbnail = ({
           <Flex direction={"column"} gap="md">
             {playlists ? (
               <>
-                {playlists.map((p) => {
+                {playlists.map((p, index) => {
                   return (
-                    <div className="flex justify-start items-center">
+                    <div key = {index}className="flex justify-start items-center">
                       <input
                         type="checkbox"
                         key={p.id}
