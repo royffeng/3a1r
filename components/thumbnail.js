@@ -15,6 +15,7 @@ const Thumbnail = ({
   date,
   userid,
   noDate = false,
+  redirect = true,
 }) => {
   if (username === null || username === undefined) {
     return <></>;
@@ -26,12 +27,12 @@ const Thumbnail = ({
       className={`${tn_styles.thumbnail} !z-0`}
     >
       <Flex direction="column">
-        <Link target="_blank" href={`/karaoke?vid=${id}`}>
+        <Link target="_blank" href={redirect ? `/karaoke?vid=${id}` : ""}>
           <Image src={thumbnail} layout="fill" radius="md" alt="Thumbnail" />
         </Link>
         <Space h={8} />
         <Flex sx={{ paddingRight: "1rem" }} direction="row">
-          <Link href={`/user?id=${userid}`}>
+          <Link href={redirect ? `/user?id=${userid}` : ""}>
             {avatar_url !== undefined ? (
               <Avatar
                 aria-label="avatar of user who created this video"
@@ -50,7 +51,7 @@ const Thumbnail = ({
             )}
           </Link>
           <Space w={8} />
-          <Link href={`/karaoke?vid=${id}`}>
+          <Link href={redirect ? `/karaoke?vid=${id}` : ""}>
             <Flex direction="column" className="w-full">
               <Text fz="sm" fw={600}>
                 {title}
