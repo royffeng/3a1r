@@ -14,12 +14,18 @@ const Profile = () => {
   const [playlistLoading, setPlaylistLoading] = useState(true);
   const [genres, setGenres] = useState(user.genres)
 
+  useEffect(() => {console.log(user.genres)}, [genres])
+
   const updateGenres = useCallback(async (genres) => {
     console.log([...[...genres].map(genre => {
       return {uid: user.id, genre: genre}
     })])
+
+    const {data: currGenres} = await supabase.from("genreLikes").select(`genre`).eq("uid", user.id)
+    let currGenresSet = new Set([...currGenres]);
+    console.log("yo", [...genres].filter(g => (!currGenresSet.has(g))))
     
-    const { error } = await supabase.from("genreLikes").insert([...genres].map(genre => {
+    const { error } = await supabase.from("genreLikes").insert([...genres].filter(g => (!currGenresSet.has(g))).map(genre => {
       return {uid: user.id, genre: genre}
     }));
     if (error) {

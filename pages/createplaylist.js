@@ -7,7 +7,7 @@ import { FaCamera } from "react-icons/fa";
 import Navbar from "../components/navbar";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-const createplaylist = ({ searchContext }) => {
+const CreatePlaylist = ({ searchContext }) => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -147,4 +147,4 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default createplaylist;
+export default CreatePlaylist;
