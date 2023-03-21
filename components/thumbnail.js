@@ -100,32 +100,39 @@ const Thumbnail = ({
         centered
         opened={opened}
         onClose={close}
-        title={"...Add to a playlist"}
+        title={"Add to a Playlist"}
         color="black"
       >
         <Checkbox.Group value={value} onChange={setValue}>
           <Flex direction={"column"} gap="md">
             {playlists ? (
               <>
-                {" "}
                 {playlists.map((p) => {
                   return (
-                    <Checkbox key={p.id} value={`${p.id}`} label={p.name} />
+                    <div className="flex justify-start items-center">
+                      <input
+                        type="checkbox"
+                        key={p.id}
+                        value={`${p.id}`}
+                        className="accent-black text-black mx-2"
+                      />
+                      <label>{p.name}</label>
+                    </div>
                   );
                 })}
               </>
             ) : (
               <Text>No playlists to add to</Text>
             )}
-            <Button
-              radius="md"
-              className="bg-micdrop-green"
+            <button
+              
+              className="bg-micdrop-green text-white rounded px-3 py-2 font-lexend font-semibold hover:!bg-black"
               onClick={() => {
                 handleSaveToPlaylist(id, value, initialValues);
               }}
             >
               Save to Playlists
-            </Button>
+            </button>
           </Flex>
         </Checkbox.Group>
       </Modal>
@@ -191,16 +198,9 @@ const Thumbnail = ({
             </Flex>
           </Link>
           <Flex>
-            <Button
-              compact
-              sx={{ height: "100%" }}
-              className="bg-micdrop-lightpurple"
-              onClick={() => {
+              <TbPlus className = "hover:bg-white rounded p-1 text-2xl" onClick={() => {
                 handleOpen(user.id);
-              }}
-            >
-              <TbPlus color="black" />
-            </Button>
+              }}/>
           </Flex>
         </Flex>
       </Flex>
