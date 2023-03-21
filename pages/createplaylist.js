@@ -1,24 +1,88 @@
 import { useContext, useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { AiOutlineCamera } from "react-icons/ai";
+import { AiOutlineCamera, AiOutlineSearch } from "react-icons/ai";
 import Navbar from "../components/navbar";
 import { UserContext } from "../utils/UserContext";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { VideoGrid } from "../components/home/videoGrid";
+import Thumbnail from "../components/thumbnail";
+import { IdentityStore } from "aws-sdk";
 
 const createplaylist = ({ searchContext }) => {
   const [title, setTitle] = useState("");
   const [videos, setVideos] = useState([]);
+  const [playlistVideos, setPlaylistVideos] = useState([])
   const [count, setCount] = useState(0);
   const [view, setView] = useState(false);
   const [image, setImage] = useState("");
+  const [search, setSearch] = useState("");
+  const [dataLoading, setDataLoading] = useState(false);
   const user = useContext(UserContext);
+  const supabase = useSupabaseClient();
+
+  const fetchVideoData = async () => {
+    setDataLoading(true);
+    let { data, error } = await supabase
+      .from("video")
+      .select(
+        `
+          id,
+          title,
+          thumbnail, 
+          views,
+          created_at,
+          profiles(
+              username,
+              avatar_url
+          )
+        `
+      )
+      .ilike("title", `%${search}%`);
+    if (error) {
+      console.log(error);
+      return;
+    } else {
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        let d = data[i];
+        if (!d.profiles.avatar_url.includes("https")) {
+          let { data: avatar, error: error } = await supabase.storage
+            .from("avatars")
+            .download(`${d.profiles.avatar_url}`);
+          if (error) {
+            console.log(error);
+          } else {
+            const url = URL.createObjectURL(avatar);
+            d.profiles.avatar_url = url;
+          }
+        }
+      }
+      setVideos(data);
+    }
+    setDataLoading(false);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    searchContext(search);
+    fetchVideoData();
+  };
+
+  const handleSelectVideo = (id) => {
+    setPlaylistVideos([...playlistVideos, videos.filter((element) => element.id === id)[0]])
+  }
+
+  const handleDeselectVideo = (id) => {
+    setPlaylistVideos(playlistVideos.filter((element) => element.id !== id ))
+  }
 
   return (
     <>
       <Navbar searchContext={searchContext} />
       {view && (
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center bg-opacity-80 w-full h-full bg-micdrop-beige">
-          <div className="border-2 border-black p-4 rounded-xl flex justify-center items-start flex-col w-[50vw]">
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center bg-opacity-80 w-full h-full bg-micdrop-beige z-[10000000]">
+          <div className="border-2 border-black p-4 rounded-xl flex justify-center items-start flex-col w-[50vw] bg-micdrop-beige">
             <p className="text-2xl font-lexend">add image url</p>
             <input
               type="text"
@@ -96,6 +160,61 @@ const createplaylist = ({ searchContext }) => {
           </Col>
         </Row>
         <div className="w-full h-1 bg-black my-4" />
+        <div className="w-full flex justify-end items-center">
+          <form onSubmit={handleSearchSubmit}>
+            <div className="flex justify-center items-center bg-white rounded-md">
+              <AiOutlineSearch className="mx-2" />
+              <input
+                className="rounded-r-md py-2 outline-none font-lexend"
+                onChange={(e) => setSearch(e.currentTarget.value)}
+                placeholder="search songs/artists"
+              />
+            </div>
+          </form>
+        </div>
+        {dataLoading && <p>No Videos!</p>}
+        {!dataLoading && (
+          <div className="my-2">
+            <Row>
+            {videos?.map((video, index) => (
+              <Col key={index} xl = {3} onClick = {() => handleSelectVideo(video.id)}>
+                <Thumbnail
+                  redirect = {false}
+                  id={video.id}
+                  thumbnail={video.thumbnail}
+                  title={video.title}
+                  username={video.profiles?.username}
+                  views={video.views}
+                  avatar_url={video.profiles?.avatar_url}
+                  date={video.created_at}
+                  userid={video.profiles?.id}
+                />
+              </Col>
+            ))}
+          </Row>
+          </div>
+        )}
+        <div className="w-full h-1 bg-black my-4" />
+        <div>
+          <p className="font-lexend text-2xl">Videos in Playlist</p>
+          <Row>
+            {playlistVideos?.map((video, index) => (
+              <Col key={index} xl = {3} onClick = {() => handleDeselectVideo(video.id)}>
+                <Thumbnail
+                redirect = {false}
+                  id={video.id}
+                  thumbnail={video.thumbnail}
+                  title={video.title}
+                  username={video.profiles?.username}
+                  views={video.views}
+                  avatar_url={video.profiles?.avatar_url}
+                  date={video.created_at}
+                  userid={video.profiles?.id}
+                />
+              </Col>
+            ))}
+          </Row>
+        </div>
       </div>
     </>
   );
