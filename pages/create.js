@@ -84,9 +84,9 @@ export default function Create({ searchContext }) {
             uid: user.id,
             title: title,
             description: description,
-            thumbnail: `${process.env.NEXT_PUBLIC_THUMBNAIL_BASE}/${uuid}/Thumbnails/${uuid}.0000000.jpg`,
+            thumbnail: `${process.env.NEXT_PUBLIC_THUMBNAIL_BASE}${uuid}/Thumbnails/${uuid}.0000000.jpg`,
             lyrics: lyricTimestamp,
-            videourl: `${uuid}/${process.env.NEXT_PUBLIC_URL_BASE}/HLS/${uuid}_720.m3u8`,
+            videourl: `${process.env.NEXT_PUBLIC_URL_BASE}HLS/${uuid}_720.m3u8`,
           },
         ])
         .select();
@@ -101,13 +101,15 @@ export default function Create({ searchContext }) {
           })
         );
         genres.forEach(async (g) => {
-          let { data, error } = await supabase.from("videoGenres").insert(
-            genres.map((g) => {
-              return { genre: g, vid: data[0].id };
-            })
-          );
-          if (error) {
-            console.log("insert video genres error: ", error);
+          if (data.length > 0 && data[0]) {
+            let { data, error } = await supabase.from("videoGenres").insert(
+              genres.map((g) => {
+                return { genre: g, vid: data[0].id };
+              })
+            );
+            if (error) {
+              console.log("insert video genres error: ", error);
+            }
           }
         });
         setSuccess(true);
@@ -306,7 +308,7 @@ export default function Create({ searchContext }) {
                 ? null
                 : true
             }
-            color="green"
+            className="bg-micdrop-green"
             onClick={() =>
               insertVideo(user, title, description, uuid, lyrics, timestamps)
             }
