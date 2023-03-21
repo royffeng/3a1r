@@ -7,6 +7,7 @@ import styles from "../styles/Home.module.css";
 import { UserContext } from "../utils/UserContext";
 import Navbar from "../components/navbar";
 import { VideoGrid } from "../components/home/videoGrid";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const Profile = ({ searchContext }) => {
   const supabase = useSupabaseClient();
@@ -111,6 +112,30 @@ const Profile = ({ searchContext }) => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx);
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
 };
 
 export default Profile;

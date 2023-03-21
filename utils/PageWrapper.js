@@ -60,6 +60,7 @@ export default function PageWrapper({ loading, children }) {
     };
     if (user) {
       getUserData();
+      // console.log("user from context", user);
     } else {
       loading();
     }
