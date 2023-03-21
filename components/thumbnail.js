@@ -109,7 +109,10 @@ const Thumbnail = ({
               <>
                 {playlists.map((p, index) => {
                   return (
-                    <div key = {index}className="flex justify-start items-center">
+                    <div
+                      key={index}
+                      className="flex justify-start items-center"
+                    >
                       <input
                         type="checkbox"
                         key={p.id}
