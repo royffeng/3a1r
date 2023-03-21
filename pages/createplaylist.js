@@ -13,11 +13,11 @@ const createplaylist = ({ searchContext }) => {
   const [title, setTitle] = useState("");
   const [videos, setVideos] = useState([]);
   const [playlistVideos, setPlaylistVideos] = useState([]);
-  const [count, setCount] = useState(0);
   const [view, setView] = useState(false);
   const [image, setImage] = useState("");
   const [search, setSearch] = useState("");
   const [dataLoading, setDataLoading] = useState(false);
+  const [toggle, setToggle] = useState(false);
   const user = useContext(UserContext);
   const supabase = useSupabaseClient();
 
@@ -78,6 +78,23 @@ const createplaylist = ({ searchContext }) => {
 
   const handleDeselectVideo = (id) => {
     setPlaylistVideos(playlistVideos.filter((element) => element.id !== id));
+  };
+
+  const handleCreatePlaylist = async () => {
+    const uid = user.id
+    const { error } = await supabase
+      .from("playlists")
+      .insert({
+        uid: uid,
+        public: toggle,
+        name: title,
+        likes: 0,
+        thumbnail_url: image,
+      });
+
+      if(error) {
+        console.log(error)
+      }
   };
 
   return (
@@ -146,8 +163,31 @@ const createplaylist = ({ searchContext }) => {
                 className="text-3xl font-lexend px-2 py-2 mb-2 outline-none focus:ring-2 focus:ring-black rounded"
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <p className="mb-0 text-xl">
-                {count} video{count === 1 ? "" : "s"}
+              <div className="flex justify-center items-center">
+                <button
+                  onClick={() => setToggle(false)}
+                  className={`${
+                    !toggle
+                      ? "bg-black text-white"
+                      : "bg-micdrop-beige text-black"
+                  } px-3 py-2 border-2 border-black rounded-full mx-2`}
+                >
+                  Private
+                </button>
+                <button
+                  onClick={() => setToggle(true)}
+                  className={`${
+                    toggle
+                      ? "bg-black text-white"
+                      : "bg-micdrop-beige text-black"
+                  } px-3 py-2 border-2 border-black rounded-full`}
+                >
+                  Public
+                </button>
+              </div>
+              <p className="mb-0 text-xl my-2">
+                {playlistVideos.length} video
+                {playlistVideos.length === 1 ? "" : "s"}
               </p>
             </div>
 
@@ -156,7 +196,7 @@ const createplaylist = ({ searchContext }) => {
                 <img src={user.avatarUrl} className="rounded-full w-10 mx-2" />
                 <p className="mb-0 text-xl">{user.username}</p>
               </div>
-              <button className="hover:!text-micdrop-green hover:bg-micdrop-beige rounded-full px-4 py-2 font-lexend font-semibold text-2xl border-4 border-micdrop-green bg-micdrop-green text-white">
+              <button onClick = {handleCreatePlaylist} className="hover:!text-micdrop-green hover:bg-micdrop-beige rounded-full px-4 py-2 font-lexend font-semibold text-2xl border-4 border-micdrop-green bg-micdrop-green text-white">
                 save
               </button>
             </div>
