@@ -23,7 +23,7 @@ export default function PageWrapper({ loading, children }) {
       if (error) {
         console.log(error);
       } else {
-        let avatarUrl = null;
+        let avatarUrl = data[0].avatar_url;
         let genresArray = null;
         if (!data[0].avatar_url.includes("https")) {
           let { data: avatar, error: error } = await supabase.storage

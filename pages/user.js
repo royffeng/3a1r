@@ -57,7 +57,6 @@ const Profile = () => {
         console.log("error getting profiles: ", error);
         return;
       } else {
-        let avatarUrl = null;
         if (!data.avatar_url.includes("https")) {
           let { data: avatar, error: error } = await supabase.storage
             .from("avatars")
@@ -66,10 +65,10 @@ const Profile = () => {
             console.log(error);
           } else {
             const url = URL.createObjectURL(avatar);
-            avatarUrl = url;
+            data.avatar_url = url;
           }
         }
-        setUser({ avatarUrl: avatarUrl, ...data });
+        setUser(data);
       }
     };
 

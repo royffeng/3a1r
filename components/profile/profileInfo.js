@@ -9,6 +9,7 @@ const colors = [
 ];
 
 const ProfileInfo = ({ user, genres }) => {
+  console.log("user", user)
   return (
     <div className="">
       {user ? (
@@ -20,9 +21,9 @@ const ProfileInfo = ({ user, genres }) => {
           className="pt-20"
         >
           <Grid.Col sx={{ aspectRatio: "1 / 1" }} span={1}>
-            {user.avatarUrl !== undefined ? (
+            {user.avatarUrl !== undefined || user.avatar_url ? (
               <Avatar
-                src={user.avatarUrl}
+                src={user.avatarUrl || user.avatar_url }
                 alt="no image here"
                 sx={{ width: "100%", height: "100%", borderRadius: "100%" }}
               />
