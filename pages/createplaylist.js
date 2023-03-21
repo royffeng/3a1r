@@ -111,7 +111,7 @@ const CreatePlaylist = ({ searchContext }) => {
       <div className="">
       <Navbar searchContext={searchContext} />
       <div className="pt-20 px-4">
-      <Row className="flex justify-center items-center">
+        <Row className="flex justify-center items-center">
           <Col xl={2} className="flex justify-center items-center">
             <div className="w-full h-full">
               <div className="flex justify-center items-center flex-col bg-micdrop-beige rounded-2xl w-full h-5/6 border-black border-2">
@@ -120,11 +120,11 @@ const CreatePlaylist = ({ searchContext }) => {
             </div>
           </Col>
         </Row>
+      </div>
         <Row className="flex justify-center items-center">
         </Row>
         <div className="w-full h-1 bg-black my-4" />
       </div>
-    </div>
     </>
   );
 };
