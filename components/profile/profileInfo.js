@@ -1,5 +1,5 @@
-import { Avatar, Flex, Grid } from "@mantine/core";
-import React from "react";
+import { Avatar, Flex, Grid, Button } from "@mantine/core";
+import React, {useState} from "react";
 
 const colors = [
   "bg-micdrop-green",
@@ -8,8 +8,7 @@ const colors = [
   "bg-micdrop-purple",
 ];
 
-const ProfileInfo = ({ user, genres }) => {
-  console.log("user", user)
+const ProfileInfo = ({ user, genres, self = true, isFollowing=false, setIsFollowing, handleFollow}) => {
   return (
     <div className="">
       {user ? (
@@ -45,7 +44,20 @@ const ProfileInfo = ({ user, genres }) => {
               <p className="text-5xl font-bold">{user.full_name}</p>
               <p className="text-3xl font-medium">@{user.username}</p>
               <>
-                <Flex direction="row" gap={4}>
+                {!self && (
+                  <div className="max-w-full">
+                    <Button className="bg-micdrop-green" radius="md"
+                    onClick={() => {
+                      handleFollow(isFollowing);
+                      setIsFollowing(!isFollowing)
+                    }}>
+                    {isFollowing ? "following" : "follow"}
+                    </Button>
+                  </div>
+                )}
+              </>
+              <>
+                <Flex className="mt-3" direction="row" gap={4}>
                   {genres &&
                     genres.map((g, index) => (
                       <div
@@ -78,6 +90,7 @@ const ProfileInfo = ({ user, genres }) => {
                     ))}
                 </Flex>
               </>
+              
             </Flex>
           </Grid.Col>
         </Grid>

@@ -1,21 +1,46 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import Playlists from "../components/profile/playlists";
 import ProfileInfo from "../components/profile/profileInfo";
 import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
+import { UserContext } from "../utils/UserContext";
 
 const Profile = () => {
+  const userData = useContext(UserContext);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const [playlists, setPlaylists] = useState(null);
-  const [user, setUser] = useState(null);
+  const [userOfPlaylist, setUserOfPlaylist] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false)
   const [genres, setGenres] = useState(null);
 
   const id = router.query.id;
+  const handleFollow = useCallback(async (currentState) => {
+    if(currentState) {
+      // remove
+      let {data,error} = await supabase
+        .from("friends")
+        .delete()
+        .eq("uid1", userData.id)
+        .eq("uid2", id)
+      
+    } else {
+      // add
+      let {data,error} = await supabase
+        .from("friends")
+        .insert({uid1: userData.id, uid2: id})
+        .select("*")
+
+      if(error) {
+        console.log("error inserting friends", error)
+      }
+    }
+    setIsFollowing(!currentState);
+  }, [userData, id]);
 
   useEffect(() => {
-    const fetchPlaylists = async () => {
+    const fetchPlaylist = async () => {
       let { data, error } = await supabase
         .from("playlists")
         .select(
@@ -68,7 +93,7 @@ const Profile = () => {
             data.avatar_url = url;
           }
         }
-        setUser(data);
+        setUserOfPlaylist(data);
       }
     };
 
@@ -90,16 +115,34 @@ const Profile = () => {
       }
     };
 
+    const fetchFriends = async () => {
+      let{data, error} = await supabase
+        .from("friends")
+        .select("*")
+        .eq("uid1", userData.id)
+        .eq("uid2", id);
+
+      if(error) {
+        console.log("error getting friends", error)
+      } else {
+        console.log("friends data", data)
+        setIsFollowing(data.length > 0)
+      }
+    }
+
     if (id) {
-      fetchPlaylists();
+      fetchPlaylist();
       fetchUser();
       fetchGenres();
+      if(userData) {
+        fetchFriends();
+      }
     }
-  }, [id]);
+  }, [id, userData]);
 
   return (
     <div className={`${styles.container}`}>
-      {user && <ProfileInfo user={user} genres={genres} />}
+      {userOfPlaylist && <ProfileInfo user={userOfPlaylist} genres={genres} self={false} isFollowing={isFollowing} setIsFollowing={setIsFollowing} handleFollow={handleFollow}/>}
       {playlists && <Playlists playlists={playlists} personal={false} />}
     </div>
   );
