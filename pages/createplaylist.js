@@ -6,8 +6,10 @@ import { UserContext } from "../utils/UserContext";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Thumbnail from "../components/thumbnail";
+import { useRouter } from "next/router";
 
 const CreatePlaylist = ({ searchContext }) => {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [videos, setVideos] = useState([]);
   const [playlistVideos, setPlaylistVideos] = useState([]);
@@ -104,7 +106,10 @@ const CreatePlaylist = ({ searchContext }) => {
           pid: pid,
           sid: sid,
         })
-        .then((response) => console.log(response));
+        .then((response) => {
+          console.log(response);
+          router.push("/");
+        });
     });
   };
 

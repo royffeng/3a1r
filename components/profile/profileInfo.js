@@ -17,14 +17,18 @@ const ProfileInfo = ({
   user,
   genres,
   self = true,
+  friends = false,
   isFollowing = false,
   setIsFollowing,
-  handleFollow,
+  handleAddFriend,
   updateGenres,
 }) => {
   const [showGenreList, setShowGenreList] = useState(false);
   const genreList = useMemo(() => [...GENRE_LIST], [GENRE_LIST]);
-  const [selectedGenres, setGenres] = useState(new Set([...user.genres]));
+  const [selectedGenres, setGenres] = useState(
+    new Set(user && user.genres ? [...user.genres] : [])
+  );
+  const [isFriends, setIsFriends] = useState(friends);
   return (
     <div className="">
       {user ? (
@@ -66,11 +70,10 @@ const ProfileInfo = ({
                       className="bg-micdrop-green"
                       radius="md"
                       onClick={() => {
-                        handleFollow(isFollowing);
-                        setIsFollowing(!isFollowing);
+                        handleAddFriend(isFriends, setIsFriends);
                       }}
                     >
-                      {isFollowing ? "following" : "follow"}
+                      {isFriends ? "following" : "follow"}
                     </Button>
                   </div>
                 )}
@@ -97,23 +100,25 @@ const ProfileInfo = ({
                         {g}
                       </div>
                     ))}
-                  <Flex
-                    justify={"center"}
-                    align="center"
-                    className="mx-0 max-w-f"
-                  >
-                    <Button
-                      leftIcon={
-                        <AiOutlinePlusCircle style={{ color: "white" }} />
-                      }
-                      onClick={() => setShowGenreList(true)}
-                      radius="md"
-                      className="bg-micdrop-green"
-                      color="white"
+                  {self ?? (
+                    <Flex
+                      justify={"center"}
+                      align="center"
+                      className="mx-0 max-w-f"
                     >
-                      Add Genres
-                    </Button>
-                  </Flex>
+                      <Button
+                        leftIcon={
+                          <AiOutlinePlusCircle style={{ color: "white" }} />
+                        }
+                        onClick={() => setShowGenreList(true)}
+                        radius="md"
+                        className="bg-micdrop-green"
+                        color="white"
+                      >
+                        Add Genres
+                      </Button>
+                    </Flex>
+                  )}
                 </Flex>
                 {showGenreList && (
                   <Row className="w-full m-0 p-0">
