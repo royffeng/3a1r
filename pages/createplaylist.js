@@ -106,7 +106,10 @@ const CreatePlaylist = ({ searchContext }) => {
           pid: pid,
           sid: sid,
         })
-        .then((response) => {console.log(response); router.push("/");});
+        .then((response) => {
+          console.log(response);
+          router.push("/");
+        });
     });
   };
 

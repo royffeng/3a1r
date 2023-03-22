@@ -25,7 +25,9 @@ const ProfileInfo = ({
 }) => {
   const [showGenreList, setShowGenreList] = useState(false);
   const genreList = useMemo(() => [...GENRE_LIST], [GENRE_LIST]);
-  const [selectedGenres, setGenres] = useState(new Set(user && user.genres ? [...user.genres]: []));
+  const [selectedGenres, setGenres] = useState(
+    new Set(user && user.genres ? [...user.genres] : [])
+  );
   const [isFriends, setIsFriends] = useState(friends);
   return (
     <div className="">
@@ -98,24 +100,25 @@ const ProfileInfo = ({
                         {g}
                       </div>
                     ))}
-                    {self ?? <Flex
-                    justify={"center"}
-                    align="center"
-                    className="mx-0 max-w-f"
-                  >
-                    <Button
-                      leftIcon={
-                        <AiOutlinePlusCircle style={{ color: "white" }} />
-                      }
-                      onClick={() => setShowGenreList(true)}
-                      radius="md"
-                      className="bg-micdrop-green"
-                      color="white"
+                  {self ?? (
+                    <Flex
+                      justify={"center"}
+                      align="center"
+                      className="mx-0 max-w-f"
                     >
-                      Add Genres
-                    </Button>
-                  </Flex>}
-                  
+                      <Button
+                        leftIcon={
+                          <AiOutlinePlusCircle style={{ color: "white" }} />
+                        }
+                        onClick={() => setShowGenreList(true)}
+                        radius="md"
+                        className="bg-micdrop-green"
+                        color="white"
+                      >
+                        Add Genres
+                      </Button>
+                    </Flex>
+                  )}
                 </Flex>
                 {showGenreList && (
                   <Row className="w-full m-0 p-0">
